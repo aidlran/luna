@@ -1,0 +1,35 @@
+.error {
+  color: #cd5c5c;
+}
+
+label {
+  display: block;
+  margin: 8px auto;
+  color: #333;
+  font-size: 0.9rem;
+}
+
+input {
+  width: 100%;
+  margin: 1px auto;
+  padding: 5px;
+  border: var(--border);
+  font-size: 1.1rem;
+}
+
+input:focus {
+  outline: none;
+  border-color: #006;
+}
+
+input:not([type='submit']) {
+  width: calc(100% - 14px);
+}
+
+input[type='submit'] {
+  margin-top: 18px;
+}
+
+input[type='submit']:not(:disabled) {
+  cursor: pointer;
+}
