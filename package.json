@@ -1,8 +1,12 @@
 {
-	"name": "projex-frontend",
+	"name": "projex-web-client",
 	"version": "1.0.0-PREVIEW",
 	"license": "AGPL-3.0",
 	"private": true,
+	"repository": "github:enclavetech/projex-web-client",
+	"engines": {
+		"node": ">=18"
+	},
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build",
