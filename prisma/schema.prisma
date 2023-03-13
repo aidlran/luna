@@ -1,0 +1,50 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  handle       String   @unique
+  passwordHash String   @db.VarChar(255)
+  name         String?  @db.VarChar(255)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  userKeyPairs UserKeyPair[]
+}
+
+model KeyPair {
+  id         String   @id @default(cuid())
+  publicKey  String
+  privateKey String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  userKeyPairs UserKeyPair[]
+  tasks        EncryptedData[]
+}
+
+model UserKeyPair {
+  keyPairId String
+  userId    String
+
+  keyPair KeyPair @relation(fields: [keyPairId], references: [id])
+  user    User    @relation(fields: [userId], references: [id])
+
+  @@id([keyPairId, userId])
+}
+
+model EncryptedData {
+  id               String @id @default(cuid())
+  encryptedPayload String
+  keyPairId        String
+
+  keyPair KeyPair @relation(fields: [keyPairId], references: [id])
+}

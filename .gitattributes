@@ -4,3 +4,6 @@
 # Exclude config files from language stats
 *.config.js linguist-detectable=false
 .eslintrc.* linguist-detectable=false
+
+# Include Prisma schema in language stats
+*.prisma linguist-detectable=true
