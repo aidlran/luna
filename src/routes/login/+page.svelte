@@ -1,7 +1,5 @@
 <script lang="ts">
-  import '$lib/styles/form.styles.css';
-
-  import AuthForm from '$lib/components/auth-form.component.svelte';
+  import { AuthForm } from '$lib/components';
 
   let identifier: string;
   let passphrase: string;

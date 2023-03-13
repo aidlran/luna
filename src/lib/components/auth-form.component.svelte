@@ -1,6 +1,4 @@
-<script lang="ts">
-  import '$lib/styles/form.styles.css';
-
+<script>
   export let messageText = '';
   export let messageIsError = false;
   export let submitButtonText = 'Submit';
@@ -28,7 +26,28 @@
     border-radius: 5px;
   }
 
-  .container :global(p) {
+  :global(label) {
+    display: block;
+    margin: 8px auto;
+  }
+
+  :global(input) {
+    width: 100%;
+    margin: 1px auto;
+    padding: 5px;
+    border: var(--border);
+    font-size: 1.1rem;
+  }
+
+  :global(input:not([type='submit'])) {
+    width: calc(100% - 14px);
+  }
+
+  :global(input[type='submit']) {
+    margin-top: 18px;
+  }
+
+  :global(p) {
     text-align: center;
   }
 </style>

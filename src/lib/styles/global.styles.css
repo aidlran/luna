@@ -1,0 +1,28 @@
+:root {
+  --border: 2px solid #000;
+
+  font-family: sans-serif;
+  font-size: 0.9em;
+}
+
+body {
+  min-height: 100vh;
+}
+
+label {
+  color: #333;
+  font-size: 0.9rem;
+}
+
+input:focus {
+  outline: none;
+  border-color: #006;
+}
+
+input[type='submit']:not(:disabled) {
+  cursor: pointer;
+}
+
+p.error {
+  color: #cd5c5c;
+}
