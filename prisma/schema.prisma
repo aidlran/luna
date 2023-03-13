@@ -9,10 +9,10 @@ datasource db {
 }
 
 model User {
-  id           String   @id @default(cuid())
-  email        String   @unique
-  handle       String   @unique
-  passwordHash String   @db.VarChar(255)
+  id           String   @id @default(cuid()) @db.VarChar(30)
+  email        String   @unique @db.VarChar(255)
+  username     String   @unique @db.VarChar(24)
+  passwordHash String   @db.VarChar(128)
   name         String?  @db.VarChar(255)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
@@ -21,9 +21,9 @@ model User {
 }
 
 model KeyPair {
-  id         String   @id @default(cuid())
-  publicKey  String
-  privateKey String
+  id         String   @id @default(cuid()) @db.VarChar(30)
+  publicKey  String   @db.Text
+  privateKey String   @db.Text
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
@@ -32,19 +32,22 @@ model KeyPair {
 }
 
 model UserKeyPair {
-  keyPairId String
-  userId    String
+  keyPairId String @db.VarChar(30)
+  userId    String @db.VarChar(30)
 
   keyPair KeyPair @relation(fields: [keyPairId], references: [id])
   user    User    @relation(fields: [userId], references: [id])
 
   @@id([keyPairId, userId])
+  @@index([userId])
 }
 
 model EncryptedData {
-  id               String @id @default(cuid())
-  encryptedPayload String
-  keyPairId        String
+  id               String @id @default(cuid()) @db.VarChar(30)
+  encryptedPayload String @db.Text
+  keyPairId        String @db.VarChar(30)
 
   keyPair KeyPair @relation(fields: [keyPairId], references: [id])
+
+  @@index([keyPairId])
 }
