@@ -27,11 +27,13 @@ export const actions: Actions = {
         return fail(400, { errors: returnedErrors });
       }
 
-      throw error;
+      console.log(error);
+      return fail(500, { errors: { '': ['Something went wrong. Please try again later.'] } });
     }
 
-    // TODO: Create session
+    // // TODO: Create session
+    // throw redirect(303, '/app');
 
-    throw redirect(303, '/app');
+    return fail(403, { errors: { '': ['Incorrect login details.'] } });
   },
 };
