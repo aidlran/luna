@@ -1,29 +1,69 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
+  import { enhance } from '$app/forms';
+
   import { AuthForm } from '$lib/components';
+  import { generateUsernameFromEmail } from '$lib/services/username.service';
+
+  export let form;
 
   let email: string;
-  let username: string;
   let passphrase: string;
+  let usernameInput: string;
+  let usernameGenerated: string;
 
-  let messageText = '';
-  let messageIsError = false;
+  let initialFocus: HTMLInputElement;
+
+  onMount(() => initialFocus.focus());
+
+  function onEmailChange(event: Event) {
+    usernameGenerated = generateUsernameFromEmail(email);
+  }
+
+  function onFormSubmit(event: Event) {
+    if (!usernameInput?.length) {
+      usernameInput = usernameGenerated;
+    }
+  }
 </script>
 
-<AuthForm {messageText} {messageIsError} submitButtonText="Sign Up">
-  <div slot="form" style="display: contents">
+<AuthForm errors={form?.errors}>
+  <form slot="form" method="POST" on:submit|preventDefault={onFormSubmit} use:enhance>
     <label>
-      <span>Email</span>
-      <input type="email" name="email" placeholder="Email" required bind:value={email} />
+      Email *
+      <input
+        type="email"
+        name="email"
+        placeholder="Email"
+        required
+        maxLength="255"
+        bind:value={email}
+        bind:this={initialFocus}
+        on:input={onEmailChange}
+      />
     </label>
     <label>
-      <span>Username</span>
-      <input name="username" placeholder="Username" required bind:value={username} />
+      Passphrase *
+      <input
+        type="password"
+        name="passphrase"
+        placeholder="Passphrase"
+        required
+        minLength="10"
+        bind:value={passphrase}
+      />
     </label>
     <label>
-      <span>Passphrase</span>
-      <input type="password" name="passphrase" placeholder="Passphrase" required bind:value={passphrase} />
+      Username
+      <input
+        name="username"
+        placeholder={usernameGenerated ?? 'Username'}
+        maxLength="32"
+        bind:value={usernameInput}
+      />
     </label>
-  </div>
+    <input type="submit" value="Sign Up" />
+  </form>
 
   <p slot="footer">
     Already have an account?

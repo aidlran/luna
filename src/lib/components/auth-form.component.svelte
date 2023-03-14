@@ -1,17 +1,16 @@
-<script>
-  export let messageText = '';
-  export let messageIsError = false;
-  export let submitButtonText = 'Submit';
+<script lang="ts">
+  export let errors: Record<string, string[]> = {};
 </script>
 
 <div class="container">
-  <form method="post">
-    <slot name="form" />
-    <input type="submit" value={submitButtonText} />
-  </form>
+  <slot name="form" />
 
-  {#if messageText}
-    <p class:error={messageIsError}>{messageText}</p>
+  {#if errors && Object.keys(errors).length}
+    {#each Object.keys(errors) as inputName}
+      {#each errors[inputName] as errorString}
+        <p class="error">{errorString}</p>
+      {/each}
+    {/each}
   {/if}
 
   <slot name="footer" />
