@@ -1,7 +1,7 @@
 <script>
-  import '$lib/styles/global.styles.css';
+  import '$lib/public/styles/global.styles.css';
 
-  import { Header } from '$lib/components';
+  import { Header } from '$lib/public/components';
 </script>
 
 <Header />

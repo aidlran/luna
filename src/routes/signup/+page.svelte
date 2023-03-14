@@ -2,8 +2,8 @@
   import { afterUpdate, onMount } from 'svelte';
   import { enhance } from '$app/forms';
 
-  import { AuthForm } from '$lib/components';
-  import { generateUsernameFromEmail } from '$lib/services/username.service';
+  import { AuthForm } from '$lib/public/components';
+  import { generateUsernameFromEmail } from '$lib/public/services/username.service';
 
   export let form;
 

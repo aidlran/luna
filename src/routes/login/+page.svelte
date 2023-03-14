@@ -2,7 +2,7 @@
   import { onMount } from 'svelte';
   import { enhance } from '$app/forms';
 
-  import { AuthForm } from '$lib/components';
+  import { AuthForm } from '$lib/public/components';
 
   export let form;
 
