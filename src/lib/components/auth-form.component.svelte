@@ -18,11 +18,18 @@
 
 <style>
   .container {
-    width: 300px;
-    margin: auto;
+    width: calc(100% - 40px);
     padding: 20px;
-    border: var(--border);
-    border-radius: 5px;
+  }
+
+  @media (min-width: 600px) {
+    .container {
+      width: calc(100% - 44px);
+      max-width: 300px;
+      margin: 20px auto;
+      border: var(--border);
+      border-radius: 5px;
+    }
   }
 
   :global(label) {
@@ -44,6 +51,7 @@
 
   :global(input[type='submit']) {
     margin-top: 18px;
+    padding: 10px 5px;
   }
 
   :global(p) {

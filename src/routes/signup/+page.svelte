@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { afterUpdate, onMount } from 'svelte';
   import { enhance } from '$app/forms';
 
   import { AuthForm } from '$lib/components';
@@ -14,17 +14,33 @@
 
   let initialFocus: HTMLInputElement;
 
+  let willClearUsername = false;
+
   onMount(() => initialFocus.focus());
 
-  function onEmailChange(event: Event) {
+  function onEmailChange() {
     usernameGenerated = generateUsernameFromEmail(email);
   }
 
-  function onFormSubmit(event: Event) {
+  /**
+   * If the user hasn't input a username, we need to copy the
+   * auto-generated one into the input value before submit.
+   */
+  function onFormSubmit() {
     if (!usernameInput?.length) {
+      willClearUsername = true;
       usernameInput = usernameGenerated;
     }
   }
+
+  // After a failed form submit with the auto-generated username, we need to
+  // clear the input value so that the placeholder bind is visible again.
+  afterUpdate(() => {
+    if (willClearUsername) {
+      usernameInput = '';
+      willClearUsername = false;
+    }
+  });
 </script>
 
 <AuthForm errors={form?.errors}>
@@ -34,7 +50,6 @@
       <input
         type="email"
         name="email"
-        placeholder="Email"
         required
         maxLength="255"
         bind:value={email}
@@ -44,23 +59,11 @@
     </label>
     <label>
       Passphrase *
-      <input
-        type="password"
-        name="passphrase"
-        placeholder="Passphrase"
-        required
-        minLength="10"
-        bind:value={passphrase}
-      />
+      <input type="password" name="passphrase" required minLength="10" bind:value={passphrase} />
     </label>
     <label>
       Username
-      <input
-        name="username"
-        placeholder={usernameGenerated || 'Username'}
-        maxLength="32"
-        bind:value={usernameInput}
-      />
+      <input name="username" placeholder={usernameGenerated} maxLength="32" bind:value={usernameInput} />
     </label>
     <input type="submit" value="Sign Up" />
   </form>

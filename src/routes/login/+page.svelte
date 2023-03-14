@@ -18,17 +18,11 @@
   <form slot="form" method="POST" use:enhance>
     <label>
       <span>Username or email</span>
-      <input
-        name="identifier"
-        placeholder="Username or email"
-        required
-        bind:value={identifier}
-        bind:this={initialFocus}
-      />
+      <input name="identifier" required bind:value={identifier} bind:this={initialFocus} />
     </label>
     <label>
       <span>Passphrase</span>
-      <input type="password" name="passphrase" placeholder="Passphrase" bind:value={passphrase} />
+      <input type="password" name="passphrase" bind:value={passphrase} />
     </label>
     <input type="submit" value="Log In" />
   </form>
