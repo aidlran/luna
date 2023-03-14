@@ -57,7 +57,7 @@
       Username
       <input
         name="username"
-        placeholder={usernameGenerated ?? 'Username'}
+        placeholder={usernameGenerated || 'Username'}
         maxLength="32"
         bind:value={usernameInput}
       />
