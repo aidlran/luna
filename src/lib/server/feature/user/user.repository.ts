@@ -1,6 +1,6 @@
 import { hash } from 'argon2';
-import { prismaClientService } from '$lib/server/services/prisma-client.service';
-import { generateUsernameFromEmail, sanitizeUsername } from '$lib/services/username.service';
+import { prismaClientService } from '$lib/server/shared/prisma-client.service';
+import { generateUsernameFromEmail, sanitizeUsername } from '$lib/shared/services/username.service';
 import type { UserCreateDTO } from './user.create.dto';
 
 export async function createOne(user: UserCreateDTO) {

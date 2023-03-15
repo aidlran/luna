@@ -1,7 +1,6 @@
 <script>
-  import '$lib/public/styles/global.styles.css';
-
-  import { Header } from '$lib/public/components';
+  import '$lib/client/styles/global.styles.css';
+  import { Header } from '$lib/client/components';
 </script>
 
 <Header />

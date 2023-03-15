@@ -2,7 +2,7 @@
   import { onMount } from 'svelte';
   import { enhance } from '$app/forms';
 
-  import { AuthForm } from '$lib/public/components';
+  import { AuthForm } from '$lib/client/components';
 
   export let form;
 
@@ -22,7 +22,7 @@
     </label>
     <label>
       <span>Passphrase</span>
-      <input type="password" name="passphrase" bind:value={passphrase} />
+      <input type="password" name="passphrase" required bind:value={passphrase} />
     </label>
     <input type="submit" value="Log In" />
   </form>

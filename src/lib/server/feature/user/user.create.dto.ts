@@ -4,13 +4,6 @@ export class UserCreateDTO {
   @IsEmail(undefined, { message: 'Please enter a valid email.' })
   email: string;
 
-  @IsOptional()
-  @Matches(/^[0-9A-Z]{4,24}$|^$/i, {
-    message:
-      'Usernames can only contain letters and numbers for now and must be between 4-24 characters long.',
-  })
-  username?: string;
-
   @IsStrongPassword(
     {
       minLength: 10,
@@ -25,4 +18,11 @@ export class UserCreateDTO {
     }
   )
   passphrase: string;
+
+  @IsOptional()
+  @Matches(/^[0-9A-Z]{4,24}$|^$/i, {
+    message:
+      'Usernames can only contain letters and numbers for now and must be between 4-24 characters long.',
+  })
+  username?: string;
 }
