@@ -1,4 +1,4 @@
-import type { Actions } from '@sveltejs/kit';
+import type { Actions } from './$types';
 
 import { sessionController } from '$lib/server/feature/session';
 

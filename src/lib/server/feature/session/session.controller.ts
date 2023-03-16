@@ -1,11 +1,11 @@
-import { ValidateDTO } from '$lib/shared/services/form-validation.service';
 import { fail } from '@sveltejs/kit';
+import { ValidateFormData } from 'class-validator-svelte';
 
 import { SessionCreateDTO } from './session.create.dto';
 
 class SessionController {
-  @ValidateDTO(SessionCreateDTO)
-  async post() {
+  @ValidateFormData(SessionCreateDTO)
+  post() {
     // // TODO: Create session
     // throw redirect(303, '/app');
 
