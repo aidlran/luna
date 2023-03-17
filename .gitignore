@@ -2,8 +2,9 @@
 .env.*
 
 .svelte-kit
+.vercel
 
-.vscode
-!.vscode/extensions.json
+/.vscode/*
+!/.vscode/extensions.json
 
 node_modules
