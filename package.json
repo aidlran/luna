@@ -15,18 +15,21 @@
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "lint": "prettier --plugin-search-dir . --check . && eslint .",
-    "format": "prettier --plugin-search-dir . --write .",
+    "prettier": "prettier --plugin-search-dir . --write .",
+    "prisma:generate": "prisma generate",
     "prisma:push": "prisma db push"
   },
   "dependencies": {
     "@prisma/client": "^4.11.0",
     "argon2": "^0.30.3",
     "class-validator": "^0.14.0",
-    "class-validator-svelte": "github:aidlran/class-validator-svelte#preview"
+    "class-validator-svelte": "github:aidlran/class-validator-svelte#preview",
+    "jsonwebtoken": "^9.0.0"
   },
   "devDependencies": {
     "@sveltejs/adapter-vercel": "^2.3.1",
     "@sveltejs/kit": "^1.0.0-next.587",
+    "@types/jsonwebtoken": "^9.0.1",
     "@typescript-eslint/eslint-plugin": "^5.55.0",
     "@typescript-eslint/parser": "^5.55.0",
     "eslint": "^8.36.0",
