@@ -2,13 +2,13 @@
   import { afterUpdate, onMount } from 'svelte';
   import { enhance } from '$app/forms';
 
-  import { AuthForm } from '$lib/client/components';
   import { generateUsernameFromEmail } from '$lib/shared/services/username.service';
+  import { AuthForm } from '$lib/client/components';
 
   export let form;
+  export let data;
 
   let email: string;
-  let passphrase: string;
   let usernameInput: string;
   let usernameGenerated: string;
 
@@ -44,28 +44,42 @@
 </script>
 
 <AuthForm errors={form?.errors}>
-  <form slot="form" method="POST" on:submit|preventDefault={onFormSubmit} use:enhance>
-    <label>
-      Email *
-      <input
-        type="email"
-        name="email"
-        required
-        maxLength="255"
-        bind:value={email}
-        bind:this={initialFocus}
-        on:input={onEmailChange}
-      />
-    </label>
-    <label>
-      Passphrase *
-      <input type="password" name="passphrase" required minLength="10" bind:value={passphrase} />
-    </label>
-    <label>
-      Username
-      <input name="username" placeholder={usernameGenerated} maxLength="32" bind:value={usernameInput} />
-    </label>
-    <input type="submit" value="Sign Up" />
+  <form
+    slot="form"
+    method="POST"
+    action={data.signUpCodeValid ? '?/signUp' : '?/submitCode'}
+    on:submit|preventDefault={data.signUpCodeValid ? onFormSubmit : null}
+    use:enhance
+  >
+    {#if data.signUpCodeValid}
+      <label>
+        Email *
+        <input
+          type="email"
+          name="email"
+          required
+          maxLength="255"
+          bind:value={email}
+          bind:this={initialFocus}
+          on:input={onEmailChange}
+        />
+      </label>
+      <label>
+        Passphrase *
+        <input type="password" name="passphrase" required minLength="10" />
+      </label>
+      <label>
+        Username
+        <input name="username" placeholder={usernameGenerated} maxLength="32" bind:value={usernameInput} />
+      </label>
+      <input type="submit" value="Sign Up" />
+    {:else}
+      <label>
+        Sign Up Code *
+        <input name="signUpCode" required maxLength="48" bind:this={initialFocus} />
+      </label>
+      <input type="submit" value="Submit" />
+    {/if}
   </form>
 
   <p slot="footer">

@@ -1,6 +1,6 @@
 import type { Actions } from './$types';
 
-import { sessionController } from '$lib/server/feature/session';
+import { sessionController } from '$lib/server/model/session';
 
 export const actions: Actions = {
   default: sessionController.post,
