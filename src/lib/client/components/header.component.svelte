@@ -1,1 +1,34 @@
-<header />
+<header>
+  <div class="button">
+    <a href="/logout">Log Out</a>
+  </div>
+</header>
+
+<style>
+  header {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    height: var(--header-height);
+    padding: 8px;
+    border-bottom: var(--border);
+  }
+
+  header div.button {
+    display: flex;
+    height: 100%;
+    width: var(--header-height);
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  header div.button:hover {
+    background: var(--colour-hover);
+  }
+
+  div.button a {
+    margin: auto;
+    text-align: center;
+    font-size: 0.9rem;
+  }
+</style>

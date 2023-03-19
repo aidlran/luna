@@ -1,5 +1,8 @@
 :root {
+  --colour-link: blue;
+  --colour-hover: #ddd;
   --border: 2px solid #000;
+  --header-height: 50px;
 
   font-family: sans-serif;
   font-size: 0.9em;

@@ -3,6 +3,6 @@ import { validateJWT } from '$lib/server/services';
 
 export function load({ cookies }) {
   if (!validateJWT(cookies)) {
-    throw redirect(307, '/login');
+    throw redirect(303, '/login');
   }
 }

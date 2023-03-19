@@ -4,11 +4,12 @@ import * as JWT from 'jsonwebtoken';
 
 import type { JwtUserData } from '../interfaces';
 
-export const JWT_MAX_AGE = 60 * 60 * 24 * 7;
+export const JWT_COOKIE_NAME = 'jwt';
+export const JWT_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
 
 export function issueJWT(cookies: Cookies, user: JwtUserData) {
   cookies.set(
-    'jwt',
+    JWT_COOKIE_NAME,
     JWT.sign({ user }, env.JWT_SECRET, {
       algorithm: 'HS512',
       issuer: 'projex',
@@ -16,7 +17,7 @@ export function issueJWT(cookies: Cookies, user: JwtUserData) {
       expiresIn: '7d',
     }),
     {
-      maxAge: JWT_MAX_AGE,
+      maxAge: JWT_COOKIE_MAX_AGE,
       httpOnly: true,
       path: '/',
       secure: env.NODE_ENV.trim().startsWith('prod'),
@@ -26,7 +27,7 @@ export function issueJWT(cookies: Cookies, user: JwtUserData) {
 }
 
 export function validateJWT(cookies: Cookies): boolean {
-  const jwt = cookies.get('jwt');
+  const jwt = cookies.get(JWT_COOKIE_NAME);
 
   if (jwt) {
     try {
@@ -37,6 +38,10 @@ export function validateJWT(cookies: Cookies): boolean {
     }
   }
 
-  cookies.delete('jwt');
+  deleteJWT(cookies);
   return false;
+}
+
+export function deleteJWT(cookies: Cookies) {
+  cookies.delete(JWT_COOKIE_NAME);
 }
