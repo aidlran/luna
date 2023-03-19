@@ -1,11 +1,16 @@
 :root {
-  --colour-link: blue;
+  --colour-text: #111;
+  --colour-link: #00f;
   --colour-hover: #ddd;
-  --border: 2px solid #000;
+  --colour-danger: #cd5c5c;
+  --colour-safe: #080;
+
+  --border: 2px solid var(--colour-text);
   --header-height: 50px;
 
   font-family: sans-serif;
   font-size: 0.9em;
+  color: var(--colour-text);
 }
 
 body {
@@ -19,7 +24,7 @@ label {
 
 input:focus {
   outline: none;
-  border-color: #006;
+  border-color: var(--colour-link);
 }
 
 input[type='submit']:not(:disabled) {
@@ -27,5 +32,5 @@ input[type='submit']:not(:disabled) {
 }
 
 p.error {
-  color: #cd5c5c;
+  color: var(--colour-danger);
 }

@@ -1,8 +1,9 @@
+import type { User } from '@prisma/client';
 import { hash, verify } from 'argon2';
+
 import { prismaClientService } from '$lib/server/services/prisma-client.service';
 import { generateUsernameFromEmail, sanitizeUsername } from '$lib/shared/services/username.service';
 import type { UserCreateDTO } from './user.create.dto';
-import type { User } from '@prisma/client';
 import type { SessionCreateDTO } from '../session';
 
 export const INCORRECT_PASSPHRASE = 'INCORRECT_PASSPHRASE';
@@ -22,19 +23,22 @@ export async function createOne(user: UserCreateDTO) {
 }
 
 export async function findOneAndVerify(sessionCreateDTO: SessionCreateDTO) {
-  const user = await prismaClientService.user.findFirstOrThrow({
+  const foundUser = await prismaClientService.user.findFirstOrThrow({
     where: {
       OR: [{ email: sessionCreateDTO.identifier }, { username: sessionCreateDTO.identifier }],
     },
   });
 
-  if (!(await verify(user.passwordHash, sessionCreateDTO.passphrase))) {
+  if (!(await verify(foundUser.passwordHash, sessionCreateDTO.passphrase))) {
     throw INCORRECT_PASSPHRASE;
   }
 
-  return sanitiseUser(user);
+  return sanitiseUser(foundUser);
 }
 
+/**
+ * Makes sure `passwordHash` is not returned in the result.
+ */
 function sanitiseUser(user: User) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { passwordHash, ...sanitisedUser } = user;

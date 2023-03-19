@@ -34,7 +34,7 @@ class UserController {
 
     issueJWT(event.cookies, user);
 
-    throw redirect(303, '/app');
+    throw redirect(303, '/dashboard');
   }
 
   @ValidateFormData(SignUpCodeDTO)

@@ -26,20 +26,22 @@ export function issueJWT(cookies: Cookies, user: JwtUserData) {
   );
 }
 
-export function validateJWT(cookies: Cookies): boolean {
+/**
+ * Parses, validates, and returns the JWT session. Clears it if anything is amiss.
+ */
+export function validateJWT(cookies: Cookies) {
   const jwt = cookies.get(JWT_COOKIE_NAME);
 
   if (jwt) {
     try {
-      JWT.verify(jwt, env.JWT_SECRET);
-      return true;
+      return JWT.verify(jwt, env.JWT_SECRET) as JWT.JwtPayload;
     } catch (error) {
       /* fallthrough */
     }
   }
 
   deleteJWT(cookies);
-  return false;
+  return null;
 }
 
 export function deleteJWT(cookies: Cookies) {
