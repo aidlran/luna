@@ -5,8 +5,8 @@ import { env } from '$env/dynamic/private';
 import { fail, redirect, type Cookies } from '@sveltejs/kit';
 import { validateJWT } from '$lib/server/services';
 
-export function load({ cookies }) {
-  if (validateJWT(cookies)) {
+export async function load({ cookies }) {
+  if (await validateJWT(cookies)) {
     throw redirect(303, '/dashboard');
   }
   return {

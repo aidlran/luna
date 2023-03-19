@@ -25,7 +25,7 @@ class SessionController {
       // TODO: return a message if the database provider is down and notify us
     }
 
-    issueJWT(event.cookies, user);
+    await issueJWT(event.cookies, user);
 
     throw redirect(303, '/dashboard');
   }

@@ -24,7 +24,7 @@
     "argon2": "^0.30.3",
     "class-validator": "^0.14.0",
     "class-validator-svelte": "github:aidlran/class-validator-svelte#preview",
-    "jsonwebtoken": "^9.0.0"
+    "jose": "^4.13.1"
   },
   "devDependencies": {
     "@sveltejs/adapter-vercel": "^2.4.0",

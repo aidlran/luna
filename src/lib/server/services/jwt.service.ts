@@ -1,21 +1,23 @@
 import { env } from '$env/dynamic/private';
 import type { Cookies } from '@sveltejs/kit';
-import * as JWT from 'jsonwebtoken';
+import { jwtVerify, SignJWT } from 'jose';
 
 import type { JwtUserData } from '../interfaces';
 
 export const JWT_COOKIE_NAME = 'jwt';
 export const JWT_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
+export const JWT_SECRET = new TextEncoder().encode(env.JWT_SECRET);
 
-export function issueJWT(cookies: Cookies, user: JwtUserData) {
+export async function issueJWT(cookies: Cookies, user: JwtUserData) {
   cookies.set(
     JWT_COOKIE_NAME,
-    JWT.sign({ user }, env.JWT_SECRET, {
-      algorithm: 'HS512',
-      issuer: 'projex',
-      subject: user.name || user.email,
-      expiresIn: '7d',
-    }),
+    await new SignJWT({ user })
+      .setProtectedHeader({ alg: 'HS512' })
+      .setIssuedAt()
+      .setIssuer('projex')
+      .setSubject(user.name || user.email)
+      .setExpirationTime('7d')
+      .sign(JWT_SECRET),
     {
       maxAge: JWT_COOKIE_MAX_AGE,
       httpOnly: true,
@@ -29,16 +31,17 @@ export function issueJWT(cookies: Cookies, user: JwtUserData) {
 /**
  * Parses, validates, and returns the JWT session. Clears it if anything is amiss.
  */
-export function validateJWT(cookies: Cookies) {
+export async function validateJWT(cookies: Cookies) {
   const jwt = cookies.get(JWT_COOKIE_NAME);
 
-  if (jwt) {
+  if (jwt)
     try {
-      return JWT.verify(jwt, env.JWT_SECRET) as JWT.JwtPayload;
+      return await jwtVerify(jwt, JWT_SECRET, {
+        issuer: 'projex',
+      });
     } catch (error) {
       /* fallthrough */
     }
-  }
 
   deleteJWT(cookies);
   return null;

@@ -32,7 +32,7 @@ class UserController {
       }
     }
 
-    issueJWT(event.cookies, user);
+    await issueJWT(event.cookies, user);
 
     throw redirect(303, '/dashboard');
   }
