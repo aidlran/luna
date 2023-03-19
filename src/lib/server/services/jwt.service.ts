@@ -24,3 +24,19 @@ export function issueJWT(cookies: Cookies, user: JwtUserData) {
     }
   );
 }
+
+export function validateJWT(cookies: Cookies): boolean {
+  const jwt = cookies.get('jwt');
+
+  if (jwt) {
+    try {
+      JWT.verify(jwt, env.JWT_SECRET);
+      return true;
+    } catch (error) {
+      /* fallthrough */
+    }
+  }
+
+  cookies.delete('jwt');
+  return false;
+}
