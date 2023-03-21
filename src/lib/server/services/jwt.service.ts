@@ -1,6 +1,6 @@
 import { env } from '$env/dynamic/private';
 import type { Cookies } from '@sveltejs/kit';
-import { jwtVerify, SignJWT } from 'jose';
+import { jwtVerify, SignJWT, type JWTVerifyResult } from 'jose';
 
 import type { JwtUserData } from '../interfaces';
 
@@ -36,9 +36,9 @@ export async function validateJWT(cookies: Cookies) {
 
   if (jwt)
     try {
-      return await jwtVerify(jwt, JWT_SECRET, {
+      return (await jwtVerify(jwt, JWT_SECRET, {
         issuer: 'projex',
-      });
+      })) as JWTVerifyResult & { user: JwtUserData };
     } catch (error) {
       /* fallthrough */
     }

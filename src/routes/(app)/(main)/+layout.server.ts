@@ -1,5 +1,5 @@
 import { redirect } from '@sveltejs/kit';
-import { userHasKey } from '$lib/server/model/keypair/keypair.repository';
+import { userHasKey } from '$lib/server/model/keypair';
 
 export async function load({ parent }) {
   const { session } = await parent();
