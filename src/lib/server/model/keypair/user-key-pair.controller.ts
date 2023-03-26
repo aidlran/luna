@@ -12,7 +12,7 @@ class UserKeyPairController {
 
     if (!session) return fail(403);
 
-    return createUserKeyPair(session.user.id, request.dto);
+    return createUserKeyPair(session.payload?.user?.id, request.dto);
   }
 }
 

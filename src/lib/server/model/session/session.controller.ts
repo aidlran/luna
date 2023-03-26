@@ -19,7 +19,7 @@ class SessionController {
       } else if (error instanceof PrismaClientKnownRequestError && error.code === 'P2025') {
         return fail(404, { errors: { identifier: ['Account not found.'] } });
       } else {
-        console.log(error);
+        console.error(error);
         return fail(500, { errors: { '': ['I am having a bit of a moment. Please come back later.'] } });
       }
       // TODO: return a message if the database provider is down and notify us

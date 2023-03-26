@@ -22,7 +22,7 @@ export async function issueJWT(cookies: Cookies, user: JwtUserData) {
       maxAge: JWT_COOKIE_MAX_AGE,
       httpOnly: true,
       path: '/',
-      secure: env.NODE_ENV.trim().startsWith('prod'),
+      secure: env.NODE_ENV?.trim().startsWith('prod'),
       sameSite: 'strict',
     }
   );
@@ -38,7 +38,7 @@ export async function validateJWT(cookies: Cookies) {
     try {
       return (await jwtVerify(jwt, JWT_SECRET, {
         issuer: 'projex',
-      })) as JWTVerifyResult & { user: JwtUserData };
+      })) as JWTVerifyResult & { payload: { user: JwtUserData } };
     } catch (error) {
       /* fallthrough */
     }

@@ -1,9 +1,8 @@
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
-import { fail, redirect, type RequestEvent } from '@sveltejs/kit';
+import { fail, type RequestEvent } from '@sveltejs/kit';
 import { ValidateFormData } from 'class-validator-svelte';
 
 import { issueJWT } from '$lib/server/services';
-
 import * as UserRepository from './user.repository';
 import { UserCreateDTO } from './user.create.dto';
 import { SignUpCodeDTO } from './sign-up-code.dto';
@@ -32,9 +31,9 @@ class UserController {
       }
     }
 
-    await issueJWT(event.cookies, user);
+    issueJWT(event.cookies, user);
 
-    throw redirect(303, '/dashboard');
+    return { user };
   }
 
   @ValidateFormData(SignUpCodeDTO)

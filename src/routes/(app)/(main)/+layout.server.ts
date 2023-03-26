@@ -1,11 +1,12 @@
 import { redirect } from '@sveltejs/kit';
 import { userHasKey } from '$lib/server/model/keypair';
+import { deleteJWT } from '$lib/server/services';
 
-export async function load({ parent }) {
+export async function load({ cookies, parent }) {
   const { session } = await parent();
 
-  // Redirect the user to onboard if they have no key pairs
-  if (!(await userHasKey(session.user?.id))) {
-    throw redirect(303, '/onboard');
+  if (!(await userHasKey(session.payload?.user?.id))) {
+    deleteJWT(cookies);
+    throw redirect(303, '/login?no_keys');
   }
 }

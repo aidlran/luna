@@ -1,90 +1,147 @@
 <script lang="ts">
   import { afterUpdate, onMount } from 'svelte';
   import { enhance } from '$app/forms';
+  import { page } from '$app/stores';
 
+  import { generateKey } from 'openpgp';
   import { generateUsernameFromEmail } from '$lib/shared/services/username.service';
-  import { AuthForm } from '$lib/client/components';
 
   export let form;
   export let data;
 
+  let errors: Record<string, string[]> | undefined;
+
   let email: string;
+  let passphrase: string;
   let usernameInput: string;
   let usernameGenerated: string;
 
   let initialFocus: HTMLInputElement;
+  let submitButton: HTMLInputElement;
 
   let willClearUsername = false;
-
-  onMount(() => initialFocus.focus());
 
   function onEmailChange() {
     usernameGenerated = generateUsernameFromEmail(email);
   }
 
-  /**
-   * If the user hasn't input a username, we need to copy the
-   * auto-generated one into the input value before submit.
-   */
   function onFormSubmit() {
+    // Use a generated username as the input's value
     if (!usernameInput?.length) {
       willClearUsername = true;
       usernameInput = usernameGenerated;
     }
   }
 
-  // After a failed form submit with the auto-generated username, we need to
-  // clear the input value so that the placeholder bind is visible again.
-  afterUpdate(() => {
+  function afterFormSubmit() {
+    // If used generated username, clear input value
     if (willClearUsername) {
       usernameInput = '';
       willClearUsername = false;
     }
+  }
+
+  async function tryCreateKey() {
+    if (form?.user) {
+      const keyPair = await generateKey({
+        format: 'armored',
+        passphrase,
+        userIDs: {
+          email: form.user.email,
+          name: form.user.name || form.user.username,
+        },
+      });
+
+      const formData = new FormData();
+      formData.append('privateKey', keyPair.privateKey);
+      formData.append('publicKey', keyPair.publicKey);
+
+      const response = await fetch('/api/me/key', {
+        body: formData,
+        method: 'POST',
+      });
+
+      if (response.ok) {
+        window.location.assign('/dashboard');
+      }
+    }
+  }
+
+  onMount(() => {
+    initialFocus.focus();
+  });
+
+  afterUpdate(() => {
+    submitButton.disabled = false;
+    errors = form?.errors;
+    tryCreateKey();
   });
 </script>
 
-<AuthForm errors={form?.errors}>
+{#if data.signUpCodeValid}
   <form
-    slot="form"
     method="POST"
-    action={data.signUpCodeValid ? '?/signUp' : '?/submitCode'}
-    on:submit|preventDefault={data.signUpCodeValid ? onFormSubmit : null}
-    use:enhance
+    action="?/createUser"
+    on:submit|preventDefault={onFormSubmit}
+    use:enhance={afterFormSubmit}
   >
-    {#if data.signUpCodeValid}
-      <label>
-        Email *
-        <input
-          type="email"
-          name="email"
-          required
-          maxLength="255"
-          bind:value={email}
-          bind:this={initialFocus}
-          on:input={onEmailChange}
-        />
-      </label>
-      <label>
-        Passphrase *
-        <input type="password" name="passphrase" required minLength="10" />
-      </label>
-      <label>
-        Username
-        <input name="username" placeholder={usernameGenerated} maxLength="32" bind:value={usernameInput} />
-      </label>
-      <input type="submit" value="Sign Up" />
-    {:else}
-      <label>
-        Sign Up Code *
-        <input name="signUpCode" required maxLength="48" bind:this={initialFocus} />
-      </label>
-      <input type="submit" value="Submit" />
+    <label>
+      Email *
+      <input
+        type="email"
+        name="email"
+        required
+        maxLength="255"
+        bind:value={email}
+        bind:this={initialFocus}
+        on:input={onEmailChange}
+      />
+    </label>
+    {#if errors?.email}
+      <p class="error">{errors.email.join(' ')}</p>
     {/if}
-  </form>
 
-  <p slot="footer">
-    Already have an account?
-    <br />
-    <a href="login">Log in</a> here.
-  </p>
-</AuthForm>
+    <label>
+      Passphrase *
+      <input type="password" name="passphrase" required minLength="10" bind:value={passphrase} />
+    </label>
+    {#if errors?.passphrase}
+      <p class="error">{errors.passphrase.join(' ')}</p>
+    {/if}
+
+    <label>
+      Username
+      <input name="username" placeholder={usernameGenerated} maxLength="32" bind:value={usernameInput} />
+    </label>
+    {#if errors?.username}
+      <p class="error">{errors.username.join(' ')}</p>
+    {/if}
+
+    <input type="submit" value="Sign Up" disabled bind:this={submitButton} />
+  </form>
+{:else}
+  <form method="POST" action="?/submitCode" use:enhance>
+    <label>
+      Sign Up Code *
+      <input name="signUpCode" required maxLength="48" bind:this={initialFocus} />
+    </label>
+    {#if errors?.signUpCode}
+      <p class="error">{errors.signUpCode.join(' ')}</p>
+    {/if}
+    {#if $page.url.searchParams.has('invalid_code')}
+      <p class="error">Invalid sign up code.</p>
+    {/if}
+
+    <input type="submit" value="Submit" disabled bind:this={submitButton} />
+  </form>
+{/if}
+
+{#if errors?.['']}
+  <p class="error">{errors[''].join(' ')}</p>
+{/if}
+
+<p>
+  Already have an account?
+  <br />
+  <a href="login">Log in</a> here.
+</p>
