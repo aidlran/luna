@@ -20,8 +20,8 @@
     max-width: calc(100% - 20px);
     max-height: calc(100% - 20px);
     padding: 36px 24px;
-    border: 2px solid #ffffff50;
-    background: #fafaffb9;
+    border: var(--border);
+    background: rgba(var(--colour-background), var(--alpha-level-1));
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
     box-shadow: -4px -4px 24px 4px #5a5a7010;

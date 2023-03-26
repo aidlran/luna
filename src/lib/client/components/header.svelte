@@ -12,6 +12,9 @@
     height: var(--header-height);
     padding: 8px;
     border-bottom: var(--border);
+    background: rgba(var(--colour-background), var(--alpha-level-1));
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
   }
 
   header div.button {

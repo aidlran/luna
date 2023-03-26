@@ -8,3 +8,17 @@
 <main>
   <slot />
 </main>
+
+<style>
+  :global(body) {
+    height: 100vh;
+    max-height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-flow: column nowrap;
+  }
+
+  main {
+    flex-grow: 1;
+  }
+</style>
