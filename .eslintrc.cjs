@@ -11,7 +11,8 @@ module.exports = {
   parserOptions: {
     sourceType: 'module',
     ecmaVersion: 2020,
-    project: './tsconfig.lint.json',
+    project: 'tsconfig.lint.json',
+    tsconfigRootDir: __dirname,
   },
   env: {
     browser: true,
