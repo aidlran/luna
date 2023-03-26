@@ -29,7 +29,13 @@
 
   .centered {
     margin: auto;
-    max-width: 350px;
+    width: 100%;
+  }
+
+  @media only screen and (min-width: 600px) {
+    .centered {
+      max-width: 350px;
+    }
   }
 
   :global(label) {
