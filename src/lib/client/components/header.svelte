@@ -1,4 +1,9 @@
+<script lang="ts">
+  export let username: string;
+</script>
+
 <header>
+  <span>{username}</span>
   <div class="button">
     <a href="/logout">Log Out</a>
   </div>
@@ -10,6 +15,7 @@
     justify-content: flex-end;
     align-items: center;
     height: var(--header-height);
+    gap: 8px;
     padding: 8px;
     border-bottom: var(--border);
     background: rgba(var(--colour-background), var(--alpha-level-1));

@@ -1,0 +1,3 @@
+[submodule "packages/key-manager"]
+	path = packages/key-manager
+	url = https://github.com/enclavetech/key-manager

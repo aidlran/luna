@@ -1,10 +1,7 @@
-import type { User } from '@prisma/client';
 import { hash, verify } from 'argon2';
 
-import { prismaClientService } from '$lib/server/services/prisma-client.service';
-import { generateUsernameFromEmail, sanitizeUsername } from '$lib/shared/services/username.service';
-import type { UserCreateDTO } from './user.create.dto';
-import type { SessionCreateDTO } from '../session';
+import { prismaClientService } from '$lib/server';
+import { generateUsernameFromEmail, sanitizeUsername, UserCreateDTO, SessionCreateDTO } from '$lib/shared';
 
 export const INCORRECT_PASSPHRASE = 'INCORRECT_PASSPHRASE';
 
@@ -12,20 +9,53 @@ export async function createOne(user: UserCreateDTO) {
   const passwordHash = await hash(user.passphrase);
   const email = user.email.trim().toLowerCase();
   const username = user.username?.length ? sanitizeUsername(user.username) : generateUsernameFromEmail(email);
+  const { privateKey, publicKey } = user;
 
   if (username.length < 4) throw 'Username too short';
 
-  const createdUser = await prismaClientService.user.create({
-    data: { email, passwordHash, username },
+  const result = await prismaClientService.userKeyPair.create({
+    data: {
+      user: {
+        create: { email, passwordHash, username },
+      },
+      keyPair: {
+        create: { privateKey, publicKey },
+      },
+    },
+    select: {
+      user: true,
+      keyPair: true,
+    },
   });
 
-  return sanitiseUser(createdUser);
+  return {
+    ...sanitiseUser(result.user),
+    userKeyPairs: [
+      {
+        keyPair: result.keyPair,
+      },
+    ],
+  };
 }
 
 export async function findOneAndVerify(sessionCreateDTO: SessionCreateDTO) {
   const foundUser = await prismaClientService.user.findFirstOrThrow({
     where: {
       OR: [{ email: sessionCreateDTO.identifier }, { username: sessionCreateDTO.identifier }],
+    },
+    select: {
+      createdAt: true,
+      updatedAt: true,
+      username: true,
+      id: true,
+      email: true,
+      name: true,
+      passwordHash: true,
+      userKeyPairs: {
+        select: {
+          keyPair: true,
+        },
+      },
     },
   });
 
@@ -39,7 +69,7 @@ export async function findOneAndVerify(sessionCreateDTO: SessionCreateDTO) {
 /**
  * Makes sure `passwordHash` is not returned in the result.
  */
-function sanitiseUser(user: User) {
+function sanitiseUser<T extends { passwordHash: string }>(user: T) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { passwordHash, ...sanitisedUser } = user;
   return sanitisedUser;

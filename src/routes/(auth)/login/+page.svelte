@@ -1,49 +1,93 @@
 <script lang="ts">
-  import { afterUpdate, onMount } from 'svelte';
-  import { enhance } from '$app/forms';
-  import { page } from '$app/stores';
+  import { onMount } from 'svelte';
+  import { goto } from '$app/navigation';
+
+  import { decryptKey, readPrivateKey } from 'openpgp';
+  import { KeyManager } from 'key-manager';
+
+  import { createSession, FetchError } from '$lib/client';
 
   export let form;
 
-  let errors: Record<string, String[]> | undefined = form?.errors;
+  let keyManager: KeyManager;
+
+  let displayedError: string | undefined = form?.error;
 
   let identifier: string;
   let passphrase: string;
 
+  let disabled = true;
   let initialFocus: HTMLInputElement;
-  onMount(() => initialFocus.focus());
 
-  afterUpdate(() => {
-    errors = form?.errors;
+  onMount(async () => {
+    initialFocus.focus();
+    keyManager = new KeyManager();
+    disabled = false;
   });
+
+  async function onSubmit(event: SubmitEvent) {
+    disabled = true;
+    let loginResult;
+
+    // Whole thing is wrapped in a try/catch to un-disable form on error
+    // try/catch blocks within are for displaying a relevant error message
+    try {
+      // Try to log in
+      try {
+        loginResult = await createSession({ identifier, passphrase });
+      } catch (error) {
+        if (error instanceof FetchError) {
+          displayedError = error.friendlyMessage;
+        }
+        throw error;
+      }
+
+      // Display error message on fail
+      if (loginResult.message) {
+        displayedError = loginResult.message;
+        disabled = false;
+      }
+
+      // Unlock and redirect on success
+      else if (loginResult.user) {
+        // TODO: centralised state for key manager
+        await Promise.all(
+          loginResult.user.userKeyPairs.map(async (userKeyPair) => {
+            const privateKey = await readPrivateKey({ armoredKey: userKeyPair.keyPair.privateKey });
+            const decryptedKey = await decryptKey({ privateKey, passphrase });
+            return await keyManager.put(userKeyPair.keyPair.id, decryptedKey.armor());
+          })
+        );
+        goto('/dashboard');
+      }
+    } catch (error) {
+      // Reset form on error
+      console.log(error);
+      disabled = false;
+    }
+  }
 </script>
 
-<form method="POST" use:enhance>
+<form method="POST" on:submit|preventDefault={onSubmit}>
   <label>
     <span>Username or email</span>
-    <input name="identifier" required bind:value={identifier} bind:this={initialFocus} />
+    <input bind:value={identifier} required bind:this={initialFocus} />
   </label>
 
   <label>
     <span>Passphrase</span>
-    <input type="password" name="passphrase" required bind:value={passphrase} />
+    <input bind:value={passphrase} required type="password" />
   </label>
 
-  <input type="submit" value="Log In" />
+  <input type="submit" value="Log In" {disabled} />
 </form>
 
-{#if $page.url.searchParams.has('no_keys')}
-  <p class="error">Please re-authenticate to finish onboarding.</p>
-{/if}
-
-{#if errors}
-  {#each Object.values(errors) as errorList}
-    <p class="error">{errorList.join(' ')}</p>
-  {/each}
+{#if displayedError}
+  <p class="error">{displayedError}</p>
 {/if}
 
 <p>
   Don't have an account?
   <br />
-  <a href="signup">Sign up</a> here.
+  <a href="/signup">Sign up</a> here.
 </p>

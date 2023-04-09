@@ -1,9 +1,11 @@
-<script>
+<script lang="ts">
   import '$lib/client/styles/global.styles.css';
-  import { Header } from '$lib/client/components';
+  import { Header } from '$lib/client';
+
+  export let data;
 </script>
 
-<Header />
+<Header username={data.session.payload.user.username} />
 
 <main>
   <slot />

@@ -1,147 +1,146 @@
 <script lang="ts">
-  import { afterUpdate, onMount } from 'svelte';
-  import { enhance } from '$app/forms';
-  import { page } from '$app/stores';
+  import { onMount } from 'svelte';
+  import { goto } from '$app/navigation';
 
-  import { generateKey } from 'openpgp';
-  import { generateUsernameFromEmail } from '$lib/shared/services/username.service';
+  import { decryptKey, generateKey, readPrivateKey } from 'openpgp';
+
+  import { KeyManager } from 'key-manager';
+
+  import { generateUsernameFromEmail } from '$lib/shared/services';
+  import { FetchError, createUser } from '$lib/client';
 
   export let form;
-  export let data;
 
-  let errors: Record<string, string[]> | undefined;
+  let keyManager: KeyManager;
+
+  let errors: Record<string, string[]> = form?.errors ?? {};
 
   let email: string;
   let passphrase: string;
   let usernameInput: string;
   let usernameGenerated: string;
 
+  let disabled = true;
   let initialFocus: HTMLInputElement;
-  let submitButton: HTMLInputElement;
 
-  let willClearUsername = false;
+  onMount(async () => {
+    initialFocus.focus();
+    keyManager = new KeyManager();
+    disabled = false;
+  });
 
   function onEmailChange() {
     usernameGenerated = generateUsernameFromEmail(email);
   }
 
-  function onFormSubmit() {
-    // Use a generated username as the input's value
-    if (!usernameInput?.length) {
-      willClearUsername = true;
-      usernameInput = usernameGenerated;
-    }
-  }
+  async function onSubmit() {
+    disabled = true;
+    const username = usernameInput || usernameGenerated;
+    let keyPair;
+    let createUserResult;
 
-  function afterFormSubmit() {
-    // If used generated username, clear input value
-    if (willClearUsername) {
-      usernameInput = '';
-      willClearUsername = false;
-    }
-  }
-
-  async function tryCreateKey() {
-    if (form?.user) {
-      const keyPair = await generateKey({
-        format: 'armored',
-        passphrase,
-        userIDs: {
-          email: form.user.email,
-          name: form.user.name || form.user.username,
-        },
-      });
-
-      const formData = new FormData();
-      formData.append('privateKey', keyPair.privateKey);
-      formData.append('publicKey', keyPair.publicKey);
-
-      const response = await fetch('/api/me/key', {
-        body: formData,
-        method: 'POST',
-      });
-
-      if (response.ok) {
-        window.location.assign('/dashboard');
+    // Whole thing is wrapped in a try/catch to un-disable form on error
+    // try/catch blocks within are for displaying a relevant error message
+    try {
+      // Generate a key pair
+      try {
+        keyPair = await generateKey({
+          format: 'armored',
+          passphrase,
+          userIDs: {
+            email,
+            name: username,
+          },
+        });
+      } catch (error) {
+        errors[''] = ["Could not create key pair. Please ensure you've entered a valid email address."];
+        throw error;
       }
+
+      // Extract armored keys from keyPair
+      const { privateKey, publicKey } = keyPair;
+
+      // Create the user
+      try {
+        createUserResult = await createUser({
+          email,
+          passphrase,
+          username,
+          privateKey,
+          publicKey,
+        });
+      } catch (error) {
+        if (error instanceof FetchError) {
+          errors[''] = [error.friendlyMessage];
+        }
+        throw error;
+      }
+
+      // Display error messages on fail
+      if (createUserResult.errors) {
+        errors = createUserResult.errors;
+        disabled = false;
+      }
+
+      // Unlock and redirect on success
+      else if (createUserResult.user) {
+        // TODO: centralised state for key manager
+        await Promise.all(
+          createUserResult.user.userKeyPairs.map(async (userKeyPair) => {
+            const privateKey = await readPrivateKey({ armoredKey: userKeyPair.keyPair.privateKey });
+            const decryptedKey = await decryptKey({ privateKey, passphrase });
+            return await keyManager.put(userKeyPair.keyPair.id, decryptedKey.armor());
+          })
+        );
+        goto('/dashboard');
+      }
+    } catch (error) {
+      // Reset form on error
+      console.error(error);
+      disabled = false;
     }
   }
-
-  onMount(() => {
-    initialFocus.focus();
-  });
-
-  afterUpdate(() => {
-    submitButton.disabled = false;
-    errors = form?.errors;
-    tryCreateKey();
-  });
 </script>
 
-{#if data.signUpCodeValid}
-  <form
-    method="POST"
-    action="?/createUser"
-    on:submit|preventDefault={onFormSubmit}
-    use:enhance={afterFormSubmit}
-  >
-    <label>
-      Email *
-      <input
-        type="email"
-        name="email"
-        required
-        maxLength="255"
-        bind:value={email}
-        bind:this={initialFocus}
-        on:input={onEmailChange}
-      />
-    </label>
-    {#if errors?.email}
-      <p class="error">{errors.email.join(' ')}</p>
-    {/if}
+<form method="POST" on:submit|preventDefault={onSubmit}>
+  <label>
+    Email *
+    <input
+      type="email"
+      name="email"
+      required
+      maxLength="255"
+      bind:value={email}
+      bind:this={initialFocus}
+      on:input={onEmailChange}
+    />
+  </label>
 
-    <label>
-      Passphrase *
-      <input type="password" name="passphrase" required minLength="10" bind:value={passphrase} />
-    </label>
-    {#if errors?.passphrase}
-      <p class="error">{errors.passphrase.join(' ')}</p>
-    {/if}
+  {#if errors?.email}
+    <p class="error">{errors.email.join(' ')}</p>
+  {/if}
 
-    <label>
-      Username
-      <input name="username" placeholder={usernameGenerated} maxLength="32" bind:value={usernameInput} />
-    </label>
-    {#if errors?.username}
-      <p class="error">{errors.username.join(' ')}</p>
-    {/if}
+  <label>
+    Passphrase *
+    <input type="password" name="passphrase" required minLength="10" bind:value={passphrase} />
+  </label>
 
-    <input type="submit" value="Sign Up" disabled bind:this={submitButton} />
-  </form>
-{:else}
-  <form method="POST" action="?/submitCode" use:enhance>
-    <label>
-      Sign Up Code *
-      <input name="signUpCode" required maxLength="48" bind:this={initialFocus} />
-    </label>
-    {#if errors?.signUpCode}
-      <p class="error">{errors.signUpCode.join(' ')}</p>
-    {/if}
-    {#if $page.url.searchParams.has('invalid_code')}
-      <p class="error">Invalid sign up code.</p>
-    {/if}
+  {#if errors?.passphrase}
+    <p class="error">{errors.passphrase.join(' ')}</p>
+  {/if}
 
-    <input type="submit" value="Submit" disabled bind:this={submitButton} />
-  </form>
-{/if}
+  <label>
+    Username
+    <input name="username" placeholder={usernameGenerated} maxLength="32" bind:value={usernameInput} />
+  </label>
+
+  {#if errors?.username}
+    <p class="error">{errors.username.join(' ')}</p>
+  {/if}
+
+  <input type="submit" value="Sign Up" {disabled} />
+</form>
 
 {#if errors?.['']}
-  <p class="error">{errors[''].join(' ')}</p>
+  <p class="error">{errors?.[''].join(' ')}</p>
 {/if}
-
-<p>
-  Already have an account?
-  <br />
-  <a href="login">Log in</a> here.
-</p>

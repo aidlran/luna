@@ -1,5 +1,5 @@
 import { prismaClientService } from '$lib/server/services';
-import type { KeyPairCreateDTO } from './key-pair.create.dto';
+import type { KeyPairCreateDTO } from '$lib/shared';
 
 /**
  * @returns TRUE if we can find at least one keypair for the user, or FALSE otherwise.

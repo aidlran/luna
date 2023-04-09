@@ -1,7 +1,8 @@
 import { error, json } from '@sveltejs/kit';
 import { validateFormData } from 'class-validator-svelte';
-import { validateJWT } from '$lib/server/services';
-import { createUserKeyPair, KeyPairCreateDTO } from '$lib/server/model/keypair';
+
+import { validateJWT, KeyPairRepository } from '$lib/server';
+import { KeyPairCreateDTO } from '$lib/shared';
 
 export async function POST({ cookies, request }) {
   const session = await validateJWT(cookies);
@@ -10,5 +11,6 @@ export async function POST({ cookies, request }) {
   const formData = await validateFormData(await request.formData(), KeyPairCreateDTO);
   if (!formData.ok) throw error(400);
 
-  return json(await createUserKeyPair(session.payload?.user?.id, formData.dto));
+  return json(await KeyPairRepository.createUserKeyPair(session.payload?.user?.id, formData.dto));
 }
+POST;

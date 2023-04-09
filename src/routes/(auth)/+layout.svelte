@@ -73,6 +73,11 @@
     border-radius: 12px;
     font-size: 1.25rem;
     font-weight: bold;
+    box-shadow: 0 1px 16px 6px #5a5a701f;
+    transition-duration: 100ms;
+  }
+
+  :global(input[type='submit']:not(:disabled)) {
     background: rgb(131, 58, 180);
     background: linear-gradient(
       240deg,
@@ -81,8 +86,6 @@
       rgba(131, 58, 180, 1) 100%
     );
     color: #fff;
-    box-shadow: 0 1px 16px 6px #5a5a701f;
-    transition-duration: 100ms;
   }
 
   :global(p) {

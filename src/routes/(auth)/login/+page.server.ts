@@ -1,7 +1,6 @@
-import { redirect } from '@sveltejs/kit';
+import { fail, redirect } from '@sveltejs/kit';
 import type { Actions } from './$types';
 
-import { sessionController } from '$lib/server/model/session';
 import { validateJWT } from '$lib/server/services';
 
 export async function load({ cookies }) {
@@ -11,5 +10,7 @@ export async function load({ cookies }) {
 }
 
 export const actions: Actions = {
-  default: sessionController.post,
+  default: function () {
+    return fail(400, { error: 'Please enable JavaScript in your browser.' });
+  },
 };

@@ -1,6 +1,7 @@
 import { IsEmail, IsOptional, IsStrongPassword, Matches } from 'class-validator';
+import { KeyPairCreateDTO } from './key-pair.create.dto';
 
-export class UserCreateDTO {
+export class UserCreateDTO extends KeyPairCreateDTO {
   @IsEmail(undefined, { message: 'Please enter a valid email.' })
   email: string;
 
