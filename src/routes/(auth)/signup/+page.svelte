@@ -9,11 +9,9 @@
   import { generateUsernameFromEmail } from '$lib/shared/services';
   import { FetchError, createUser } from '$lib/client';
 
-  export let form;
-
   let keyManager: KeyManager;
 
-  let errors: Record<string, string[]> = form?.errors ?? {};
+  let errors: Record<string, string[]> = {};
 
   let email: string;
   let passphrase: string;

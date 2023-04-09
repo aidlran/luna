@@ -1,9 +1,7 @@
-import { fail, redirect } from '@sveltejs/kit';
+import { redirect } from '@sveltejs/kit';
 import { env } from '$env/dynamic/private';
-import type { Actions } from './$types';
 
-import { validateJWT } from '$lib/server/services';
-import { KeyPairRepository } from '$lib/server';
+import { KeyPairRepository, validateJWT } from '$lib/server';
 
 const COOKIE_NAME = 'sign_up_code';
 
@@ -20,9 +18,3 @@ export async function load({ cookies }) {
     throw redirect(303, '/signup/code' + (signUpCode ? '?invalid' : ''));
   }
 }
-
-export const actions: Actions = {
-  default: function () {
-    return fail(400, { errors: { '': ['Please enable JavaScript in your browser.'] } });
-  },
-};

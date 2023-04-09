@@ -7,11 +7,9 @@
 
   import { createSession, FetchError } from '$lib/client';
 
-  export let form;
-
   let keyManager: KeyManager;
 
-  let displayedError: string | undefined = form?.error;
+  let displayedError: string | undefined;
 
   let identifier: string;
   let passphrase: string;

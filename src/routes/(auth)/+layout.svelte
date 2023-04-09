@@ -1,11 +1,6 @@
 <script lang="ts">
   import '$lib/client/styles/global.styles.css';
-  import { onMount } from 'svelte';
   import { Modal } from '$lib/client/components';
-
-  let noScriptWarning: HTMLParagraphElement;
-
-  onMount(() => noScriptWarning.remove());
 </script>
 
 <main>
@@ -17,10 +12,6 @@
     </div>
   </Modal>
 </main>
-
-<p class="noscript-warning" bind:this={noScriptWarning}>
-  JavaScript is disabled in your browser. This application will not work without it.
-</p>
 
 <style>
   .flex-container {
@@ -91,15 +82,5 @@
   :global(p) {
     text-align: center;
     margin: 8px auto;
-  }
-
-  :global(.noscript-warning) {
-    position: fixed;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    margin: 0;
-    padding: 10px 0;
-    background: yellow;
   }
 </style>
