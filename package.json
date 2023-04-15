@@ -34,7 +34,7 @@
     "class-validator": "^0.14.0",
     "class-validator-svelte": "github:aidlran/class-validator-svelte#preview",
     "jose": "^4.13.1",
-    "key-manager": "github:enclavetech/key-manager#v1",
+    "key-manager": "file:packages/key-manager",
     "openpgp": "^5.7.0"
   },
   "devDependencies": {
