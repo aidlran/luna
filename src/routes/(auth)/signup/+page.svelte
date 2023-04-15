@@ -83,7 +83,7 @@
           createUserResult.user.userKeyPairs.map(async (userKeyPair) => {
             const privateKey = await readPrivateKey({ armoredKey: userKeyPair.keyPair.privateKey });
             const decryptedKey = await decryptKey({ privateKey, passphrase });
-            return await keyManager.put(userKeyPair.keyPair.id, decryptedKey.armor());
+            return await keyManager.put(decryptedKey.armor(), userKeyPair.keyPair.id);
           })
         );
         goto('/dashboard');
