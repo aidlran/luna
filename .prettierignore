@@ -1,6 +1,1 @@
-/build
-.env*
-node_modules
-package-lock.json
-.svelte-kit
-.vscode
+.eslintignore

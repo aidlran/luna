@@ -1,11 +1,7 @@
-.env
-.env.*
-
+# Directories
 .svelte-kit
 .vercel
-
-/.vscode/*
-!/.vscode/extensions.json
-!/.vscode/settings.json
-
 node_modules
+
+# Files
+.env*

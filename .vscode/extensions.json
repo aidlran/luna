@@ -3,6 +3,6 @@
     "dbaeumer.vscode-eslint",
     "esbenp.prettier-vscode",
     "prisma.prisma",
-    "svelte.svelte-vscode",
+    "svelte.svelte-vscode"
   ]
 }

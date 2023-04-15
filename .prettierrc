@@ -2,9 +2,8 @@
   "jsxSingleQuote": false,
   "printWidth": 110,
   "singleQuote": true,
+  "tabWidth": 2,
   "trailingComma": "es5",
   "useTabs": false,
-  "plugins": ["prettier-plugin-svelte"],
-  "pluginSearchDirs": ["."],
-  "overrides": [{ "files": "*.svelte", "options": { "parser": "svelte" } }]
+  "plugins": ["prettier-plugin-prisma", "prettier-plugin-svelte"]
 }
