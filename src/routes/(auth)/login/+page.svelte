@@ -3,11 +3,10 @@
   import { goto } from '$app/navigation';
 
   import { decryptKey, readPrivateKey } from 'openpgp';
-  import { KeyManager } from 'key-manager';
 
-  import { createSession, FetchError } from '$lib/client';
+  import { createSession, FetchError, getServices } from '$lib/client';
 
-  let keyManager = KeyManager();
+  const { keyManager } = getServices();
 
   let displayedError: string | undefined;
 
@@ -44,12 +43,11 @@
 
       // Unlock and redirect on success
       else if (loginResult.user) {
-        // TODO: centralised state for key manager
         await Promise.all(
           loginResult.user.userKeyPairs.map(async (userKeyPair) => {
             const privateKey = await readPrivateKey({ armoredKey: userKeyPair.keyPair.privateKey });
             const decryptedKey = await decryptKey({ privateKey, passphrase });
-            return await keyManager.put(decryptedKey.armor(), userKeyPair.keyPair.id);
+            return await keyManager.importKey(decryptedKey, userKeyPair.keyPair.id);
           })
         );
         goto('/dashboard');

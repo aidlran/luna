@@ -4,12 +4,10 @@
 
   import { decryptKey, generateKey, readPrivateKey } from 'openpgp';
 
-  import { KeyManager } from 'key-manager';
-
   import { generateUsernameFromEmail } from '$lib/shared';
-  import { FetchError, createUser } from '$lib/client';
+  import { FetchError, createUser, getServices } from '$lib/client';
 
-  let keyManager = KeyManager();
+  const { keyManager } = getServices();
 
   let errors: Record<string, string[]> = {};
 
@@ -18,7 +16,7 @@
   let usernameInput: string;
   let usernameGenerated: string;
 
-  let disabled = true;
+  let disabled = false;
   let initialFocus: HTMLInputElement;
 
   onMount(() => initialFocus.focus());
@@ -78,12 +76,11 @@
 
       // Unlock and redirect on success
       else if (createUserResult.user) {
-        // TODO: centralised state for key manager
         await Promise.all(
           createUserResult.user.userKeyPairs.map(async (userKeyPair) => {
             const privateKey = await readPrivateKey({ armoredKey: userKeyPair.keyPair.privateKey });
             const decryptedKey = await decryptKey({ privateKey, passphrase });
-            return await keyManager.put(decryptedKey.armor(), userKeyPair.keyPair.id);
+            return await keyManager.importKey(decryptedKey, userKeyPair.keyPair.id);
           })
         );
         goto('/dashboard');
