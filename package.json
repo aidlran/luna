@@ -38,6 +38,7 @@
     "openpgp": "^5.7.0"
   },
   "devDependencies": {
+    "@openpgp/web-stream-tools": "^0.0.13",
     "@sveltejs/adapter-vercel": "^2.4.1",
     "@sveltejs/kit": "^1.15.2",
     "@types/estree": "^1.0.0",
