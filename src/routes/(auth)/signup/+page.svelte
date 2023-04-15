@@ -6,10 +6,10 @@
 
   import { KeyManager } from 'key-manager';
 
-  import { generateUsernameFromEmail } from '$lib/shared/services';
+  import { generateUsernameFromEmail } from '$lib/shared';
   import { FetchError, createUser } from '$lib/client';
 
-  let keyManager: KeyManager;
+  let keyManager = KeyManager();
 
   let errors: Record<string, string[]> = {};
 
@@ -21,11 +21,7 @@
   let disabled = true;
   let initialFocus: HTMLInputElement;
 
-  onMount(async () => {
-    initialFocus.focus();
-    keyManager = new KeyManager();
-    disabled = false;
-  });
+  onMount(() => initialFocus.focus());
 
   function onEmailChange() {
     usernameGenerated = generateUsernameFromEmail(email);

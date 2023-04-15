@@ -9,7 +9,7 @@
   },
   "type": "module",
   "scripts": {
-    "build": "concurrently npm:build:app npm:build:libs",
+    "build": "npm run build:libs && npm run build:app",
     "build:app": "vite build",
     "build:libs": "npm run build:lib:key-manager",
     "build:lib:key-manager": "cd packages/key-manager && npm run build",

@@ -7,21 +7,17 @@
 
   import { createSession, FetchError } from '$lib/client';
 
-  let keyManager: KeyManager;
+  let keyManager = KeyManager();
 
   let displayedError: string | undefined;
 
   let identifier: string;
   let passphrase: string;
 
-  let disabled = true;
+  let disabled = false;
   let initialFocus: HTMLInputElement;
 
-  onMount(async () => {
-    initialFocus.focus();
-    keyManager = new KeyManager();
-    disabled = false;
-  });
+  onMount(() => initialFocus.focus());
 
   async function onSubmit(event: SubmitEvent) {
     disabled = true;
