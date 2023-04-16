@@ -2,11 +2,9 @@
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
 
-  import { decryptKey, readPrivateKey } from 'openpgp';
-
   import { createSession, FetchError, getServices } from '$lib/client';
 
-  const { keyManager } = getServices();
+  const { keysService } = getServices();
 
   let displayedError: string | undefined;
 
@@ -43,13 +41,15 @@
 
       // Unlock and redirect on success
       else if (loginResult.user) {
-        await Promise.all(
-          loginResult.user.userKeyPairs.map(async (userKeyPair) => {
-            const privateKey = await readPrivateKey({ armoredKey: userKeyPair.keyPair.privateKey });
-            const decryptedKey = await decryptKey({ privateKey, passphrase });
-            return await keyManager.importKey(decryptedKey, userKeyPair.keyPair.id);
-          })
-        );
+        try {
+          await keysService.importKeyPairs(
+            loginResult.user.userKeyPairs.map((userKeyPair) => userKeyPair.keyPair, passphrase),
+            passphrase
+          );
+        } catch (error) {
+          displayedError = 'Could not import keys.';
+          throw error;
+        }
         goto('/dashboard');
       }
     } catch (error) {
