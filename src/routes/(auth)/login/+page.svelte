@@ -42,9 +42,9 @@
       // Unlock and redirect on success
       else if (loginResult.user) {
         try {
-          await keysService.importKeyPairs(
-            loginResult.user.userKeyPairs.map((userKeyPair) => userKeyPair.keyPair, passphrase),
-            passphrase
+          await keysService.import(
+            passphrase,
+            ...loginResult.user.userKeyPairs.map((userKeyPair) => userKeyPair.keyPair, passphrase)
           );
         } catch (error) {
           displayedError = 'Could not import keys.';

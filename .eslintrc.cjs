@@ -21,5 +21,6 @@ module.exports = {
   },
   rules: {
     'deprecation/deprecation': 'warn',
+    'no-console': 'error',
   },
 };
