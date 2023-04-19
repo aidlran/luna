@@ -14,7 +14,12 @@ export function initServices(): Services {
     keysService,
   };
 
-  return setContext('services', services);
+  setContext('services', services);
+
+  // eslint-disable-next-line no-console
+  console.log('Services initialised');
+
+  return services;
 }
 
 export function getServices(): Services {

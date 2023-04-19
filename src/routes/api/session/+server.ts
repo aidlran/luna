@@ -21,6 +21,7 @@ class SessionController {
         throw error(404, 'Account not found.');
       }
 
+      // eslint-disable-next-line no-console
       console.error(findUserError);
       throw error(500, 'Having a bit of a moment, please come back later.');
 

@@ -25,6 +25,7 @@ class UserController {
           { status: 403 }
         );
       } else {
+        // eslint-disable-next-line no-console
         console.error(error);
         return json(
           {

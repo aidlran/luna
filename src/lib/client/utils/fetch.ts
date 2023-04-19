@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 export type ApiPostUrl = 'session' | 'user';
 
 const apiPrefix = '/api/';
