@@ -9,10 +9,29 @@ export class KeysService {
     const { id, privateKey: armoredKey } = keyPair;
     const privateKey = await readPrivateKey({ armoredKey });
     const decryptedKey = await decryptKey({ privateKey, passphrase });
-    await this.keyManager.importKey(decryptedKey, id);
+    await this.keyManager.importKey(decryptedKey.armor(), id);
   }
 
+  /**
+   * Try and load keys from the saved session.
+   */
+  public async resumeSession(): Promise<void> {
+    // TODO: GET session
+    const session = localStorage.getItem('tmp_session');
+    if (session) await this.keyManager.importSession(session);
+  }
+
+  /**
+   * Imports raw KeyPair items from the database into the key manager.
+   * @param {string} passphrase The active user's passphrase.
+   * @param {KeyPair[]} keyPairs Encrypted KeyPair items to import.
+   */
   public async import(passphrase: string, ...keyPairs: KeyPair[]): Promise<void> {
     await Promise.all(keyPairs.map((keyPair) => this.importKeyPair(keyPair, passphrase)));
+
+    const { data } = await this.keyManager.exportSession();
+
+    // TODO: POST session
+    localStorage.setItem('tmp_session', data);
   }
 }
