@@ -5,7 +5,9 @@
 <header>
   <span>{username}</span>
   <div class="button">
-    <a href="/logout">Log Out</a>
+    <!-- TODO: replace with AJAX
+      SvelteKit's link data preload is quite problematic here -->
+    <a data-sveltekit-preload-data="tap" href="/logout">Log Out</a>
   </div>
 </header>
 
