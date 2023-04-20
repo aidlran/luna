@@ -16,9 +16,15 @@ export class KeysService {
    * Try and load keys from the saved session.
    */
   public async resumeSession(): Promise<void> {
-    // TODO: GET session
+    // TODO: GET /api/session
     const session = localStorage.getItem('tmp_session');
     if (session) await this.keyManager.importSession(session);
+  }
+
+  public async destroySession(): Promise<void> {
+    // TODO: DELETE /api/session
+    localStorage.removeItem('tmp_session');
+    await this.keyManager.destroySession();
   }
 
   /**
@@ -31,7 +37,7 @@ export class KeysService {
 
     const { data } = await this.keyManager.exportSession();
 
-    // TODO: POST session
+    // TODO: POST /api/session
     localStorage.setItem('tmp_session', data);
   }
 }

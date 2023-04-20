@@ -1,6 +1,10 @@
 <script lang="ts">
   import '$lib/client/styles/global.styles.css';
-  import { Modal } from '$lib/client/components';
+  import { getServices, Modal } from '$lib/client';
+
+  const { keysService } = getServices();
+
+  keysService.destroySession();
 </script>
 
 <main>
