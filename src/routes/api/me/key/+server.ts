@@ -1,7 +1,7 @@
 import { error, json } from '@sveltejs/kit';
 import { validateFormData } from 'class-validator-svelte';
 
-import { KeyPairRepository } from '$lib/server';
+import { KeyPairRepository } from '$lib/server/model';
 import { KeyPairCreateDTO } from '$lib/shared/dtos';
 import { jwtService } from '$lib/server/utils/context';
 
