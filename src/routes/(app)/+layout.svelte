@@ -5,7 +5,7 @@
   export let data;
 </script>
 
-<Header username={data.session.payload.user.username} />
+<Header username={data.sessionContext.user.username} />
 
 <main>
   <slot />

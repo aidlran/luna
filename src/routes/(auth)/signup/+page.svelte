@@ -1,13 +1,11 @@
 <script lang="ts">
+  import { generateKey } from 'openpgp';
+
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
 
-  import { generateKey } from 'openpgp';
-
-  import { generateUsernameFromEmail } from '$lib/shared';
   import { FetchError, createUser, getServices } from '$lib/client';
-
-  const { keysService } = getServices();
+  const { keysService, usernameService } = getServices();
 
   let errors: Record<string, string[]> = {};
 
@@ -22,7 +20,7 @@
   onMount(() => initialFocus.focus());
 
   function onEmailChange() {
-    usernameGenerated = generateUsernameFromEmail(email);
+    usernameGenerated = usernameService.generateFromEmail(email);
   }
 
   async function onSubmit() {
@@ -77,10 +75,7 @@
       // Unlock and redirect on success
       else if (createUserResult.user) {
         try {
-          await keysService.import(
-            passphrase,
-            ...createUserResult.user.userKeyPairs.map((userKeyPair) => userKeyPair.keyPair, passphrase)
-          );
+          await keysService.import(passphrase, ...createUserResult.user.keyPairs);
         } catch (error) {
           errors[''] = ['Could not import keys.'];
           throw error;

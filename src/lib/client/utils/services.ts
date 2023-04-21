@@ -1,17 +1,16 @@
 import { KeyWorkerClusterManager } from 'key-manager';
 import { getContext, setContext } from 'svelte';
-import { KeysService } from '../services';
+import { KeysService, UsernameService } from '../services';
 
 export interface Services {
   keysService: KeysService;
+  usernameService: UsernameService;
 }
 
 export function initServices(): Services {
-  const keyManager = new KeyWorkerClusterManager();
-  const keysService = new KeysService(keyManager);
-
   const services: Services = {
-    keysService,
+    keysService: new KeysService(new KeyWorkerClusterManager()),
+    usernameService: new UsernameService(),
   };
 
   setContext('services', services);

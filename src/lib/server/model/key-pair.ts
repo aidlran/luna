@@ -1,12 +1,12 @@
-import { prismaClientService } from '$lib/server/services';
-import type { KeyPairCreateDTO } from '$lib/shared';
+import type { KeyPairCreateDTO } from '$lib/shared/dtos';
+import { prismaClient } from '../utils/context';
 
-/**
- * @returns TRUE if we can find at least one keypair for the user, or FALSE otherwise.
- */
+// TODO: replace with controller/service classes
+
+/** @deprecated */
 export async function userHasKey(userId: string) {
   try {
-    await prismaClientService.userKeyPair.findFirstOrThrow({
+    await prismaClient.userKeyPair.findFirstOrThrow({
       where: {
         userId,
       },
@@ -17,8 +17,9 @@ export async function userHasKey(userId: string) {
   }
 }
 
+/** @deprecated */
 export async function createUserKeyPair(userID: string, keyPairDTO: KeyPairCreateDTO) {
-  const userKeyPair = await prismaClientService.userKeyPair.create({
+  const userKeyPair = await prismaClient.userKeyPair.create({
     data: {
       user: {
         connect: {

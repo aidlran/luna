@@ -1,7 +1,6 @@
 import { redirect } from '@sveltejs/kit';
-import { deleteJWT } from '$lib/server/services';
 
 export function load({ cookies }) {
-  deleteJWT(cookies);
+  cookies.delete('jwt');
   throw redirect(303, '/login');
 }

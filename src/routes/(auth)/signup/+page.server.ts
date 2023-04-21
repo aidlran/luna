@@ -1,19 +1,22 @@
 import { redirect } from '@sveltejs/kit';
-import { env } from '$env/dynamic/private';
-
-import { KeyPairRepository, validateJWT } from '$lib/server';
+import { SIGN_UP_CODE } from '$env/static/private';
+import { jwtService } from '$lib/server/utils/context';
 
 const COOKIE_NAME = 'sign_up_code';
 
 export async function load({ cookies }) {
-  const session = await validateJWT(cookies);
-
-  if (session && (await KeyPairRepository.userHasKey(session.payload?.user?.id))) {
-    throw redirect(303, '/dashboard');
-  }
+  const jwt = cookies.get('jwt');
+  if (jwt)
+    try {
+      if (await jwtService.verify(jwt)) {
+        throw redirect(303, '/dashboard');
+      }
+    } catch (e) {
+      /* empty */
+    }
 
   const signUpCode = cookies.get(COOKIE_NAME);
-  if (signUpCode !== env.SIGN_UP_CODE) {
+  if (signUpCode !== SIGN_UP_CODE) {
     cookies.delete(COOKIE_NAME);
     throw redirect(303, '/signup/code' + (signUpCode ? '?invalid' : ''));
   }

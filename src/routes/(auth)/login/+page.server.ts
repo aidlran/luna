@@ -1,9 +1,14 @@
 import { redirect } from '@sveltejs/kit';
-
-import { validateJWT } from '$lib/server';
+import { jwtService } from '$lib/server/utils/context';
 
 export async function load({ cookies }) {
-  if (await validateJWT(cookies)) {
-    throw redirect(303, '/dashboard');
-  }
+  const jwt = cookies.get('jwt');
+  if (jwt)
+    try {
+      if (await jwtService.verify(jwt)) {
+        throw redirect(303, '/dashboard');
+      }
+    } catch (e) {
+      /* empty */
+    }
 }
