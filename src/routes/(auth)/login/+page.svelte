@@ -2,9 +2,10 @@
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
 
-  import { createSession, FetchError, getServices } from '$lib/client';
+  import { ApiError } from '$lib/client/api';
+  import { getServices } from '$lib/client/utils/services';
 
-  const { keysService } = getServices();
+  const { keysService, sessionApiService } = getServices();
 
   let displayedError: string | undefined;
 
@@ -25,9 +26,9 @@
     try {
       // Try to log in
       try {
-        loginResult = await createSession({ identifier, passphrase });
+        loginResult = await sessionApiService.createSession({ identifier, passphrase });
       } catch (error) {
-        if (error instanceof FetchError) {
+        if (error instanceof ApiError) {
           displayedError = error.friendlyMessage;
         }
         throw error;

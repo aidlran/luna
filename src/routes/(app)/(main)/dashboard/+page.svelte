@@ -1,5 +1,5 @@
 <script>
-  import TaskList from '$lib/client/components/task-list.svelte';
+  import { TaskList } from '$lib/client/components';
 </script>
 
 <div class="task-list-container">

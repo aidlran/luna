@@ -1,9 +1,8 @@
 import { hash, verify } from 'argon2';
 import type { PrismaClient } from '@prisma/client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
-import type { IUserCreate } from '$lib/shared/interfaces';
+import type { IUserCreate, IUserMe } from '$lib/shared/interfaces';
 import { UserError } from '../errors/user.error';
-import type { IUserMe } from '../interfaces/user-me.interface';
 
 export class UserService {
   constructor(private readonly prismaClient: PrismaClient) {}

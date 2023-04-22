@@ -1,6 +1,5 @@
 <script lang="ts">
-  import '$lib/client/styles/global.styles.css';
-  import { Header } from '$lib/client';
+  import { Header } from '$lib/client/components';
 
   export let data;
 </script>

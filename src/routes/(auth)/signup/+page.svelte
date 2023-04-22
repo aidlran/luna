@@ -4,8 +4,10 @@
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
 
-  import { FetchError, createUser, getServices } from '$lib/client';
-  const { keysService, usernameService } = getServices();
+  import { ApiError } from '$lib/client/api';
+  import { getServices } from '$lib/client/utils/services';
+
+  const { keysService, userApiService, usernameService } = getServices();
 
   let errors: Record<string, string[]> = {};
 
@@ -52,7 +54,7 @@
 
       // Create the user
       try {
-        createUserResult = await createUser({
+        createUserResult = await userApiService.createUser({
           email,
           passphrase,
           username,
@@ -60,7 +62,7 @@
           publicKey,
         });
       } catch (error) {
-        if (error instanceof FetchError) {
+        if (error instanceof ApiError) {
           errors[''] = [error.friendlyMessage];
         }
         throw error;

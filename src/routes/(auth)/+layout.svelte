@@ -1,6 +1,6 @@
 <script lang="ts">
-  import '$lib/client/styles/global.styles.css';
-  import { getServices, Modal } from '$lib/client';
+  import { Modal } from '$lib/client/components';
+  import { getServices } from '$lib/client/utils/services';
 
   const { keysService } = getServices();
 

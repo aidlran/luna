@@ -1,4 +1,4 @@
-import type { IKeyPairCreate } from './key-pair.create.interface';
+import type { IKeyPairCreate } from './key-pair-create.interface';
 
 export interface IUserCreate extends IKeyPairCreate {
   email: string;

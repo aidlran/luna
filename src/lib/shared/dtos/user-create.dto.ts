@@ -1,5 +1,5 @@
 import { IsEmail, IsStrongPassword, Matches } from 'class-validator';
-import { KeyPairCreateDTO } from './key-pair.create.dto';
+import { KeyPairCreateDTO } from './key-pair-create.dto';
 import type { IUserCreate } from '../interfaces';
 
 export class UserCreateDTO extends KeyPairCreateDTO implements IUserCreate {

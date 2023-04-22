@@ -21,6 +21,9 @@ export class KeysService {
     if (session) await this.keyManager.importSession(session);
   }
 
+  /**
+   * End any active session and destroy all session data.
+   */
   public async destroySession(): Promise<void> {
     // TODO: DELETE /api/session
     localStorage.removeItem('tmp_session');
