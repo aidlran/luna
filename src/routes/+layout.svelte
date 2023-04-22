@@ -1,5 +1,5 @@
 <script>
-  import '$lib/client/styles/global.styles.css';
+  import '../styles.css';
   import { inject } from '@vercel/analytics';
   import { dev } from '$app/environment';
   import { initServices } from '$lib/client/utils/services';
