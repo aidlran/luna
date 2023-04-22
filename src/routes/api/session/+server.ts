@@ -1,6 +1,6 @@
-import type { RequestEvent } from '@sveltejs/kit';
 import { sessionController } from '$lib/server/utils/context';
 import type { SessionCreateDTO, SessionDataUpdateDTO } from '$lib/shared/dtos';
+import type { RequestEvent } from './$types';
 
 export const DELETE = (requestEvent) => sessionController.delete(requestEvent);
 

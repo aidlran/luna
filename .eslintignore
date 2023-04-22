@@ -1,1 +1,9 @@
-.gitignore
+# Directories
+.svelte-kit
+.vercel
+node_modules
+packages
+static
+
+# Files
+.env*
