@@ -6,14 +6,16 @@ const COOKIE_NAME = 'sign_up_code';
 
 export async function load({ cookies }) {
   const jwt = cookies.get('jwt');
-  if (jwt)
+
+  if (jwt) {
     try {
-      if (await jwtService.verify(jwt)) {
-        throw redirect(303, '/dashboard');
-      }
+      await jwtService.verify(jwt);
     } catch (e) {
       /* empty */
     }
+
+    throw redirect(303, '/dashboard');
+  }
 
   const signUpCode = cookies.get(COOKIE_NAME);
   if (signUpCode !== SIGN_UP_CODE) {

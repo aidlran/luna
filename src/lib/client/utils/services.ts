@@ -13,12 +13,14 @@ export interface Services {
 }
 
 export function initServices(): Services {
+  const sessionApiService = new SessionApiService();
+
   const services: Services = {
     // API
-    sessionApiService: new SessionApiService(),
+    sessionApiService,
     userApiService: new UserApiService(),
 
-    keysService: new KeysService(new KeyWorkerClusterManager()),
+    keysService: new KeysService(new KeyWorkerClusterManager(), sessionApiService),
     usernameService: new UsernameService(),
   };
 

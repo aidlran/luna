@@ -1,9 +1,15 @@
 import type { KeyPair } from '@prisma/client';
 import type { KeyManager } from 'key-manager';
 import { decryptKey, readPrivateKey } from 'openpgp';
+import type { SessionApiService } from '../api';
+
+// TODO: move session-y stuff to seperate service
 
 export class KeysService {
-  constructor(private readonly keyManager: KeyManager) {}
+  constructor(
+    private readonly keyManager: KeyManager,
+    private readonly sessionApiService: SessionApiService,
+  ) {}
 
   protected async importKeyPair(keyPair: KeyPair, passphrase: string): Promise<void> {
     const { id, privateKey: armoredKey } = keyPair;
@@ -12,22 +18,33 @@ export class KeysService {
     await this.keyManager.importKey(decryptedKey.armor(), id);
   }
 
+  protected async saveSession(): Promise<void> {
+    const { data } = await this.keyManager.exportSession();
+    await this.sessionApiService.updateData({ payload: data });
+  }
+
   /**
-   * Try and load keys from the saved session.
+   * Try and load keys from an existing session.
    */
   public async resumeSession(): Promise<void> {
-    // TODO: GET /api/session
-    const session = localStorage.getItem('tmp_session');
-    if (session) await this.keyManager.importSession(session);
+    const session = await this.sessionApiService.get();
+
+    if (session.message) {
+      await this.sessionApiService.destroy();
+      throw new Error(session.message);
+    }
+
+    await this.keyManager.importSession(session.payload);
+    await this.saveSession().catch(() => {
+      /* empty */
+    });
   }
 
   /**
    * End any active session and destroy all session data.
    */
   public async destroySession(): Promise<void> {
-    // TODO: DELETE /api/session
-    localStorage.removeItem('tmp_session');
-    await this.keyManager.destroySession();
+    await Promise.allSettled([this.sessionApiService.destroy(), this.keyManager.destroySession()]);
   }
 
   /**
@@ -37,10 +54,8 @@ export class KeysService {
    */
   public async import(passphrase: string, ...keyPairs: KeyPair[]): Promise<void> {
     await Promise.all(keyPairs.map((keyPair) => this.importKeyPair(keyPair, passphrase)));
-
-    const { data } = await this.keyManager.exportSession();
-
-    // TODO: POST /api/session
-    localStorage.setItem('tmp_session', data);
+    await this.saveSession().catch(() => {
+      /* empty */
+    });
   }
 }

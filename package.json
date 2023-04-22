@@ -15,7 +15,7 @@
     "build:lib:key-manager": "cd packages/key-manager && npm run build",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-    "dev": "concurrently npm:dev:app npm:dev:libs",
+    "dev": "concurrently -k npm:dev:app npm:dev:libs",
     "dev:app": "vite dev",
     "dev:libs": "npm run dev:lib:key-manager",
     "dev:lib:key-manager": "cd packages/key-manager && npm run dev",

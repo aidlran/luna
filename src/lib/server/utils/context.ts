@@ -11,7 +11,7 @@ if (dev && !(global as any).db) {
 
 export const prismaClient = dev ? (global as any).db : new PrismaClient();
 export const jwtService = new JwtService();
-export const sessionService = new SessionService(jwtService);
+export const sessionService = new SessionService(jwtService, prismaClient);
 export const userService = new UserService(prismaClient);
-export const sessionController = new SessionController(sessionService, userService);
+export const sessionController = new SessionController(prismaClient, sessionService, userService);
 export const userController = new UserController(sessionService, userService);

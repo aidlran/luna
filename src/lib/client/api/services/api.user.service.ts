@@ -8,6 +8,6 @@ export class UserApiService extends ApiService {
   }
 
   public createUser(data: IUserCreate): Promise<{ user: IUserMe } & IApiMaybeErrorResponse> {
-    return this.post<IUserCreate, { user: IUserMe }>('', data);
+    return this.POST<IUserCreate, { user: IUserMe }>('', data);
   }
 }

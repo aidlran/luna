@@ -20,7 +20,7 @@ export class UserController {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { keyPairs, ...sessionContextUser } = user;
 
-      await this.sessionService.update(cookies, { user: sessionContextUser });
+      await this.sessionService.create(cookies, { user: sessionContextUser });
 
       return json({ user }, { status: 201 });
     } catch (e) {

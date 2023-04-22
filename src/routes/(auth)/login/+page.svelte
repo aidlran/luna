@@ -26,7 +26,7 @@
     try {
       // Try to log in
       try {
-        loginResult = await sessionApiService.createSession({ identifier, passphrase });
+        loginResult = await sessionApiService.create({ identifier, passphrase });
       } catch (error) {
         if (error instanceof ApiError) {
           displayedError = error.friendlyMessage;
