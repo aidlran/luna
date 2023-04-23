@@ -23,7 +23,7 @@ export class EncryptedDataController {
 
     const { id } = params;
 
-    // Find the item
+    // Find the item, type check
     const response: EncryptedData = await this.prismaClient.encryptedData
       .findUniqueOrThrow({
         where: { id },
@@ -38,6 +38,31 @@ export class EncryptedDataController {
     // Verify User owns KeyPair
     await this.keyPairService.getUserKeyPair({ keyPairId, userId }).catch(() => {
       throw error(403);
+    });
+
+    return json(response);
+  }
+
+  public async getAllByUser({ cookies }: RequestEvent): Promise<Response> {
+    // Verify session
+    const sessionContext = await this.sessionService.get(cookies);
+    if (!sessionContext) {
+      throw error(401);
+    }
+
+    const { id: userId } = sessionContext.user;
+
+    const keyPairIds: string[] = (await this.keyPairService.getUserKeyPairs(userId)).map(
+      (userKeyPair) => userKeyPair.keyPairId,
+    );
+
+    // Find the items, type check
+    const response: EncryptedData[] = await this.prismaClient.encryptedData.findMany({
+      where: {
+        keyPairId: {
+          in: keyPairIds,
+        },
+      },
     });
 
     return json(response);

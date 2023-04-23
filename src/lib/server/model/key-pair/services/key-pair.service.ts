@@ -16,4 +16,17 @@ export class KeyPairService {
       },
     });
   }
+
+  /**
+   * Get all of the user's KeyPairs.
+   * @param {string} userId A user's ID.
+   * @returns {Promise<UserKeyPair>}
+   */
+  public getUserKeyPairs(userId: string): Promise<UserKeyPair[]> {
+    return this.prismaClient.userKeyPair.findMany({
+      where: {
+        userId,
+      },
+    });
+  }
 }

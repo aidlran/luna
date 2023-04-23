@@ -1,11 +1,12 @@
 import { KeyWorkerClusterManager } from 'key-manager';
 import { getContext, setContext } from 'svelte';
-import { EncryptedDataApiService, SessionApiService, UserApiService } from '../api';
+import { EncryptedDataApiService, MeApiService, SessionApiService, UserApiService } from '../api';
 import { KeysService, UsernameService } from '../services';
 
 export interface Services {
   // API
   encryptedDataApiService: EncryptedDataApiService;
+  meApiService: MeApiService;
   sessionApiService: SessionApiService;
   userApiService: UserApiService;
 
@@ -15,14 +16,16 @@ export interface Services {
 
 export function initServices(): Services {
   const sessionApiService = new SessionApiService();
+  const keysService = new KeysService(new KeyWorkerClusterManager(), sessionApiService);
 
   const services: Services = {
     // API
     encryptedDataApiService: new EncryptedDataApiService(),
+    meApiService: new MeApiService(keysService),
     sessionApiService,
     userApiService: new UserApiService(),
 
-    keysService: new KeysService(new KeyWorkerClusterManager(), sessionApiService),
+    keysService,
     usernameService: new UsernameService(),
   };
 
