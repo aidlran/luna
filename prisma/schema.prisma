@@ -45,6 +45,7 @@ model UserKeyPair {
   user    User    @relation(fields: [userId], references: [id])
 
   @@id([keyPairId, userId])
+  @@index([keyPairId])
   @@index([userId])
 }
 
