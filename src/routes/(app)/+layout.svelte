@@ -7,16 +7,20 @@
 
   const { keysService } = getServices();
 
-  // TODO: need to figure out if keyService has already imported keys
-  keysService.resumeSession().catch(() => {
-    goto('/login');
-  });
+  async function init(): Promise<void> {
+    // TODO: need to figure out if keyService has already imported keys
+    await keysService.resumeSession().catch(() => {
+      goto('/login');
+    });
+  }
 </script>
 
 <Header username={data.sessionContext.user.username} />
 
 <main>
-  <slot />
+  {#await init() then}
+    <slot />
+  {/await}
 </main>
 
 <style>

@@ -39,7 +39,7 @@ export class KeysService {
 
     // Import session, take returned imported keyIDs and add to our array
     const { data } = await this.keyManager.importSession(session.payload);
-    this.keyIDs.concat(data);
+    this.keyIDs.push(...data);
 
     await this.saveSession().catch(() => {
       /* empty */

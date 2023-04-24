@@ -1,10 +1,69 @@
+<script lang="ts">
+  import type { ITodo } from '../interfaces/todo.interface';
+  import { getServices } from '../utils/services';
+
+  const { meApiService } = getServices();
+
+  export let listName: string;
+  export let items: ITodo[];
+
+  let isAddingItem = false;
+  let disabled = false;
+  let newItemName: string;
+
+  function focusInput(input: HTMLInputElement) {
+    input.focus();
+  }
+
+  function sort(): void {
+    items = items.sort((a, b) => b.createdAt - a.createdAt);
+  }
+
+  sort();
+
+  async function onSubmit(): Promise<void> {
+    if (newItemName) {
+      const newTodo: ITodo = {
+        type: 'todo',
+        name: newItemName,
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      };
+
+      // Add item to top of list
+      items = [newTodo].concat(items);
+      newItemName = '';
+      isAddingItem = false;
+
+      // Push change
+      await meApiService.createEncryptedData(JSON.stringify(newTodo)).catch(() => {
+        // Remove item if push failed
+        items = items.filter((todo) => todo !== newTodo);
+      });
+    }
+  }
+</script>
+
 <section class="task-list">
   <header>
-    <h1>My Tasks</h1>
-    <!-- <button>Add</button> -->
+    <h1>{listName}</h1>
+    <button on:click={() => (isAddingItem = true)}>+</button>
   </header>
   <div class="task-entries">
-    <!-- <div class="task">This is a Task description.</div> -->
+    {#if isAddingItem}
+      <form class="task" on:submit|preventDefault={onSubmit}>
+        <input
+          required
+          use:focusInput
+          on:blur={() => (isAddingItem = false)}
+          bind:value={newItemName}
+          {disabled}
+        />
+      </form>
+    {/if}
+    {#each items as task}
+      <div class="task">{task.name}</div>
+    {/each}
   </div>
 </section>
 
