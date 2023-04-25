@@ -1,4 +1,4 @@
 import { encryptedDataController } from '$lib/server/utils/context';
-import type { RequestEvent } from './$types';
 
-export const GET = (requestEvent: RequestEvent) => encryptedDataController.getOne(requestEvent);
+export const DELETE = (requestEvent) => encryptedDataController.deleteOne(requestEvent);
+export const GET = (requestEvent) => encryptedDataController.getOne(requestEvent);

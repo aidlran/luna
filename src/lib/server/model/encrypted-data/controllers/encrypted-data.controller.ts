@@ -14,6 +14,15 @@ export class EncryptedDataController {
     private readonly sessionService: SessionService,
   ) {}
 
+  public async deleteOne(requestEvent: RequestEvent & { params: { id: string } }): Promise<Response> {
+    await this.getOne(requestEvent);
+
+    const { id } = requestEvent.params;
+    await this.prismaClient.encryptedData.delete({ where: { id } });
+
+    return json({});
+  }
+
   public async getOne({ cookies, params }: RequestEvent & { params: { id: string } }): Promise<Response> {
     // Verify session
     const sessionContext = await this.sessionService.get(cookies);

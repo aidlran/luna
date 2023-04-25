@@ -10,8 +10,9 @@
     return (
       await Promise.all(
         allData.map(async (data) => {
+          const { id } = data;
           try {
-            return JSON.parse(await keysService.decrypt(data));
+            return { id, ...JSON.parse(await keysService.decrypt(data)) };
           } catch (e) {
             return null;
           }

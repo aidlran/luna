@@ -2,10 +2,10 @@
   import type { ITodo } from '../interfaces/todo.interface';
   import { getServices } from '../utils/services';
 
-  const { meApiService } = getServices();
+  const { encryptedDataApiService, meApiService } = getServices();
 
   export let listName: string;
-  export let items: ITodo[];
+  export let items = Array<ITodo>();
 
   let isAddingItem = false;
   let disabled = false;
@@ -36,10 +36,39 @@
       isAddingItem = false;
 
       // Push change
-      await meApiService.createEncryptedData(JSON.stringify(newTodo)).catch(() => {
-        // Remove item if push failed
-        items = items.filter((todo) => todo !== newTodo);
+      await meApiService
+        .createEncryptedData(JSON.stringify(newTodo))
+        .then((result) => {
+          // Add ID to todo
+          newTodo.id = result.id;
+          items = items; // Assign to trigger Svelte change detection
+        })
+        .catch(() => {
+          // Remove item if push failed
+          items = items.filter((todo) => todo !== newTodo);
+        });
+    }
+  }
+
+  async function onDelete(todoToDelete: ITodo): Promise<void> {
+    if (todoToDelete.id) {
+      let found = false;
+
+      items = items.filter((todo) => {
+        if (todo.id === todoToDelete.id) {
+          found = true;
+          return false; // remove
+        } else {
+          return true; // keep
+        }
       });
+
+      if (found) {
+        await encryptedDataApiService.deleteOne(todoToDelete.id).catch(() => {
+          items.push(todoToDelete);
+          sort();
+        });
+      }
     }
   }
 </script>
@@ -62,7 +91,12 @@
       </form>
     {/if}
     {#each items as task}
-      <div class="task">{task.name}</div>
+      <div class="task">
+        <span>{task.name}</span>
+        {#if task.id}
+          <button on:click={() => onDelete(task)}>Delete</button>
+        {/if}
+      </div>
     {/each}
   </div>
 </section>

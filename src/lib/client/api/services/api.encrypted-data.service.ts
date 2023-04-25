@@ -10,4 +10,8 @@ export class EncryptedDataApiService extends ApiService {
   public getOne(id: string): Promise<EncryptedData & IApiMaybeErrorResponse> {
     return super.GET<EncryptedData>(id);
   }
+
+  public async deleteOne(id: string): Promise<IApiMaybeErrorResponse> {
+    return super.DELETE(id);
+  }
 }
