@@ -1,6 +1,8 @@
 import type { IApiMaybeErrorResponse } from '../interfaces/api-error-response';
 import { ApiError } from '../errors/api.error';
 
+// TODO: API service should throw in a standardised way for 400, 401, 403, 404, etc. responses
+
 export abstract class ApiService {
   private readonly controllerURL;
 

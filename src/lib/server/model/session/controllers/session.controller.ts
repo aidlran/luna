@@ -12,7 +12,12 @@ export class SessionController {
   private readonly expireTime = 1000 * 60 * 60 * 24 * 7;
 
   constructor(
+    /**
+     * // TODO
+     * @deprecated Move prismaClient calls to service(s).
+     */
     private readonly prismaClient: PrismaClient,
+
     private readonly sessionService: SessionService,
     private readonly userService: UserService,
   ) {}
@@ -49,7 +54,8 @@ export class SessionController {
     const { sessionID, ...sanitisedSessionContext } = sessionContext;
     await this.sessionService.create(cookies, sanitisedSessionContext);
 
-    return json({ payload: sessionData.data });
+    const { payload } = sessionData;
+    return json({ payload });
   }
 
   @ValidateFormData(SessionCreateDTO)
@@ -96,7 +102,7 @@ export class SessionController {
 
     const session = await this.prismaClient.session.create({
       data: {
-        data: payload,
+        payload,
       },
       select: {
         id: true,

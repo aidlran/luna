@@ -1,3 +1,5 @@
+export * from './encrypted-data.create.interface';
+export * from './encrypted-data-with-keys.response.interface';
 export * from './key-pair-create.interface';
 export * from './model-id-response.interface';
 export * from './session-create.interface';

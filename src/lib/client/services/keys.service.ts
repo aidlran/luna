@@ -1,10 +1,10 @@
-import type { EncryptedData, KeyPair } from '@prisma/client';
+import type { KeyPair } from '@prisma/client';
 import type { KeyManager } from 'key-manager';
 import { decryptKey, readPrivateKey } from 'openpgp';
 import type { SessionApiService } from '../api';
-import type { IEncryptedDataCreate } from '$lib/shared/types';
+import type { IEncryptedDataCreate } from '$lib/shared/interfaces';
 
-// TODO: move session-y stuff to seperate service
+// TODO: move session-y stuff to separate service
 
 export class KeysService {
   private readonly keyIDs = new Array<string>();
@@ -73,22 +73,30 @@ export class KeysService {
   // TODO: move following to own `EncryptedData` service
 
   /**
-   * Decrypt the `EncryptedData` item.
-   * @param {Omit<EncryptedData, 'id'>} encryptedData Relevant parts of the `EncryptedData`.
+   * Decrypt a message.
+   * @param {string} payload Encrypted armored message string.
+   * @param {string} messageKey Encrypted key used to decrypt the message.
+   * @param {string} keyPairID ID of the `KeyPair` that encrypted the `messageKey`.
    * @returns {Promise<string>} The decrypted payload string.
    */
-  public async decrypt(encryptedData: Omit<EncryptedData, 'id'>): Promise<string> {
-    const { encryptedPayload, keyPairId } = encryptedData;
-    return (await this.keyManager.decrypt(keyPairId, encryptedPayload)).data;
+  public async decrypt(payload: string, messageKey: string, keyPairID: string): Promise<string> {
+    const { data } = await this.keyManager.hybridDecrypt(payload, messageKey, keyPairID);
+
+    return data;
   }
 
   /**
-   * Encrypt a message into an `EncryptedData` item.
+   * Encrypt a message.
    * @param {string} message
    * @returns {Promise<IEncryptedDataCreate>} A promise that resolves with data for creating a `EncryptedData` item.
    */
   public async encrypt(message: string): Promise<IEncryptedDataCreate> {
-    const { data, keyID } = await this.keyManager.encrypt(this.keyIDs[0], message);
-    return { encryptedPayload: data, keyPairId: keyID };
+    const encryptResult = await this.keyManager.hybridEncrypt(this.keyIDs[0], message);
+
+    return {
+      encryptedReadKey: encryptResult.data.key,
+      ownerKeyPairID: encryptResult.keyID,
+      payload: encryptResult.data.message,
+    };
   }
 }

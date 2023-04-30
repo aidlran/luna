@@ -12,7 +12,16 @@
         allData.map(async (data) => {
           const { id } = data;
           try {
-            return { id, ...JSON.parse(await keysService.decrypt(data)) };
+            return {
+              id,
+              ...JSON.parse(
+                await keysService.decrypt(
+                  data.payload,
+                  data.keys[0].encryptedDataKey,
+                  data.keys[0].keyPairID,
+                ),
+              ),
+            };
           } catch (e) {
             return null;
           }

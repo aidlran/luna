@@ -39,6 +39,8 @@
       await meApiService
         .createEncryptedData(JSON.stringify(newTodo))
         .then((result) => {
+          if (result.errors || result.message) throw null;
+
           // Add ID to todo
           newTodo.id = result.id;
           items = items; // Assign to trigger Svelte change detection

@@ -1,9 +1,11 @@
-import type { IModelIdResponse } from '$lib/shared/interfaces';
-import type { IEncryptedDataCreate } from '$lib/shared/types';
-import type { EncryptedData } from '@prisma/client';
+import type {
+  EncryptedDataWithKeysResponse,
+  IEncryptedDataCreate,
+  IModelIdResponse,
+} from '$lib/shared/interfaces';
+import type { KeysService } from '../../services';
 import type { IApiMaybeErrorResponse } from '../interfaces/api-error-response';
 import { ApiService } from './api.service';
-import type { KeysService } from '$lib/client/services';
 
 export class MeApiService extends ApiService {
   constructor(private readonly keysService: KeysService) {
@@ -15,7 +17,7 @@ export class MeApiService extends ApiService {
     return super.POST<IEncryptedDataCreate, IModelIdResponse>('encrypted-data', encryptedData);
   }
 
-  public getAllEncryptedData(): Promise<EncryptedData[] & IApiMaybeErrorResponse> {
-    return super.GET<EncryptedData[]>('encrypted-data');
+  public getAllEncryptedData(): Promise<EncryptedDataWithKeysResponse[] & IApiMaybeErrorResponse> {
+    return super.GET<EncryptedDataWithKeysResponse[]>('encrypted-data');
   }
 }

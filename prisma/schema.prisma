@@ -8,53 +8,131 @@ datasource db {
   relationMode = "prisma"
 }
 
+/// Encrypted session data.
 model Session {
-  id        String   @id @default(cuid()) @db.VarChar(30)
+  /// The session ID.
+  id String @id @default(cuid()) @db.VarChar(30)
+
+  /// The encrypted session data string.
+  payload String @db.Text
+
+  /// The creation time.
   createdAt DateTime @default(now())
-  data      String   @db.Text
 }
 
+/// A system user account.
 model User {
-  id           String   @id @default(cuid()) @db.VarChar(30)
-  email        String   @unique @db.VarChar(255)
-  username     String   @unique @db.VarChar(24)
-  passwordHash String   @db.VarChar(128)
-  name         String?  @db.VarChar(255)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  /// The User ID.
+  id String @id @default(cuid()) @db.VarChar(30)
 
+  /// The user's email.
+  email String @unique @db.VarChar(255)
+
+  /// The user's unique username.
+  username String @unique @db.VarChar(24)
+
+  /// The hash of the user's password.
+  passwordHash String @db.VarChar(128)
+
+  /// The user's name.
+  name String? @db.VarChar(255)
+
+  /// The account creation time.
+  createdAt DateTime @default(now())
+
+  /// The update time.
+  updatedAt DateTime @updatedAt
+
+  /// KeyPairs that the user controls.
   userKeyPairs UserKeyPair[]
 }
 
+/// An asymmetric key pair.
 model KeyPair {
-  id         String   @id @default(cuid()) @db.VarChar(30)
-  publicKey  String   @db.Text
-  privateKey String   @db.Text
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  /// The KeyPair ID.
+  id String @id @default(cuid()) @db.VarChar(30)
 
+  /// The armored encrypted private key.
+  privateKey String @db.Text
+
+  /// The armored public key.
+  publicKey String @db.Text
+
+  /// The creation time.
+  createdAt DateTime @default(now())
+
+  /// The update time.
+  updatedAt DateTime @updatedAt
+
+  /// Users that control this key.
   userKeyPairs UserKeyPair[]
-  tasks        EncryptedData[]
+
+  /// EncryptedData items that this key pair owns.
+  encryptedDataItems EncryptedData[]
+
+  /// Encrypted data keys that 
+  encryptedDataKeys EncryptedDataKey[]
 }
 
+/// A compound key that connects a User with a KeyPair they control.
 model UserKeyPair {
-  keyPairId String @db.VarChar(30)
-  userId    String @db.VarChar(30)
+  /// The ID of the KeyPair.
+  keyPairID String @db.VarChar(30)
 
-  keyPair KeyPair @relation(fields: [keyPairId], references: [id])
-  user    User    @relation(fields: [userId], references: [id])
+  /// The KeyPair.
+  keyPair KeyPair @relation(fields: [keyPairID], references: [id])
 
-  @@id([keyPairId, userId])
-  @@index([keyPairId])
-  @@index([userId])
+  /// The ID of the User.
+  userID String @db.VarChar(30)
+
+  /// The User.
+  user User @relation(fields: [userID], references: [id])
+
+  @@id([keyPairID, userID])
+  @@index([keyPairID])
+  @@index([userID])
 }
 
+// We use a hybrid encryption system.
+
+/// Encrypted arbitrary data.
 model EncryptedData {
-  id               String @id @default(cuid()) @db.VarChar(30)
-  encryptedPayload String @db.Text
-  keyPairId        String @db.VarChar(30)
+  /// The EncryptedData ID.
+  id String @id @default(cuid()) @db.VarChar(30)
 
-  keyPair KeyPair @relation(fields: [keyPairId], references: [id])
+  /// The encrypted data string.
+  payload String @db.Text
 
-  @@index([keyPairId])
+  /// The ID of the KeyPair that owns this data.
+  ownerKeyPairID String @db.VarChar(30)
+
+  /// The KeyPair that owns this data.
+  ownerKeyPair KeyPair @relation(fields: [ownerKeyPairID], references: [id])
+
+  /// Keys that can decrypt this data.
+  encryptedDataKeys EncryptedDataKey[]
+
+  @@index([ownerKeyPairID])
+}
+
+/// A key, asymmetrically encrypted by a KeyPair, that can decrypt an encrypted data item.
+model EncryptedDataKey {
+  /// The ID of the EncryptedData that this key unlocks.
+  encryptedDataID String @db.VarChar(30)
+
+  /// The EncryptedData that this key unlocks.
+  encryptedData EncryptedData @relation(fields: [encryptedDataID], references: [id], onUpdate: Cascade, onDelete: Cascade)
+
+  /// The ID of the KeyPair that can unlock this key.
+  keyPairID String @db.VarChar(30)
+
+  /// The KeyPair that can unlock this key.
+  keyPair KeyPair @relation(fields: [keyPairID], references: [id])
+
+  /// The key.
+  encryptedDataKey String @db.Text
+
+  @@id([encryptedDataID, keyPairID])
+  @@index([encryptedDataID])
+  @@index([keyPairID])
 }
