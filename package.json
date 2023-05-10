@@ -19,7 +19,6 @@
     "dev:app": "vite dev",
     "dev:libs": "npm run dev:lib:key-manager",
     "dev:lib:key-manager": "cd packages/key-manager && npm run dev",
-    "link": "npm i ./packages/key-manager",
     "lint": "concurrently npm:lint:app npm:lint:libs",
     "lint:app": "prettier --plugin-search-dir . --check . && eslint .",
     "lint:libs": "cd packages/key-manager && npm run lint",
@@ -31,13 +30,14 @@
     "start": "npm run dev"
   },
   "dependencies": {
+    "@enclavetech/kms-core": "file:packages/key-manager/packages/core",
+    "@enclavetech/kms-openpgp": "file:packages/key-manager/packages/openpgp",
     "@prisma/client": "^4.13.0",
     "@vercel/analytics": "^1.0.0",
     "argon2": "^0.30.3",
     "class-validator": "^0.14.0",
     "class-validator-svelte": "github:aidlran/class-validator-svelte#preview",
     "jose": "^4.14.0",
-    "key-manager": "file:packages/key-manager",
     "openpgp": "^5.7.0"
   },
   "devDependencies": {
