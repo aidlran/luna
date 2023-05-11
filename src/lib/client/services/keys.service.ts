@@ -21,8 +21,8 @@ export class KeysService {
     });
   }
 
-  protected async saveSession(): Promise<void> {
-    const { payload } = await this.kms.exportSession();
+  protected async saveSession(payload?: string): Promise<void> {
+    if (!payload) payload = (await this.kms.exportSession()).payload;
     await this.sessionApiService.updateData({ payload });
   }
 
@@ -38,10 +38,10 @@ export class KeysService {
     }
 
     // Import session, take returned imported keyIDs and add to our array
-    const { payload } = await this.kms.importSession(session.payload);
-    this.keyIDs.push(...payload);
+    const { keyIDs, sessionExportPayload } = (await this.kms.importExportSession(session.payload)).payload;
+    this.keyIDs.push(...keyIDs);
 
-    await this.saveSession().catch(() => {
+    await this.saveSession(sessionExportPayload).catch(() => {
       /* empty */
     });
   }
