@@ -9,47 +9,41 @@ import type { SessionApiService } from '../api';
 export class KeysService {
   private readonly keyIDs = new Array<string>();
 
-  constructor(private readonly kms: KMS, private readonly sessionApiService: SessionApiService) {}
-
-  protected async importKeyPair(keyPair: KeyPair, passphrase: string): Promise<void> {
-    const { id: keyID, privateKey: armoredKey } = keyPair;
-    const privateKey = await readPrivateKey({ armoredKey });
-    const decryptedKey = await decryptKey({ privateKey, passphrase });
-    await this.kms.importKey({
-      keyID,
-      key: decryptedKey.armor(),
-    });
-  }
+  constructor(
+    // multi-line pls, prettier
+    private readonly kms: KMS,
+    private readonly sessionApiService: SessionApiService,
+  ) {}
 
   protected async saveSession(payload?: string): Promise<void> {
-    if (!payload) payload = (await this.kms.exportSession()).payload;
+    if (!payload) payload = (await this.kms.exportSession()).sessionPayload;
     await this.sessionApiService.updateData({ payload });
   }
 
-  /**
-   * Try and load keys from an existing session.
-   */
-  public async resumeSession(): Promise<void> {
-    const session = await this.sessionApiService.get();
+  /** Try and load keys from an existing session. */
+  async resumeSession(): Promise<void> {
+    const fetchedSession = await this.sessionApiService.get();
 
-    if (session.message) {
+    if (fetchedSession.message) {
       await this.sessionApiService.destroy();
-      throw new Error(session.message);
+      throw new Error(fetchedSession.message);
     }
 
-    // Import session, take returned imported keyIDs and add to our array
-    const { keyIDs, sessionExportPayload } = (await this.kms.importExportSession(session.payload)).payload;
-    this.keyIDs.push(...keyIDs);
+    // Import session, re-export, invalidating old key
+    const importSessionResult = await this.kms.importSession({
+      reexport: true,
+      sessionPayload: fetchedSession.payload,
+    });
 
-    await this.saveSession(sessionExportPayload).catch(() => {
+    this.keyIDs.push(...importSessionResult.importedKeyIDs);
+
+    await this.saveSession(importSessionResult.sessionPayload).catch(() => {
       /* empty */
     });
   }
 
-  /**
-   * End any active session and destroy all session data.
-   */
-  public async destroySession(): Promise<void> {
+  /** End any active session and destroy all session data. */
+  async destroySession(): Promise<void> {
     await Promise.allSettled([this.sessionApiService.destroy(), this.kms.destroySession()]);
   }
 
@@ -58,13 +52,20 @@ export class KeysService {
    * @param {string} passphrase The active user's passphrase.
    * @param {KeyPair[]} keyPairs Encrypted KeyPair items to import.
    */
-  public async import(passphrase: string, ...keyPairs: KeyPair[]): Promise<void> {
+  public async importKeyPairs(passphrase: string, ...keyPairs: KeyPair[]): Promise<void> {
     await Promise.all(
-      keyPairs.map((keyPair) => {
+      keyPairs.map(async (keyPair) => {
+        const { id: keyID, privateKey: armoredKey } = keyPair;
+        const privateKey = await readPrivateKey({ armoredKey });
+        const decryptedKey = await decryptKey({ privateKey, passphrase });
         this.keyIDs.push(keyPair.id);
-        return this.importKeyPair(keyPair, passphrase);
+        return await this.kms.importPrivateKeys({
+          keyID,
+          privateKey: decryptedKey.armor(),
+        });
       }),
     );
+
     await this.saveSession().catch(() => {
       /* empty */
     });
@@ -90,8 +91,7 @@ export class KeysService {
   }
 
   /**
-   * Encrypt a message.
-   * @param {string} payload
+   * @param {string} payload String payload to encrypt.
    * @returns {Promise<IEncryptedDataCreate>} A promise that resolves with data for creating a `EncryptedData` item.
    */
   public async encrypt(payload: string): Promise<IEncryptedDataCreate> {
@@ -101,9 +101,9 @@ export class KeysService {
     });
 
     return {
-      encryptedReadKey: encryptResult.payload.payloadKey,
+      encryptedReadKey: encryptResult.payloadKey,
       ownerKeyPairID: this.keyIDs[0],
-      payload: encryptResult.payload.payload,
+      payload: encryptResult.payload,
     };
   }
 }
