@@ -56,13 +56,22 @@ export class KeysService {
   public async importKeyPairs(passphrase: string, ...keyPairs: KeyPair[]): Promise<void> {
     await Promise.all(
       keyPairs.map(async (keyPair) => {
-        const { id: keyID, privateKey: armoredKey } = keyPair;
-        const privateKey = await readPrivateKey({ armoredKey });
-        const decryptedKey = await decryptKey({ privateKey, passphrase });
+        const { id: keyID, privateKey: encryptedPrivateKey, publicKey } = keyPair;
+
+        const privateKey = // TODO: do this in KMS
+          (
+            await decryptKey({
+              privateKey: await readPrivateKey({ armoredKey: encryptedPrivateKey }),
+              passphrase,
+            })
+          ).armor();
+
         this.keyIDs.push(keyPair.id);
-        return await this.kms.importPrivateKeys({
+
+        return await this.kms.importKeys({
           keyID,
-          privateKey: decryptedKey.armor(),
+          privateKey,
+          publicKey,
         });
       }),
     );
