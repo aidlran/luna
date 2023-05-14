@@ -15,9 +15,10 @@ export class KeysService {
     private readonly sessionApiService: SessionApiService,
   ) {}
 
-  protected async saveSession(payload?: string): Promise<void> {
-    if (!payload) payload = (await this.kms.exportSession()).sessionPayload;
-    await this.sessionApiService.updateData({ payload });
+  protected async saveSession(sessionPayload?: string): Promise<void> {
+    await this.sessionApiService.updateData({
+      payload: sessionPayload ?? (await this.kms.exportSession()).sessionPayload,
+    });
   }
 
   /** Try and load keys from an existing session. */
