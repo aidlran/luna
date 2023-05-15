@@ -1,4 +1,4 @@
-import type { KMS } from '@enclavetech/kms-core';
+import type { IKMS } from '@enclavetech/kms-core';
 import type { KeyPair } from '@prisma/client';
 import { decryptKey, readPrivateKey } from 'openpgp';
 import type { IEncryptedDataCreate } from '$lib/shared/interfaces';
@@ -11,13 +11,13 @@ export class KeysService {
 
   constructor(
     // multi-line pls, prettier
-    private readonly kms: KMS,
+    private readonly kms: IKMS,
     private readonly sessionApiService: SessionApiService,
   ) {}
 
   protected async saveSession(sessionPayload?: string): Promise<void> {
     await this.sessionApiService.updateData({
-      payload: sessionPayload ?? (await this.kms.exportSession()).sessionPayload,
+      payload: sessionPayload ?? (await this.kms.session.export()).sessionPayload,
     });
   }
 
@@ -31,7 +31,7 @@ export class KeysService {
     }
 
     // Import session, re-export, invalidating old key
-    const importSessionResult = await this.kms.importSession({
+    const importSessionResult = await this.kms.session.import({
       reexport: true,
       sessionPayload: fetchedSession.payload,
     });
@@ -45,7 +45,7 @@ export class KeysService {
 
   /** End any active session and destroy all session data. */
   async destroySession(): Promise<void> {
-    await Promise.allSettled([this.sessionApiService.destroy(), this.kms.destroySession()]);
+    await Promise.allSettled([this.sessionApiService.destroy(), this.kms.session.destroy()]);
   }
 
   /**
@@ -68,7 +68,7 @@ export class KeysService {
 
         this.keyIDs.push(keyPair.id);
 
-        return await this.kms.importKeys({
+        return await this.kms.keys.import({
           keyID,
           privateKey,
           publicKey,
@@ -92,7 +92,7 @@ export class KeysService {
    */
   public async decrypt(payload: string, payloadKey: string, kmsKeyID: string): Promise<string> {
     return (
-      await this.kms.hybridDecrypt({
+      await this.kms.hybrid.decrypt({
         kmsKeyID,
         payload,
         payloadKey,
@@ -105,7 +105,7 @@ export class KeysService {
    * @returns {Promise<IEncryptedDataCreate>} A promise that resolves with data for creating a `EncryptedData` item.
    */
   public async encrypt(payload: string): Promise<IEncryptedDataCreate> {
-    const encryptResult = await this.kms.hybridEncrypt({
+    const encryptResult = await this.kms.hybrid.encrypt({
       kmsKeyID: this.keyIDs[0],
       payload,
     });
