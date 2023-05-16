@@ -1,7 +1,7 @@
-import { KmsCluster } from '@enclavetech/kms-openpgp';
 import { getContext, setContext } from 'svelte';
 import { EncryptedDataApiService, MeApiService, SessionApiService, UserApiService } from '../api';
 import { KeysService, UsernameService } from '../services';
+import { createConfiguredKMS } from './kms';
 
 export interface Services {
   // API
@@ -16,7 +16,7 @@ export interface Services {
 
 export function initServices(): Services {
   const sessionApiService = new SessionApiService();
-  const keysService = new KeysService(new KmsCluster(), sessionApiService);
+  const keysService = new KeysService(createConfiguredKMS(), sessionApiService);
 
   const services: Services = {
     // API

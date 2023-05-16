@@ -1,8 +1,8 @@
-import type { IKMS } from '@enclavetech/kms-core';
 import type { KeyPair } from '@prisma/client';
 import { decryptKey, readPrivateKey } from 'openpgp';
 import type { IEncryptedDataCreate } from '$lib/shared/interfaces';
 import type { SessionApiService } from '../api';
+import type { ConfiguredKMS } from '../utils/kms';
 
 // TODO: move session-y stuff to separate service
 
@@ -11,7 +11,7 @@ export class KeysService {
 
   constructor(
     // multi-line pls, prettier
-    private readonly kms: IKMS,
+    private readonly kms: ConfiguredKMS,
     private readonly sessionApiService: SessionApiService,
   ) {}
 
