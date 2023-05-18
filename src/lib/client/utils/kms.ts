@@ -1,5 +1,5 @@
-import { HybridNS, KeysNS, SessionNS } from '@enclavetech/kms-core';
-import { KMS } from '@enclavetech/kms-openpgp';
+import { KMS, HybridNS, KeysNS, SessionNS } from '@enclavetech/kms-core';
+import Worker from '$lib/client/workers/kms.worker?worker';
 
 export type ConfiguredKMS = KMS & {
   hybrid: HybridNS;
@@ -8,7 +8,7 @@ export type ConfiguredKMS = KMS & {
 };
 
 export function createConfiguredKMS() {
-  return new KMS({
+  return new KMS(() => new Worker(), {
     clusterSize: 2,
     hybrid: HybridNS,
     keys: KeysNS,
