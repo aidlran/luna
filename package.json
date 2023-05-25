@@ -11,8 +11,8 @@
   "scripts": {
     "build": "npm run build:libs && npm run build:app",
     "build:app": "vite build",
-    "build:libs": "npm run build:lib:key-manager",
-    "build:lib:key-manager": "cd packages/key-manager && npm run build",
+    "build:libs": "concurrently npm:build:lib:*",
+    "build:lib:key-manager": "cd packages/key-manager && npm run build:core && npm run build:adapter:jose",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "dev": "concurrently -k npm:dev:app npm:dev:libs",
