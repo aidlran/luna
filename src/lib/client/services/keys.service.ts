@@ -1,5 +1,4 @@
 import type { KeyPair } from '@prisma/client';
-import { decryptKey, readPrivateKey } from 'openpgp';
 import type { IEncryptedDataCreate } from '$lib/shared/interfaces';
 import type { SessionApiService } from '../api';
 import type { ConfiguredKMS } from '../utils/kms';
@@ -7,6 +6,7 @@ import type { ConfiguredKMS } from '../utils/kms';
 // TODO: move session-y stuff to separate service
 
 export class KeysService {
+  // TODO: KMS should track this
   private readonly keyIDs = new Array<string>();
 
   constructor(
@@ -50,21 +50,13 @@ export class KeysService {
 
   /**
    * Imports raw `KeyPair` items from the database into the key manager.
-   * @param {string} passphrase The active user's passphrase.
+   * @param {string} secret The active user's passphrase.
    * @param {KeyPair[]} keyPairs Encrypted KeyPair items to import.
    */
-  public async importKeyPairs(passphrase: string, ...keyPairs: KeyPair[]): Promise<void> {
+  public async importKeyPairs(secret: string, ...keyPairs: KeyPair[]): Promise<void> {
     await Promise.all(
       keyPairs.map(async (keyPair) => {
-        const { id: keyID, privateKey: encryptedPrivateKey, publicKey } = keyPair;
-
-        const privateKey = // TODO: do this in KMS
-          (
-            await decryptKey({
-              privateKey: await readPrivateKey({ armoredKey: encryptedPrivateKey }),
-              passphrase,
-            })
-          ).armor();
+        const { id: keyID, privateKey, publicKey } = keyPair;
 
         this.keyIDs.push(keyPair.id);
 
@@ -72,6 +64,7 @@ export class KeysService {
           keyID,
           privateKey,
           publicKey,
+          secret,
         });
       }),
     );
@@ -101,8 +94,9 @@ export class KeysService {
   }
 
   /**
-   * @param {string} payload String payload to encrypt.
+   * @param payload A payload string to encrypt
    * @returns {Promise<IEncryptedDataCreate>} A promise that resolves with data for creating a `EncryptedData` item.
+   * // TODO: this service should have no knowledge of `IEncryptedDataCreate`.
    */
   public async encrypt(payload: string): Promise<IEncryptedDataCreate> {
     const encryptResult = await this.kms.hybrid.encrypt({
@@ -115,5 +109,13 @@ export class KeysService {
       ownerKeyPairID: this.keyIDs[0],
       payload: encryptResult.payload,
     };
+  }
+
+  /**
+   * Creates and exports a new asymmetric key pair.
+   * @param secret The exported private key will be encrypted using this secret.
+   */
+  generateKeyPair(secret: string): Promise<{ privateKey: string; publicKey: string }> {
+    return this.kms.keys.generateKeyPair({ secret });
   }
 }

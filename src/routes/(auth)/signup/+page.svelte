@@ -1,9 +1,6 @@
 <script lang="ts">
-  import { generateKey } from 'openpgp';
-
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
-
   import { ApiError } from '$lib/client/api';
   import { getServices } from '$lib/client/utils/services';
 
@@ -28,45 +25,28 @@
   async function onSubmit() {
     disabled = true;
     const username = usernameInput || usernameGenerated;
-    let keyPair;
-    let createUserResult;
 
-    // Whole thing is wrapped in a try/catch to un-disable form on error
-    // try/catch blocks within are for displaying a relevant error message
     try {
       // Generate a key pair
-      try {
-        keyPair = await generateKey({
-          format: 'armored',
-          passphrase,
-          userIDs: {
-            email,
-            name: username,
-          },
-        });
-      } catch (error) {
-        errors[''] = ["Could not create key pair. Please ensure you've entered a valid email address."];
-        throw error;
-      }
-
-      // Extract armored keys from keyPair
-      const { privateKey, publicKey } = keyPair;
+      const { privateKey, publicKey } = await keysService.generateKeyPair(passphrase).catch(() => {
+        throw 'Could not create key pair.';
+      });
 
       // Create the user
-      try {
-        createUserResult = await userApiService.createUser({
+      const createUserResult = await userApiService
+        .createUser({
           email,
           passphrase,
           username,
           privateKey,
           publicKey,
+        })
+        .catch((e) => {
+          if (e instanceof ApiError) {
+            errors[''] = [e.friendlyMessage];
+          }
+          throw e;
         });
-      } catch (error) {
-        if (error instanceof ApiError) {
-          errors[''] = [error.friendlyMessage];
-        }
-        throw error;
-      }
 
       // Display error messages on fail
       if (createUserResult.errors) {
@@ -84,10 +64,12 @@
         }
         goto('/dashboard');
       }
-    } catch (error) {
-      // Reset form on error
-      console.error(error);
+    } catch (e) {
+      // Reset form on error & display error message
       disabled = false;
+      if (typeof e === 'string') {
+        errors[''] = [typeof e === 'string' ? e : 'Something went wrong.'];
+      }
     }
   }
 </script>

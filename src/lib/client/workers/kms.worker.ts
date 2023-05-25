@@ -1,4 +1,4 @@
 import { Worker } from '@enclavetech/kms-core';
-import { PGPLibImpl } from '@enclavetech/kms-openpgp';
+import Adapter from '@enclavetech/kms-jose';
 
-new Worker(new PGPLibImpl());
+new Worker(new Adapter());
