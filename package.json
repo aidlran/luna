@@ -1,29 +1,43 @@
 {
-  "name": "projex-web-client",
+  "name": "@enclavetech/projex",
   "version": "1.0.0-PREVIEW",
   "private": true,
-  "repository": "github:enclavetech/projex-web-client",
-  "homepage": "https://github.com/enclavetech/projex-web-client#readme",
+  "repository": "github:enclavetech/projex",
+  "homepage": "https://github.com/enclavetech/projex#readme",
   "engines": {
     "node": "^18"
   },
   "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "build": "npm run build:libs && npm run build:app",
     "build:app": "vite build",
     "build:libs": "concurrently npm:build:lib:*",
+    "build:lib:class-validator-svelte": "cd packages/class-validator-svelte && npm run build",
     "build:lib:kms": "cd packages/kms && npm run build:core && npm run build:adapter:jose",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-    "dev": "concurrently -k npm:dev:app npm:dev:libs",
+    "dev": "concurrently -k npm:check:watch npm:dev:app npm:dev:libs",
     "dev:app": "vite dev",
     "dev:libs": "npm run dev:lib:kms",
+    "dev:lib:class-validator-svelte": "cd packages/class-validator-svelte && npm run dev",
     "dev:lib:kms": "cd packages/kms && npm run dev",
     "lint": "concurrently npm:lint:app npm:lint:libs",
     "lint:app": "prettier --plugin-search-dir . --check . && eslint .",
-    "lint:libs": "cd packages/kms && npm run lint",
-    "prepare": "npm run prisma:generate",
-    "prettier": "prettier --plugin-search-dir . --write .",
+    "lint:libs": "concurrently npm:lint:lib:*",
+    "lint:lib:class-validator-svelte": "cd packages/class-validator-svelte && npm run lint",
+    "lint:lib:kms": "cd packages/kms && npm run lint",
+    "prepare": "concurrently npm:prepare:*",
+    "prepare:app": "npm run prisma:generate",
+    "prepare:lib:class-validator-svelte": "cd packages/class-validator-svelte && npm run prepare",
+    "prepare:lib:kms": "cd packages/kms && npm run prepare:core && npm run prepare:adapter:jose",
+    "prettier": "concurrently npm:prettier:app npm:prettier:libs",
+    "prettier:app": "prettier --plugin-search-dir . --write .",
+    "prettier:libs": "concurrently npm:prettier:lib:*",
+    "prettier:lib:class-validator-svelte": "cd packages/class-validator-svelte && npm run prettier",
+    "prettier:lib:kms": "cd packages/kms && npm run prettier",
     "preview": "vite preview",
     "prisma:generate": "prisma generate",
     "prisma:push": "prisma db push",
@@ -34,6 +48,7 @@
   "dependencies": {
     "@enclavetech/kms-core": "file:packages/kms/packages/core",
     "@enclavetech/kms-jose": "file:packages/kms/packages/adapters/jose",
+    "@enclavetech/kms-openpgp": "file:packages/kms/packages/adapters/openpgp",
     "@prisma/client": "^4.15.0",
     "@vercel/analytics": "^1.0.1",
     "argon2": "^0.30.3",
@@ -59,7 +74,7 @@
     "svelte": "^3.59.1",
     "svelte-check": "^3.4.3",
     "tslib": "^2.5.3",
-    "typescript": "^5.1.3",
+    "typescript": "~5.0.0",
     "vite": "^4.3.9"
   }
 }

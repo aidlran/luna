@@ -1,0 +1,19 @@
+{
+  "folders": [
+    {
+      "name": "Projex",
+      "path": "."
+    },
+    {
+      "name": "Class Validator Svelte",
+      "path": "packages/class-validator-svelte"
+    },
+    {
+      "name": "Enclave KMS",
+      "path": "packages/kms"
+    }
+  ],
+  "settings": {
+    "typescript.tsdk": "node_modules/typescript/lib"
+  }
+}
