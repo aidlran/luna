@@ -1,3 +1,6 @@
-[submodule "packages/key-manager"]
-	path = packages/key-manager
-	url = https://github.com/enclavetech/key-manager
+[submodule "class-validator-svelte"]
+	path = packages/class-validator-svelte
+	url = https://github.com/aidlran/class-validator-svelte
+[submodule "kms"]
+	path = packages/kms
+	url = https://github.com/enclavetech/kms
