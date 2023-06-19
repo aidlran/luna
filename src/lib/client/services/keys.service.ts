@@ -7,7 +7,7 @@ import type { ConfiguredKMS } from '../utils/kms';
 
 export class KeysService {
   // TODO: KMS should track this
-  private readonly keyIDs = new Array<string>();
+  private keyIDs = new Array<string>();
 
   constructor(
     // multi-line pls, prettier
@@ -45,6 +45,7 @@ export class KeysService {
 
   /** End any active session and destroy all session data. */
   async destroySession(): Promise<void> {
+    this.keyIDs = new Array<string>();
     await Promise.allSettled([this.sessionApiService.destroy(), this.kms.session.destroy()]);
   }
 
