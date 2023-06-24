@@ -1,11 +1,10 @@
-import { createConfiguredKMS } from '@enclavetech/lib-web';
+import { createConfiguredKMS, EncryptedData } from '@enclavetech/lib-web';
 import { getContext, setContext } from 'svelte';
-import { EncryptedDataApiService, MeApiService, SessionApiService, UserApiService } from '../api';
+import { MeApiService, SessionApiService, UserApiService } from '../api';
 import { KeysService, UsernameService } from '../services';
 
 export interface Services {
-  // API
-  encryptedDataApiService: EncryptedDataApiService;
+  encryptedDataService: EncryptedData;
   meApiService: MeApiService;
   sessionApiService: SessionApiService;
   userApiService: UserApiService;
@@ -19,8 +18,7 @@ export function initServices(): Services {
   const keysService = new KeysService(createConfiguredKMS(), sessionApiService);
 
   return setContext<Services>('services', {
-    // API
-    encryptedDataApiService: new EncryptedDataApiService(),
+    encryptedDataService: new EncryptedData(),
     meApiService: new MeApiService(keysService),
     sessionApiService,
     userApiService: new UserApiService(),

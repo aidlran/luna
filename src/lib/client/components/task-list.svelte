@@ -2,7 +2,7 @@
   import type { ITodo } from '../interfaces/todo.interface';
   import { getServices } from '../utils/services';
 
-  const { encryptedDataApiService, meApiService } = getServices();
+  const { encryptedDataService, meApiService } = getServices();
 
   export let listName: string;
   export let items = Array<ITodo>();
@@ -66,7 +66,7 @@
       });
 
       if (found) {
-        await encryptedDataApiService.deleteOne(todoToDelete.id).catch(() => {
+        await encryptedDataService.deleteOne(todoToDelete.id).catch(() => {
           items.push(todoToDelete);
           sort();
         });
