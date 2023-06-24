@@ -53,6 +53,7 @@
     "jose": "^4.14.0"
   },
   "devDependencies": {
+    "@openpgp/web-stream-tools": "^0.0.13",
     "@sveltejs/adapter-vercel": "^3.0.1",
     "@sveltejs/kit": "^1.20.4",
     "@types/estree": "^1.0.1",
