@@ -6,11 +6,15 @@
     },
     {
       "name": "Class Validator Svelte",
-      "path": "packages/class-validator-svelte"
+      "path": "lib/class-validator-svelte"
+    },
+    {
+      "name": "Enclave Web Library",
+      "path": "lib/web"
     },
     {
       "name": "Enclave KMS",
-      "path": "packages/kms"
+      "path": "lib/web/lib/kms"
     }
   ],
   "settings": {

@@ -1,8 +1,8 @@
 # Directories
 .svelte-kit
 .vercel
+/lib
 node_modules
-packages
 static
 
 # Files

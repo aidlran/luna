@@ -1,7 +1,7 @@
+import type { ConfiguredKMS } from '@enclavetech/lib-web';
 import type { KeyPair } from '@prisma/client';
 import type { IEncryptedDataCreate } from '$lib/shared/interfaces';
 import type { SessionApiService } from '../api';
-import type { ConfiguredKMS } from '../utils/kms';
 
 // TODO: move session-y stuff to separate service
 

@@ -1,6 +1,6 @@
 [submodule "class-validator-svelte"]
-	path = packages/class-validator-svelte
+	path = lib/class-validator-svelte
 	url = https://github.com/aidlran/class-validator-svelte
-[submodule "kms"]
-	path = packages/kms
-	url = https://github.com/enclavetech/kms
+[submodule "web"]
+	path = lib/web
+	url = https://github.com/enclavetech/lib-web
