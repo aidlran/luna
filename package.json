@@ -50,7 +50,7 @@
     "argon2": "^0.30.3",
     "class-validator": "^0.14.0",
     "class-validator-svelte": "file:lib/class-validator-svelte",
-    "jose": "4.14.0"
+    "jose": "^4.14.0"
   },
   "devDependencies": {
     "@sveltejs/adapter-vercel": "^3.0.1",
