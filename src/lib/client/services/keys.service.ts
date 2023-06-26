@@ -1,7 +1,6 @@
-import type { ConfiguredKMS } from '@enclavetech/lib-web';
+import { Session, type ConfiguredKMS } from '@enclavetech/lib-web';
 import type { KeyPair } from '@prisma/client';
 import type { IEncryptedDataCreate } from '$lib/shared/interfaces';
-import type { SessionApiService } from '../api';
 
 // TODO: move session-y stuff to separate service
 
@@ -9,31 +8,25 @@ export class KeysService {
   // TODO: KMS should track this
   private keyIDs = new Array<string>();
 
-  constructor(
-    // multi-line pls, prettier
-    private readonly kms: ConfiguredKMS,
-    private readonly sessionApiService: SessionApiService,
-  ) {}
+  constructor(private readonly kms: ConfiguredKMS) {}
 
   protected async saveSession(sessionPayload?: string): Promise<void> {
-    await this.sessionApiService.updateData({
-      payload: sessionPayload ?? (await this.kms.session.export()).sessionPayload,
-    });
+    await Session.updateSessionData(sessionPayload ?? (await this.kms.session.export()).sessionPayload);
   }
 
   /** Try and load keys from an existing session. */
   async resumeSession(): Promise<void> {
-    const fetchedSession = await this.sessionApiService.get();
+    const retrievedSession = await Session.retrieveSessionDataPayload();
 
-    if (fetchedSession.message) {
-      await this.sessionApiService.destroy();
-      throw new Error(fetchedSession.message);
+    if (retrievedSession.message) {
+      await this.destroySession();
+      throw new Error(retrievedSession.message);
     }
 
     // Import session, re-export, invalidating old key
     const importSessionResult = await this.kms.session.import({
       reexport: true,
-      sessionPayload: fetchedSession.payload,
+      sessionPayload: retrievedSession.payload,
     });
 
     this.keyIDs.push(...importSessionResult.importedKeyIDs);
@@ -46,7 +39,7 @@ export class KeysService {
   /** End any active session and destroy all session data. */
   async destroySession(): Promise<void> {
     this.keyIDs = new Array<string>();
-    await Promise.allSettled([this.sessionApiService.destroy(), this.kms.session.destroy()]);
+    await Promise.allSettled([Session.destroy(), this.kms.session.destroy()]);
   }
 
   /**

@@ -1,11 +1,11 @@
 <script lang="ts">
+  import { Session, HttpError } from '@enclavetech/lib-web';
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
 
-  import { ApiError } from '$lib/client/api';
   import { getServices } from '$lib/client/utils/services';
 
-  const { keysService, sessionApiService } = getServices();
+  const { keysService } = getServices();
 
   let displayedError: string | undefined;
 
@@ -19,20 +19,17 @@
 
   async function onSubmit(event: SubmitEvent) {
     disabled = true;
-    let loginResult;
 
     // Whole thing is wrapped in a try/catch to un-disable form on error
     // try/catch blocks within are for displaying a relevant error message
     try {
       // Try to log in
-      try {
-        loginResult = await sessionApiService.create({ identifier, passphrase });
-      } catch (error) {
-        if (error instanceof ApiError) {
+      const loginResult = await Session.signInWithCredentials(identifier, passphrase).catch((error) => {
+        if (error instanceof HttpError) {
           displayedError = error.friendlyMessage;
         }
         throw error;
-      }
+      });
 
       // Display error message on fail
       if (loginResult.message) {

@@ -1,3 +1,4 @@
+/** @deprecated moved to `web-lib`. */
 export class ApiError extends Error {
   friendlyMessage: string;
   constructor(method: string, url: string, message: string) {

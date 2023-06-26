@@ -1,8 +1,9 @@
 <script lang="ts">
+  import { EncryptedData } from '@enclavetech/lib-web';
   import type { ITodo } from '../interfaces/todo.interface';
   import { getServices } from '../utils/services';
 
-  const { encryptedDataService, meApiService } = getServices();
+  const { meApiService } = getServices();
 
   export let listName: string;
   export let items = Array<ITodo>();
@@ -66,7 +67,7 @@
       });
 
       if (found) {
-        await encryptedDataService.deleteOne(todoToDelete.id).catch(() => {
+        await EncryptedData.deleteByID(todoToDelete.id).catch(() => {
           items.push(todoToDelete);
           sort();
         });

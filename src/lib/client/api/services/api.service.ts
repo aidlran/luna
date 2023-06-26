@@ -1,8 +1,7 @@
 import type { IApiMaybeErrorResponse } from '../interfaces/api-error-response';
 import { ApiError } from '../errors/api.error';
 
-// TODO: API service should throw in a standardised way for 400, 401, 403, 404, etc. responses
-
+/** @deprecated moved to `web-lib`. */
 export abstract class ApiService {
   private readonly controllerURL;
 
@@ -10,6 +9,7 @@ export abstract class ApiService {
     this.controllerURL = `/api/${controllerURL}`;
   }
 
+  /** @deprecated moved to `web-lib`. */
   private async fetch<T extends object>(
     routeURL: string,
     fetchInit: RequestInit & { method: string },
@@ -25,6 +25,7 @@ export abstract class ApiService {
     });
   }
 
+  /** @deprecated moved to `web-lib`. */
   private async fetchWithBody<D extends object, T extends object>(
     routeURL = '',
     method: string,
@@ -43,6 +44,7 @@ export abstract class ApiService {
    * Performs a `DELETE` request.
    * @param {string} [routeURL] The route URL string.
    * @returns {Promise<T & IApiMaybeErrorResponse>}
+   * @deprecated moved to `web-lib`.
    */
   protected DELETE<T extends object>(routeURL = ''): Promise<T & IApiMaybeErrorResponse> {
     return this.fetch<T>(routeURL, { method: 'DELETE' });
@@ -52,6 +54,7 @@ export abstract class ApiService {
    * Performs a `GET` request.
    * @param {string} [routeURL] The route URL string.
    * @returns {Promise<T & IApiMaybeErrorResponse>}
+   * @deprecated moved to `web-lib`.
    */
   protected GET<T extends object>(routeURL = ''): Promise<T & IApiMaybeErrorResponse> {
     return this.fetch<T>(routeURL, { method: 'GET' });
@@ -62,6 +65,7 @@ export abstract class ApiService {
    * @param {string} [routeURL] The route URL string.
    * @param {D} data An object to submit in the request body.
    * @returns {Promise<T & IApiMaybeErrorResponse>}
+   * @deprecated moved to `web-lib`.
    */
   protected async POST<D extends object, T extends object>(
     routeURL = '',
@@ -75,6 +79,7 @@ export abstract class ApiService {
    * @param {string} [routeURL] The route URL string.
    * @param {D} data An object to submit in the request body.
    * @returns {Promise<T & IApiMaybeErrorResponse>}
+   * @deprecated moved to `web-lib`.
    */
   protected async PUT<D extends object, T extends object>(
     routeURL = '',
