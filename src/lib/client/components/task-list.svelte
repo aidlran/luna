@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { EncryptedData } from '@enclavetech/lib-web';
+  import { Data } from '@enclavetech/lib-web';
   import type { ITodo } from '../interfaces/todo.interface';
   import { getServices } from '../utils/services';
 
@@ -41,7 +41,7 @@
       // Push change
       await keysService
         .encrypt(JSON.stringify(newTodo))
-        .then(EncryptedData.create)
+        .then(Data.create)
         .then((result) => {
           if (result.errors || result.message) throw new Error();
 
@@ -70,7 +70,7 @@
       });
 
       if (found) {
-        await EncryptedData.deleteByID(todoToDelete.id).catch(() => {
+        await Data.deleteByID(todoToDelete.id).catch(() => {
           items.push(todoToDelete);
           sort();
         });
