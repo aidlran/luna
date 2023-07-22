@@ -17,7 +17,7 @@
 
   onMount(() => initialFocus.focus());
 
-  async function onSubmit(event: SubmitEvent) {
+  async function onSubmit() {
     disabled = true;
 
     // Whole thing is wrapped in a try/catch to un-disable form on error
@@ -49,8 +49,8 @@
       }
     } catch (error) {
       // Reset form on error
-      console.log(error);
       disabled = false;
+      throw error;
     }
   }
 </script>
