@@ -12,15 +12,18 @@
   let disabled = false;
   let newItemName: string;
 
-  function focusInput(input: HTMLInputElement) {
-    input.focus();
+  function focus(e: HTMLElement) {
+    e.focus();
   }
 
   function sort(): void {
     items = items.sort((a, b) => b.createdAt - a.createdAt);
   }
 
-  sort();
+  async function onAddItemClick() {
+    await onSubmit();
+    isAddingItem = true;
+  }
 
   async function onSubmit(): Promise<void> {
     if (newItemName) {
@@ -34,7 +37,6 @@
       // Add item to top of list
       items = [newTodo].concat(items);
       newItemName = '';
-      isAddingItem = false;
 
       // Push change
       await meApiService
@@ -74,19 +76,21 @@
       }
     }
   }
+
+  sort();
 </script>
 
 <section class="task-list">
   <header>
     <h1>{listName}</h1>
-    <button on:click={() => (isAddingItem = true)}>+</button>
+    <button on:click={onAddItemClick}>+</button>
   </header>
   <div class="task-entries">
     {#if isAddingItem}
       <form class="task" on:submit|preventDefault={onSubmit}>
         <input
           required
-          use:focusInput
+          use:focus
           on:blur={() => (isAddingItem = false)}
           bind:value={newItemName}
           {disabled}
