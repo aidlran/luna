@@ -3,7 +3,7 @@
   import type { ITodo } from '../interfaces/todo.interface';
   import { getServices } from '../utils/services';
 
-  const { meApiService } = getServices();
+  const { keysService } = getServices();
 
   export let listName: string;
   export let items = Array<ITodo>();
@@ -25,7 +25,7 @@
     isAddingItem = true;
   }
 
-  async function onSubmit(): Promise<void> {
+  async function onSubmit() {
     if (newItemName) {
       const newTodo: ITodo = {
         type: 'todo',
@@ -39,10 +39,11 @@
       newItemName = '';
 
       // Push change
-      await meApiService
-        .createEncryptedData(JSON.stringify(newTodo))
+      await keysService
+        .encrypt(JSON.stringify(newTodo))
+        .then(EncryptedData.create)
         .then((result) => {
-          if (result.errors || result.message) throw null;
+          if (result.errors || result.message) throw new Error();
 
           // Add ID to todo
           newTodo.id = result.id;

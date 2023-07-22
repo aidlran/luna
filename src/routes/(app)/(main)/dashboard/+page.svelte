@@ -1,12 +1,13 @@
 <script lang="ts">
+  import { EncryptedData } from '@enclavetech/lib-web';
   import { TaskList } from '$lib/client/components';
   import type { ITodo } from '$lib/client/interfaces/todo.interface';
   import { getServices } from '$lib/client/utils/services';
 
-  const { keysService, meApiService } = getServices();
+  const { keysService } = getServices();
 
   async function getData(): Promise<ITodo[]> {
-    const allData = await meApiService.getAllEncryptedData();
+    const allData = await EncryptedData.getAllOwn();
     return (
       await Promise.all(
         allData.map(async (data) => {
