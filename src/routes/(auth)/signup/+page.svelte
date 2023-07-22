@@ -1,10 +1,10 @@
 <script lang="ts">
+  import { HttpError, User } from '@enclavetech/lib-web';
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
-  import { ApiError } from '$lib/client/api';
   import { getServices } from '$lib/client/utils/services';
 
-  const { keysService, userApiService, usernameService } = getServices();
+  const { keysService, usernameService } = getServices();
 
   let errors: Record<string, string[]> = {};
 
@@ -33,20 +33,18 @@
       });
 
       // Create the user
-      const createUserResult = await userApiService
-        .createUser({
-          email,
-          passphrase,
-          username,
-          privateKey,
-          publicKey,
-        })
-        .catch((e) => {
-          if (e instanceof ApiError) {
-            errors[''] = [e.friendlyMessage];
-          }
-          throw e;
-        });
+      const createUserResult = await User.create({
+        email,
+        passphrase,
+        username,
+        privateKey,
+        publicKey,
+      }).catch((e) => {
+        if (e instanceof HttpError) {
+          errors[''] = [e.friendlyMessage];
+        }
+        throw e;
+      });
 
       // Display error messages on fail
       if (createUserResult.errors) {
