@@ -5,6 +5,7 @@ module.exports = {
     'plugin:@typescript-eslint/strict',
     'plugin:@typescript-eslint/stylistic',
     'plugin:svelte/recommended',
+    'plugin:svelte/prettier',
     'prettier',
   ],
   parser: '@typescript-eslint/parser',
