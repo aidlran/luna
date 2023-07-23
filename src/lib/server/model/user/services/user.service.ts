@@ -1,6 +1,5 @@
 import { hash, verify } from 'argon2';
-import type { PrismaClient } from '@prisma/client';
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import { Prisma, type PrismaClient } from '@prisma/client';
 import type { IUserCreate, IUserMe } from '$lib/shared/interfaces';
 import { UserError } from '../errors/user.error';
 
@@ -38,7 +37,7 @@ export class UserService {
         },
       });
     } catch (e) {
-      throw e instanceof PrismaClientKnownRequestError && e.code === 'P2002'
+      throw e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2002'
         ? new UserError('USERNAME_OR_EMAIL_UNAVAILABLE')
         : e;
     }
