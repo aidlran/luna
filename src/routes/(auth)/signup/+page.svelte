@@ -4,7 +4,7 @@
   import { goto } from '$app/navigation';
   import { getServices } from '$lib/client/utils/services';
 
-  const { keysService, usernameService } = getServices();
+  const { usernameService } = getServices();
 
   let errors: Record<string, string[]> = {};
 
@@ -47,12 +47,6 @@
 
       // Unlock and redirect on success
       else if (createUserResult.user) {
-        try {
-          await keysService.importKeyPairs(createUserResult.user.keyPairs);
-        } catch (error) {
-          errors[''] = ['Could not import keys.'];
-          throw error;
-        }
         goto('/dashboard');
       }
     } catch (e) {

@@ -1,9 +1,6 @@
 <script lang="ts">
   import { Data } from '@enclavetech/lib-web';
   import type { ITodo } from '../interfaces/todo.interface';
-  import { getServices } from '../utils/services';
-
-  const { keysService } = getServices();
 
   export let listName: string;
   export let items = Array<ITodo>();
@@ -39,7 +36,7 @@
       newItemName = '';
 
       // Push change
-      await Data.create(JSON.stringify(newTodo), keysService.defaultKey)
+      await Data.create(JSON.stringify(newTodo))
         .then((result) => {
           if (result.errors || result.message) throw new Error();
 

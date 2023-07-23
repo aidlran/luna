@@ -1,10 +1,8 @@
 <script lang="ts">
+  import { Session } from '@enclavetech/lib-web';
   import { Modal } from '$lib/client/components';
-  import { getServices } from '$lib/client/utils/services';
 
-  const { keysService } = getServices();
-
-  keysService.destroySession();
+  Session.destroy();
 </script>
 
 <main>
