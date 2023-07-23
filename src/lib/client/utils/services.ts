@@ -1,4 +1,3 @@
-import { KMS } from '@enclavetech/lib-web';
 import { getContext, setContext } from 'svelte';
 import { KeysService, UsernameService } from '../services';
 
@@ -8,7 +7,7 @@ export interface Services {
 }
 
 export function initServices(): Services {
-  const keysService = new KeysService(KMS());
+  const keysService = new KeysService();
 
   return setContext<Services>('services', {
     keysService,

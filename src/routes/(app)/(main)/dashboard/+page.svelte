@@ -2,9 +2,6 @@
   import { Data } from '@enclavetech/lib-web';
   import { TaskList } from '$lib/client/components';
   import type { ITodo } from '$lib/client/interfaces/todo.interface';
-  import { getServices } from '$lib/client/utils/services';
-
-  const { keysService } = getServices();
 
   async function getData(): Promise<ITodo[]> {
     const allData = await Data.getAllOwn();
@@ -15,13 +12,7 @@
           try {
             return {
               id,
-              ...JSON.parse(
-                await keysService.decrypt(
-                  data.payload,
-                  data.keys[0].encryptedDataKey,
-                  data.keys[0].keyPairID,
-                ),
-              ),
+              ...JSON.parse(await Data.decrypt(data)),
             };
           } catch (e) {
             return null;

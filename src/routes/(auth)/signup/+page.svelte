@@ -27,18 +27,11 @@
     const username = usernameInput || usernameGenerated;
 
     try {
-      // Generate a key pair
-      const { privateKey, publicKey } = await keysService.generateKeyPair(passphrase).catch(() => {
-        throw 'Could not create key pair.';
-      });
-
       // Create the user
       const createUserResult = await User.create({
         email,
         passphrase,
         username,
-        privateKey,
-        publicKey,
       }).catch((e) => {
         if (e instanceof HttpError) {
           errors[''] = [e.friendlyMessage];
@@ -55,7 +48,7 @@
       // Unlock and redirect on success
       else if (createUserResult.user) {
         try {
-          await keysService.importKeyPairs(passphrase, ...createUserResult.user.keyPairs);
+          await keysService.importKeyPairs(createUserResult.user.keyPairs);
         } catch (error) {
           errors[''] = ['Could not import keys.'];
           throw error;

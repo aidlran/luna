@@ -39,9 +39,7 @@
       newItemName = '';
 
       // Push change
-      await keysService
-        .encrypt(JSON.stringify(newTodo))
-        .then(Data.create)
+      await Data.create(JSON.stringify(newTodo), keysService.defaultKey)
         .then((result) => {
           if (result.errors || result.message) throw new Error();
 
