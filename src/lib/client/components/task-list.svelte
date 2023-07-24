@@ -1,6 +1,7 @@
 <script lang="ts">
   import { Data } from '@enclavetech/lib-web';
   import type { ITodo } from '../interfaces/todo.interface';
+  import TaskListEntry from './task-list-entry.svelte';
 
   export let listName: string;
   export let items = Array<ITodo>();
@@ -51,26 +52,8 @@
     }
   }
 
-  async function onDelete(todoToDelete: ITodo): Promise<void> {
-    if (todoToDelete.id) {
-      let found = false;
-
-      items = items.filter((todo) => {
-        if (todo.id === todoToDelete.id) {
-          found = true;
-          return false; // remove
-        } else {
-          return true; // keep
-        }
-      });
-
-      if (found) {
-        await Data.deleteByID(todoToDelete.id).catch(() => {
-          items.push(todoToDelete);
-          sort();
-        });
-      }
-    }
+  function onDelete({ detail: id }: CustomEvent<string>) {
+    items = items.filter((todo) => todo.id !== id);
   }
 
   sort();
@@ -94,12 +77,7 @@
       </form>
     {/if}
     {#each items as task}
-      <div class="task">
-        <span>{task.name}</span>
-        {#if task.id}
-          <button on:click={() => onDelete(task)}>Delete</button>
-        {/if}
-      </div>
+      <TaskListEntry {task} on:delete={onDelete} />
     {/each}
   </div>
 </section>
@@ -150,15 +128,5 @@
     .task-entries {
       border-radius: 0 0 18px 18px;
     }
-  }
-
-  .task {
-    border: var(--border);
-    background: rgba(var(--colour-background), var(--alpha-level-1));
-    backdrop-filter: blur(2px);
-    -webkit-backdrop-filter: blur(2px);
-    margin: 8px 0;
-    padding: 8px;
-    border-radius: 8px;
   }
 </style>
