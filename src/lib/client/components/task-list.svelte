@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Data } from '@enclavetech/lib-web';
   import type { ITodo } from '../interfaces/todo.interface';
-  import TaskListEntry from './task-list-entry.svelte';
+  import TaskCard from './task-card.svelte';
 
   export let listName: string;
   export let items = Array<ITodo>();
@@ -77,7 +77,7 @@
       </form>
     {/if}
     {#each items as task}
-      <TaskListEntry {task} on:delete={onDelete} />
+      <TaskCard {task} on:delete={onDelete} />
     {/each}
   </div>
 </section>
