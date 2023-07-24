@@ -24,7 +24,7 @@
     background: rgba(var(--colour-background), var(--alpha-level-1));
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
-    box-shadow: -4px -4px 24px 4px #5a5a7010;
+    box-shadow: var(--shadow);
   }
 
   @media only screen and (min-width: 600px) {

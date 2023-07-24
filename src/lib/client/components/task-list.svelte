@@ -87,7 +87,7 @@
     width: 100%;
     display: flex;
     flex-flow: column nowrap;
-    box-shadow: -4px -4px 24px 4px #5a5a7010;
+    box-shadow: var(--shadow);
   }
 
   header {
@@ -98,11 +98,11 @@
     background: rgba(var(--colour-background), var(--alpha-level-2));
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    padding: 8px;
+    padding: 10px 18px 8px;
   }
 
   h1 {
-    margin: 0;
+    margin: 3px 0 0;
   }
 
   .task-entries {
@@ -128,5 +128,16 @@
     .task-entries {
       border-radius: 0 0 18px 18px;
     }
+  }
+
+  .task {
+    border: var(--border);
+    background: rgba(var(--colour-background), var(--alpha-level-1));
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    margin: 8px 0;
+    padding: 8px;
+    border-radius: 8px;
+    cursor: pointer;
   }
 </style>

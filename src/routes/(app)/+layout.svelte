@@ -1,6 +1,7 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
-  import { Header } from '$lib/client/components';
+  import { Drawer, Header } from '$lib/client/components';
+  import { drawer } from '$lib/client/utils/stores';
   import { Session } from '@enclavetech/lib-web';
 
   export let data;
@@ -12,16 +13,20 @@
   }
 </script>
 
-<Header username={data.sessionContext.user.username} />
+<div class="app" on:click={() => drawer.update((v) => (v = null))}>
+  <Header username={data.sessionContext.user.username} />
 
-<main>
-  {#await init() then}
-    <slot />
-  {/await}
-</main>
+  <main>
+    {#await init() then}
+      <slot />
+    {/await}
+  </main>
+
+  <Drawer />
+</div>
 
 <style>
-  :global(body) {
+  .app {
     height: 100vh;
     max-height: 100vh;
     overflow: hidden;
