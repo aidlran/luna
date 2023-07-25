@@ -24,6 +24,8 @@
     "dev:libs": "concurrently npm:dev:lib:*",
     "dev:lib:class-validator-svelte": "cd lib/class-validator-svelte && npm run dev",
     "dev:lib:lib-web": "cd lib/web && npm run dev",
+    "lc": "echo Projex: $(find src -type f -exec cat {} \\; | wc -l) lines",
+    "line-count": "npm run lc",
     "lint": "concurrently npm:lint:app npm:lint:libs",
     "lint:app": "prettier . --check . && eslint .",
     "lint:libs": "concurrently npm:lint:lib:*",
