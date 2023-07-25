@@ -26,12 +26,16 @@
 </div>
 
 <style>
-  .app {
+  :global(body) {
     height: 100vh;
     max-height: 100vh;
     overflow: hidden;
     display: flex;
     flex-flow: column nowrap;
+  }
+
+  .app {
+    display: contents;
   }
 
   main {

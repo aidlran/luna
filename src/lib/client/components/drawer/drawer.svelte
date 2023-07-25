@@ -25,7 +25,7 @@
       return;
     }
 
-    currentTransitionDuration = 50;
+    currentTransitionDuration = 80;
     isOpen = false;
     setTimeout(() => {
       currentTransitionDuration = baseTransitionDuration;
@@ -50,8 +50,8 @@
   role="none"
   class="drawer"
   tabindex="-1"
-  style:right={isOpen ? 0 : '-300px'}
-  style:transition-duration={`${baseTransitionDuration}ms`}
+  style:right={isOpen ? 0 : 'calc(0px - var(--width))'}
+  style:transition-duration={`${currentTransitionDuration}ms`}
   on:click|stopPropagation
   on:keypress
 >
@@ -63,13 +63,14 @@
 
 <style>
   .drawer {
+    --width: 300px;
     --padding: 16px;
     --padding-x2: calc(var(--padding) * 2);
 
     position: absolute;
     height: calc(100% - var(--padding-x2));
     width: calc(100% - var(--padding-x2));
-    max-width: calc(300px - var(--padding-x2));
+    max-width: calc(var(--width) - var(--padding-x2));
     padding: var(--padding);
     background: rgba(var(--colour-background), 0.9);
     backdrop-filter: blur(2px);
