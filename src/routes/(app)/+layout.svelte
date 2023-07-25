@@ -13,7 +13,7 @@
   }
 </script>
 
-<div class="app" on:click={() => drawer.update((v) => (v = null))}>
+<div role="none" class="app" on:click={drawer.close}>
   <Header username={data.sessionContext.user.username} />
 
   <main>
@@ -22,7 +22,7 @@
     {/await}
   </main>
 
-  <Drawer />
+  <Drawer control={drawer} />
 </div>
 
 <style>

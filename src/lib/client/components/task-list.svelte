@@ -7,11 +7,15 @@
   export let items = Array<ITodo>();
 
   let isAddingItem = false;
-  let disabled = false;
   let newItemName: string;
 
   function focus(e: HTMLElement) {
     e.focus();
+  }
+
+  function cancel() {
+    isAddingItem = false;
+    newItemName = '';
   }
 
   function sort(): void {
@@ -19,37 +23,37 @@
   }
 
   async function onAddItemClick() {
-    await onSubmit();
+    if (isAddingItem) await onSubmit();
     isAddingItem = true;
   }
 
   async function onSubmit() {
-    if (newItemName) {
-      const newTodo: ITodo = {
-        type: 'todo',
-        name: newItemName,
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
-      };
+    if (!newItemName) return;
 
-      // Add item to top of list
-      items = [newTodo].concat(items);
-      newItemName = '';
+    const newTodo: ITodo = {
+      type: 'todo',
+      name: newItemName,
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+    };
 
-      // Push change
-      await Data.create(JSON.stringify(newTodo))
-        .then((result) => {
-          if (result.errors || result.message) throw new Error();
+    // Add item to top of list
+    items = [newTodo].concat(items);
+    newItemName = '';
 
-          // Add ID to todo
-          newTodo.id = result.id;
-          items = items; // Assign to trigger Svelte change detection
-        })
-        .catch(() => {
-          // Remove item if push failed
-          items = items.filter((todo) => todo !== newTodo);
-        });
-    }
+    // Push change
+    await Data.create(JSON.stringify(newTodo))
+      .then((result) => {
+        if (result.errors || result.message) throw new Error();
+
+        // Add ID to todo
+        newTodo.id = result.id;
+        items = items; // Assign to trigger Svelte change detection
+      })
+      .catch(() => {
+        // Remove item if push failed
+        items = items.filter((todo) => todo !== newTodo);
+      });
   }
 
   function onDelete({ detail: id }: CustomEvent<string>) {
@@ -67,13 +71,7 @@
   <div class="task-entries">
     {#if isAddingItem}
       <form class="task" on:submit|preventDefault={onSubmit}>
-        <input
-          required
-          use:focus
-          on:blur={() => (isAddingItem = false)}
-          bind:value={newItemName}
-          {disabled}
-        />
+        <input required use:focus on:blur={cancel} bind:value={newItemName} />
       </form>
     {/if}
     {#each items as task}

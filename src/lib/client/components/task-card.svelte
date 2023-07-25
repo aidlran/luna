@@ -12,25 +12,26 @@
   $: display = 'flex';
 
   function onDelete() {
-    if (task.id) {
-      display = 'none';
-      Data.deleteByID(task.id)
-        .catch((error) => {
-          display = 'flex';
-          throw error;
-        })
-        .then(() => dispatch('delete', task.id));
-    }
+    if (!task.id) return;
+
+    // TODO: Data items will be stores in future.
+    // The TaskDetail component would subscribe to the item.
+    // on delete, it will handle closing the drawer/itself.
+    drawer.close();
+
+    display = 'none';
+    Data.deleteByID(task.id)
+      .catch((error) => {
+        display = 'flex';
+        throw error;
+      })
+      .then(() => dispatch('delete', task.id));
+
+    // TODO: fix double delete bug
   }
 
   function onActivate() {
-    drawer.update(
-      (value) =>
-        (value = {
-          component: TaskDetail,
-          props: { task },
-        }),
-    );
+    drawer.open(TaskDetail, { task });
   }
 </script>
 
@@ -44,7 +45,7 @@
 >
   <span>{task.name}</span>
   {#if task.id}
-    <button on:click|stopPropagation={onDelete} on:keypress|stopPropagation>Delete</button>
+    <button on:click|stopPropagation={onDelete}>Delete</button>
   {/if}
 </div>
 

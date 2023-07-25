@@ -1,7 +1,3 @@
-import type { ComponentType } from 'svelte';
-import { writable } from 'svelte/store';
+import { drawerControl } from '../components/drawer';
 
-export const drawer = writable<null | {
-  component: ComponentType;
-  props?: object;
-}>();
+export const drawer = drawerControl();
