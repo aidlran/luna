@@ -55,8 +55,10 @@
   on:click|stopPropagation
   on:keypress
 >
-  <button class="close" on:click|stopPropagation={close}>X</button>
-  <svelte:component this={state.component} {...state.props} />
+  {#if isOpen}
+    <button class="close" on:click|stopPropagation={close}>X</button>
+    <svelte:component this={state.component} {...state.props} />
+  {/if}
 </div>
 
 <style>
