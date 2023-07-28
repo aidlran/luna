@@ -117,4 +117,20 @@ export class EncryptedDataRepository implements IEncryptedDataMethods {
       include: this.includeFactory.getEncryptedDataKeysIncludeForUser(userID),
     });
   }
+
+  getRootData(appID: number, userID: string) {
+    return this.prismaClient.rootData
+      .findUnique({
+        where: {
+          appID_userID: {
+            appID,
+            userID,
+          },
+        },
+        include: {
+          data: true,
+        },
+      })
+      .then((rootData) => rootData?.data);
+  }
 }

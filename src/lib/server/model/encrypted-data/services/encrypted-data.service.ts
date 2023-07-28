@@ -84,4 +84,8 @@ export class EncryptedDataService implements IEncryptedDataMethods {
       this.prepareEncryptedDataItemForUser(encryptedDataItem),
     );
   }
+
+  getRootData(appID: number, userID: string) {
+    return this.encryptedDataRepository.getRootData(appID, userID);
+  }
 }

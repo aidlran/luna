@@ -87,4 +87,22 @@ export class EncryptedDataController {
 
     return json(response, { status: 201 });
   }
+
+  async getRootData({ cookies, params }: RequestEvent & { params: { id: string } }) {
+    const userID = await this.getUserID(cookies);
+
+    let appID: number;
+
+    try {
+      appID = Number(params.id);
+    } catch (e) {
+      throw error(400);
+    }
+
+    const rootData = await this.encryptedDataService.getRootData(appID, userID).catch((e) => {
+      throw this.getError(e);
+    });
+
+    return json(rootData);
+  }
 }
