@@ -4,6 +4,7 @@ module.exports = {
     'eslint:recommended',
     'plugin:@typescript-eslint/strict',
     'plugin:@typescript-eslint/stylistic',
+    'plugin:deprecation/recommended',
     'plugin:svelte/recommended',
     'plugin:svelte/prettier',
     'prettier',

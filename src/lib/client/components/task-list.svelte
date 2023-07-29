@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Data } from '@enclavetech/lib-web';
+  import { Data } from '@enclavetech/api';
   import type { ITodo } from '../interfaces/todo.interface';
   import TaskCard from './task-card.svelte';
 

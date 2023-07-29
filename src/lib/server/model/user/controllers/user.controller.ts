@@ -1,4 +1,4 @@
-import { ValidateFormData } from 'class-validator-svelte';
+import { ValidateFormData } from 'sveltekit-validator';
 import { error, json, type RequestEvent } from '@sveltejs/kit';
 import { UserCreateDTO } from '$lib/shared/dtos';
 import type { SessionService } from '../../session';

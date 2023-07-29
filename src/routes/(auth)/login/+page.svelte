@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Session, HttpError } from '@enclavetech/lib-web';
+  import { Session, HttpError } from '@enclavetech/api';
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
 

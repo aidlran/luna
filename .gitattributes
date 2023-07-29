@@ -1,9 +1,5 @@
-# Normalise line endings
 * text=auto
 
-# Exclude config files from language stats
 *.config.js linguist-detectable=false
+*.prisma    linguist-detectable=true
 .eslintrc.* linguist-detectable=false
-
-# Include Prisma schema in language stats
-*.prisma linguist-detectable=true

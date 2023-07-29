@@ -2,7 +2,7 @@
   import { goto } from '$app/navigation';
   import { Drawer, Header } from '$lib/client/components';
   import { drawer } from '$lib/client/utils/stores';
-  import { Session } from '@enclavetech/lib-web';
+  import { Session } from '@enclavetech/api';
 
   export let data;
 

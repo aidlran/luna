@@ -1,5 +1,5 @@
 import { error, json, type Cookies, type RequestEvent } from '@sveltejs/kit';
-import { ValidateFormData } from 'class-validator-svelte';
+import { ValidateFormData } from 'sveltekit-validator';
 import { EncryptedDataCreateDTO } from '$lib/shared/dtos';
 import type { IModelIdResponse, EncryptedDataWithKeysResponse } from '$lib/shared/interfaces';
 import type { SessionService } from '../../session';

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Data } from '@enclavetech/lib-web';
+  import { Data } from '@enclavetech/api';
   import { TaskList } from '$lib/client/components';
   import type { ITodo } from '$lib/client/interfaces/todo.interface';
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Data } from '@enclavetech/lib-web';
+  import { Data } from '@enclavetech/api';
   import { createEventDispatcher } from 'svelte';
   import type { ITodo } from '../interfaces/todo.interface';
   import { drawer } from '../utils/stores';

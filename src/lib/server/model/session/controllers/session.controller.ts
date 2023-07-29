@@ -1,6 +1,6 @@
 import type { PrismaClient } from '@prisma/client';
 import { error, json, type RequestEvent } from '@sveltejs/kit';
-import { ValidateFormData } from 'class-validator-svelte';
+import { ValidateFormData } from 'sveltekit-validator';
 import { SessionCreateDTO, SessionDataUpdateDTO } from '$lib/shared/dtos';
 import type { IUserMe } from '$lib/shared/interfaces';
 import { type UserService, UserError } from '../../user';

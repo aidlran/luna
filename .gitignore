@@ -1,7 +1,4 @@
-# Directories
-.svelte-kit
-.vercel
-node_modules
-
-# Files
+/.svelte-kit
+/.vercel
+/node_modules
 .env*

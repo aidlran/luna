@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Session } from '@enclavetech/lib-web';
+  import { Session } from '@enclavetech/api';
   import { Modal } from '$lib/client/components';
 
   Session.destroy();
