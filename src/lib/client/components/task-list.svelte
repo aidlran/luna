@@ -42,7 +42,7 @@
     newItemName = '';
 
     // Push change
-    await Data.create(JSON.stringify(newTodo))
+    await Data.create(newTodo)
       .then((result) => {
         if (result.errors || result.message) throw new Error();
 

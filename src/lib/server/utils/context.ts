@@ -2,18 +2,17 @@
 
 import { PrismaClient } from '@prisma/client';
 import { dev } from '$app/environment';
-
 import {
   EncryptedDataController,
   EncryptedDataIncludeFactory,
   EncryptedDataRepository,
+  EncryptedDataKeyRepository,
   EncryptedDataService,
+  RootDataRepository,
 } from '../model/encrypted-data';
-
 import { KeyPairService } from '../model/key-pair';
 import { JwtService, SessionController, SessionService } from '../model/session';
 import { UserController, UserService } from '../model/user';
-import { EncryptedDataKeyRepository } from '../model/encrypted-data/repositories/encrypted-data-key.repository';
 
 // Stop Prisma making additional connections when dev server auto-reloads
 if (dev && !(global as any).prisma) {
@@ -27,6 +26,7 @@ export const keyPairService = new KeyPairService(prismaClient);
 export const encryptedDataService = new EncryptedDataService(
   new EncryptedDataRepository(prismaClient, new EncryptedDataIncludeFactory()),
   new EncryptedDataKeyRepository(prismaClient),
+  new RootDataRepository(prismaClient),
   keyPairService,
 );
 export const sessionService = new SessionService(jwtService, prismaClient);

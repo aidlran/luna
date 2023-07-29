@@ -96,13 +96,39 @@ export class EncryptedDataController {
     try {
       appID = Number(params.id);
     } catch (e) {
-      throw error(400);
+      throw error(400, 'Invalid app ID');
     }
 
-    const rootData = await this.encryptedDataService.getRootData(appID, userID).catch((e) => {
+    try {
+      const rootData = await this.encryptedDataService.getRootData(appID, userID);
+      return json(rootData);
+    } catch (e) {
       throw this.getError(e);
-    });
+    }
+  }
 
-    return json(rootData);
+  @ValidateFormData(EncryptedDataCreateDTO)
+  async updateRootData({
+    cookies,
+    params,
+    request,
+  }: RequestEvent & { request: { dto: EncryptedDataCreateDTO }; params: { id: string } }) {
+    const userID = await this.getUserID(cookies);
+    const DTO = request.dto;
+
+    let appID: number;
+
+    try {
+      appID = Number(params.id);
+    } catch (e) {
+      throw error(400, 'Invalid app ID');
+    }
+
+    try {
+      const rootData = await this.encryptedDataService.upsertRootData(appID, userID, DTO);
+      return json(rootData);
+    } catch (e) {
+      throw this.getError(e);
+    }
   }
 }

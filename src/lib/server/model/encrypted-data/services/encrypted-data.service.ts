@@ -5,13 +5,15 @@ import { PermissionDeniedError } from '../errors/permission-denied.error';
 import type { IEncryptedDataMethods } from '../interfaces/encrypted-data-methods.interface';
 import type { EncryptedDataKeyRepository } from '../repositories/encrypted-data-key.repository';
 import type { EncryptedDataRepository } from '../repositories/encrypted-data.repository';
+import type { RootDataRepository } from '../repositories/root-data.repository';
 import type { EncryptedDataWithKeysQueryResult } from '../types/encrypted-data-with-keys-query-result.interface';
 
 export class EncryptedDataService implements IEncryptedDataMethods {
   constructor(
-    protected readonly encryptedDataRepository: EncryptedDataRepository,
-    protected readonly encryptedDataKeyRepository: EncryptedDataKeyRepository,
-    protected readonly keyPairService: KeyPairService,
+    private readonly encryptedDataRepository: EncryptedDataRepository,
+    private readonly encryptedDataKeyRepository: EncryptedDataKeyRepository,
+    private readonly rootDataRepository: RootDataRepository,
+    private readonly keyPairService: KeyPairService,
   ) {}
 
   /**
@@ -85,7 +87,15 @@ export class EncryptedDataService implements IEncryptedDataMethods {
     );
   }
 
+  createRootData(appID: number, userID: string, data: IEncryptedDataCreate) {
+    return this.rootDataRepository.create(appID, userID, data);
+  }
+
   getRootData(appID: number, userID: string) {
-    return this.encryptedDataRepository.getRootData(appID, userID);
+    return this.rootDataRepository.get(appID, userID);
+  }
+
+  upsertRootData(appID: number, userID: string, data: IEncryptedDataCreate) {
+    return this.rootDataRepository.upsert(appID, userID, data);
   }
 }

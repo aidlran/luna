@@ -41,9 +41,9 @@ model KeyPair {
 
 model UserKeyPair {
   keyPairID String  @db.VarChar(30)
-  keyPair   KeyPair @relation(fields: [keyPairID], references: [id])
+  keyPair   KeyPair @relation(fields: [keyPairID], references: [id], onDelete: Cascade)
   userID    String  @db.VarChar(30)
-  user      User    @relation(fields: [userID], references: [id])
+  user      User    @relation(fields: [userID], references: [id], onDelete: Cascade)
 
   @@id([keyPairID, userID])
   @@index([keyPairID])
@@ -54,7 +54,7 @@ model EncryptedData {
   id             String  @id @default(cuid()) @db.VarChar(30)
   payload        String  @db.Text
   ownerKeyPairID String  @db.VarChar(30)
-  ownerKeyPair   KeyPair @relation(fields: [ownerKeyPairID], references: [id])
+  ownerKeyPair   KeyPair @relation(fields: [ownerKeyPairID], references: [id], onDelete: Cascade)
 
   encryptedDataKeys EncryptedDataKey[]
   rootDatas         RootData[]
@@ -67,7 +67,7 @@ model EncryptedDataKey {
   encryptedDataID  String        @db.VarChar(30)
   encryptedData    EncryptedData @relation(fields: [encryptedDataID], references: [id], onDelete: Cascade)
   keyPairID        String        @db.VarChar(30)
-  keyPair          KeyPair       @relation(fields: [keyPairID], references: [id])
+  keyPair          KeyPair       @relation(fields: [keyPairID], references: [id], onDelete: Cascade)
 
   @@id([encryptedDataID, keyPairID])
   @@index([encryptedDataID])
@@ -83,9 +83,9 @@ model App {
 
 model RootData {
   appID  Int           @db.SmallInt
-  app    App           @relation(fields: [appID], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  app    App           @relation(fields: [appID], references: [id], onDelete: Cascade)
   userID String        @db.VarChar(30)
-  user   User          @relation(fields: [userID], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  user   User          @relation(fields: [userID], references: [id], onDelete: Cascade)
   dataID String        @db.VarChar(30)
   data   EncryptedData @relation(fields: [dataID], references: [id])
 
