@@ -12,7 +12,7 @@
     "lib/*"
   ],
   "scripts": {
-    "build": "concurrently npm:build:*",
+    "build": "concurrently npm:build:lib:* && npm run build:app",
     "build:app": "vite build",
     "build:lib:api": "cd lib/api && npm run build",
     "build:lib:kms": "cd lib/api && npm run build",
