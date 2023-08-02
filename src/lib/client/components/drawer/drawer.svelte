@@ -46,22 +46,39 @@
   onDestroy(unsubscribe);
 </script>
 
-<div
-  role="none"
-  class="drawer"
-  tabindex="-1"
-  style:right={isOpen ? 0 : 'calc(0px - var(--width))'}
-  style:transition-duration={`${currentTransitionDuration}ms`}
-  on:click|stopPropagation
-  on:keypress
->
-  {#if isOpen}
-    <button class="close" on:click|stopPropagation={close}>X</button>
-    <svelte:component this={state.component} {...state.props} />
-  {/if}
+<div class="container" class:open={isOpen} style:--transition-duration={`${currentTransitionDuration}ms`}>
+  <div role="none" class="overlay" />
+
+  <div role="none" class="drawer" on:click|stopPropagation>
+    {#if isOpen}
+      <button class="close" on:click|stopPropagation={close}>X</button>
+      <svelte:component this={state.component} {...state.props} />
+    {/if}
+  </div>
 </div>
 
 <style>
+  .container {
+    display: contents;
+  }
+
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    min-width: 100vw;
+    min-height: 100vh;
+    pointer-events: none;
+    transition: background-color var(--transition-duration) ease;
+    background-color: #0000;
+  }
+
+  .container.open .overlay {
+    background-color: #0002;
+  }
+
   .drawer {
     --width: 300px;
     --padding: 16px;
@@ -76,7 +93,12 @@
     backdrop-filter: blur(2px);
     -webkit-backdrop-filter: blur(2px);
     box-shadow: var(--shadow);
-    transition: right ease;
+    transition: right var(--transition-duration) ease;
+    right: calc(0px - var(--width));
+  }
+
+  .container.open .drawer {
+    right: 0;
   }
 
   button.close {
