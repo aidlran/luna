@@ -1,6 +1,6 @@
 <script lang="ts">
-  import type { ITodo } from '../interfaces/todo.interface';
-  export let task: ITodo;
+  import type { Todo } from '../interfaces/todo';
+  export let task: Todo;
 </script>
 
 <h1>{task.name}</h1>

@@ -1,10 +1,11 @@
 <script lang="ts">
   import { Data } from '@enclavetech/api';
-  import type { ITodo } from '../interfaces/todo.interface';
+  import type { Todo } from '../interfaces/todo';
+  import type { OptionalID } from '../types/optional-id';
   import TaskCard from './task-card.svelte';
 
   export let listName: string;
-  export let items = Array<ITodo>();
+  export let items = Array<OptionalID<Todo>>();
 
   let isAddingItem = false;
   let newItemName: string;
@@ -30,7 +31,7 @@
   async function onSubmit() {
     if (!newItemName) return;
 
-    const newTodo: ITodo = {
+    const newTodo: OptionalID<Todo> = {
       type: 'todo',
       name: newItemName,
       createdAt: Date.now(),

@@ -1,11 +1,12 @@
 <script lang="ts">
   import { Data } from '@enclavetech/api';
   import { createEventDispatcher } from 'svelte';
-  import type { ITodo } from '../interfaces/todo.interface';
+  import type { Todo } from '../interfaces/todo';
+  import type { OptionalID } from '../types/optional-id';
   import { drawer } from '../utils/stores';
   import TaskDetail from './task-detail.svelte';
 
-  export let task: ITodo;
+  export let task: OptionalID<Todo>;
 
   const dispatch = createEventDispatcher();
 

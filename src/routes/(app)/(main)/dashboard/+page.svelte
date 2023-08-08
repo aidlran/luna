@@ -1,10 +1,10 @@
 <script lang="ts">
   import { Data } from '@enclavetech/api';
   import { TaskList } from '$lib/client/components';
-  import type { ITodo } from '$lib/client/interfaces/todo.interface';
+  import type { Todo } from '$lib/client/interfaces/todo';
 
   function getOwnTasks() {
-    return Data.getAllOwn() as Promise<ITodo[]>;
+    return Data.getAllOwn() as Promise<Todo[]>;
   }
 </script>
 
