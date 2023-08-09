@@ -44,6 +44,28 @@ export class EncryptedDataController {
     return json({});
   }
 
+  @ValidateFormData(EncryptedDataCreateDTO)
+  async replaceByIdAndUser({
+    cookies,
+    params,
+    request,
+  }: RequestEvent & { params: { id: string }; request: { dto: EncryptedDataCreateDTO } }): Promise<Response> {
+    // TODO: sign messages in client, check signature here
+
+    const userID = await this.getUserID(cookies);
+
+    const { encryptedDataID } = await this.encryptedDataService.replaceByIdAndUser(
+      params.id,
+      userID,
+      request.dto,
+    );
+
+    // Type checking our response
+    const response: IModelIdResponse = { id: encryptedDataID };
+
+    return json(response, { status: 201 });
+  }
+
   public async getByIdIncludeKeysForUser({
     cookies,
     params,

@@ -44,13 +44,30 @@
       childTaskLists = [];
     }
   }
+
+  async function onUpdateTaskListID({ detail }: CustomEvent<{ id: string; new: Task }>) {
+    const childTaskListIndex = childTaskLists.findIndex((value) => value.id === detail.id);
+    if (childTaskListIndex >= 0) {
+      childTaskLists[childTaskListIndex] = detail.new;
+    }
+
+    if (root.children) {
+      const rootChildIndex = root.children.findIndex((value) => value === detail.id);
+      if (rootChildIndex >= 0) {
+        root.children[rootChildIndex] = detail.new.id;
+      }
+    }
+
+    root.updatedAt = Date.now();
+    Data.pushRootData(root, 0);
+  }
 </script>
 
 <div class="task-list-container">
   {#await init() then}
     {#if childTaskLists}
       {#each childTaskLists as taskList}
-        <TaskList {taskList} />
+        <TaskList {taskList} on:update={onUpdateTaskListID} />
       {/each}
     {/if}
   {/await}

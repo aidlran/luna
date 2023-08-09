@@ -68,8 +68,33 @@ export class EncryptedDataService implements IEncryptedDataMethods {
     for (const userKeyPair of encryptedData.ownerKeyPair.userKeyPairs) {
       if (userKeyPair.userID === userID) {
         await this.encryptedDataRepository.deleteByID(encryptedDataID);
+        return;
       }
     }
+
+    throw new PermissionDeniedError();
+  }
+
+  async replaceByIdAndUser(
+    dataID: string,
+    userID: string,
+    dataCreate: IEncryptedDataCreate,
+  ): Promise<
+    EncryptedDataKey & {
+      encryptedData: EncryptedData;
+    }
+  > {
+    const encryptedData = await this.encryptedDataRepository.getByIdIncludeOwner(dataID);
+
+    for (const userKeyPair of encryptedData.ownerKeyPair.userKeyPairs) {
+      if (userKeyPair.userID === userID) {
+        const createResult = await this.createForUser(userID, dataCreate);
+        await this.encryptedDataRepository.deleteByID(dataID);
+        return createResult;
+      }
+    }
+
+    throw new PermissionDeniedError();
   }
 
   public async getByIdIncludeKeysForUser(
@@ -91,8 +116,9 @@ export class EncryptedDataService implements IEncryptedDataMethods {
     return this.rootDataRepository.create(appID, userID, data);
   }
 
-  getRootData(appID: number, userID: string) {
-    return this.rootDataRepository.get(appID, userID);
+  async getRootData(appID: number, userID: string) {
+    const rootData = await this.rootDataRepository.get(appID, userID);
+    if (rootData) return this.prepareEncryptedDataItemForUser(rootData);
   }
 
   upsertRootData(appID: number, userID: string, data: IEncryptedDataCreate) {
