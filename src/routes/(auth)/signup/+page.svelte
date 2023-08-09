@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { HttpError, User } from '@enclavetech/api';
+  import { User } from '@enclavetech/api';
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
   import { getServices } from '$lib/client/utils/services';
@@ -33,20 +33,20 @@
         passphrase,
         username,
       }).catch((e) => {
-        if (e instanceof HttpError) {
-          errors[''] = [e.friendlyMessage];
+        if (e instanceof Error) {
+          errors[''] = [e.message];
         }
         throw e;
       });
 
-      // Display error messages on fail
-      if (createUserResult.errors) {
-        errors = createUserResult.errors;
-        disabled = false;
-      }
+      // // Display error messages on fail
+      // if (createUserResult.errors) {
+      //   errors = createUserResult.errors;
+      //   disabled = false;
+      // } else
 
       // Unlock and redirect on success
-      else if (createUserResult.user) {
+      if (createUserResult.user) {
         goto('/dashboard');
       }
     } catch (e) {

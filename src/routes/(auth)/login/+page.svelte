@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Session, HttpError } from '@enclavetech/api';
+  import { Session } from '@enclavetech/api';
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
 
@@ -21,8 +21,8 @@
     try {
       // Try to log in
       const loginResult = await Session.signInWithCredentials(identifier, passphrase).catch((error) => {
-        if (error instanceof HttpError) {
-          displayedError = error.friendlyMessage;
+        if (error instanceof Error) {
+          displayedError = error.message;
         }
         throw error;
       });
