@@ -9,8 +9,6 @@
   let childTaskLists: Task[];
 
   async function init() {
-    debugger;
-
     root = (await Data.pullRootData(0).catch(() => {
       const date = Date.now();
       return Data.pushRootData(
@@ -49,7 +47,7 @@
 </script>
 
 <div class="task-list-container">
-  {#await init()}
+  {#await init() then}
     {#if childTaskLists}
       {#each childTaskLists as taskList}
         <TaskList {taskList} />

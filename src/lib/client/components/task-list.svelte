@@ -16,6 +16,7 @@
       childTasks = await Promise.all(
         taskList.children.map((taskID) => Data.getByID(taskID) as Promise<Task>),
       );
+      sort();
     } else {
       childTasks = [];
     }
@@ -72,8 +73,6 @@
   function onDelete({ detail: id }: CustomEvent<string>) {
     childTasks = childTasks.filter((todo) => todo.id !== id);
   }
-
-  sort();
 </script>
 
 <section class="task-list">
@@ -87,7 +86,7 @@
         <input required use:focus on:blur={cancel} bind:value={newItemName} />
       </form>
     {/if}
-    {#await initChildTasks()}
+    {#await initChildTasks() then}
       {#each childTasks as task}
         <TaskCard {task} on:delete={onDelete} />
       {/each}
