@@ -19,8 +19,25 @@ export class RootDataRepository {
             payload: data.payload,
             rootDatas: {
               create: {
-                appID,
-                userID,
+                // TODO: hack
+                // we won't have this in backend rewrite anyway
+                app: {
+                  connectOrCreate: {
+                    where: {
+                      id: appID,
+                    },
+                    create: {
+                      id: appID,
+                      name: 'projex',
+                    },
+                  },
+                },
+                // end hack :)
+                user: {
+                  connect: {
+                    id: userID,
+                  },
+                },
               },
             },
           },
@@ -38,7 +55,7 @@ export class RootDataRepository {
             userID,
           },
         },
-        include: {
+        select: {
           data: true,
         },
       })

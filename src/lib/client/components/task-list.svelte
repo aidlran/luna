@@ -1,14 +1,25 @@
 <script lang="ts">
   import { Data } from '@enclavetech/api';
-  import type { Todo } from '../interfaces/todo';
+  import type { Task } from '../interfaces/task';
   import type { OptionalID } from '../types/optional-id';
   import TaskCard from './task-card.svelte';
 
-  export let listName: string;
-  export let items = Array<OptionalID<Todo>>();
+  export let taskList: Task;
+  let childTasks: OptionalID<Task>[];
 
   let isAddingItem = false;
   let newItemName: string;
+
+  async function initChildTasks() {
+    debugger;
+    if (taskList.children?.length) {
+      childTasks = await Promise.all(
+        taskList.children.map((taskID) => Data.getByID(taskID) as Promise<Task>),
+      );
+    } else {
+      childTasks = [];
+    }
+  }
 
   function focus(e: HTMLElement) {
     e.focus();
@@ -19,8 +30,8 @@
     newItemName = '';
   }
 
-  function sort(): void {
-    items = items.sort((a, b) => b.createdAt - a.createdAt);
+  async function sort() {
+    childTasks = childTasks.sort((a, b) => b.createdAt - a.createdAt);
   }
 
   async function onAddItemClick() {
@@ -31,34 +42,35 @@
   async function onSubmit() {
     if (!newItemName) return;
 
-    const newTodo: OptionalID<Todo> = {
-      type: 'todo',
+    const newTask: OptionalID<Task> = {
+      type: 'task',
       name: newItemName,
+      parent: taskList.id,
       createdAt: Date.now(),
       updatedAt: Date.now(),
     };
 
     // Add item to top of list
-    items = [newTodo].concat(items);
+    childTasks = [newTask].concat(childTasks);
     newItemName = '';
 
     // Push change
-    await Data.create(newTodo)
+    await Data.create(newTask)
       .then((result) => {
         if (result.errors || result.message) throw new Error();
 
         // Add ID to todo
-        newTodo.id = result.id;
-        items = items; // Assign to trigger Svelte change detection
+        newTask.id = result.id;
+        childTasks = childTasks;
       })
       .catch(() => {
         // Remove item if push failed
-        items = items.filter((todo) => todo !== newTodo);
+        childTasks = childTasks.filter((todo) => todo !== newTask);
       });
   }
 
   function onDelete({ detail: id }: CustomEvent<string>) {
-    items = items.filter((todo) => todo.id !== id);
+    childTasks = childTasks.filter((todo) => todo.id !== id);
   }
 
   sort();
@@ -66,7 +78,7 @@
 
 <section class="task-list">
   <header>
-    <h1>{listName}</h1>
+    <h1>{taskList.name}</h1>
     <button on:click={onAddItemClick}>+</button>
   </header>
   <div class="task-entries">
@@ -75,9 +87,11 @@
         <input required use:focus on:blur={cancel} bind:value={newItemName} />
       </form>
     {/if}
-    {#each items as task}
-      <TaskCard {task} on:delete={onDelete} />
-    {/each}
+    {#await initChildTasks()}
+      {#each childTasks as task}
+        <TaskCard {task} on:delete={onDelete} />
+      {/each}
+    {/await}
   </div>
 </section>
 

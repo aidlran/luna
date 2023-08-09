@@ -1,16 +1,60 @@
 <script lang="ts">
   import { Data } from '@enclavetech/api';
   import { TaskList } from '$lib/client/components';
-  import type { Todo } from '$lib/client/interfaces/todo';
+  import type { Task } from '$lib/client/interfaces/task';
+  import type { OptionalID } from '$lib/client/types/optional-id';
+  import type { RootNode } from '$lib/client/types/root-node';
 
-  function getOwnTasks() {
-    return Data.getAllOwn() as Promise<Todo[]>;
+  let root: RootNode;
+  let childTaskLists: Task[];
+
+  async function init() {
+    debugger;
+
+    root = (await Data.pullRootData(0).catch(() => {
+      const date = Date.now();
+      return Data.pushRootData(
+        {
+          createdAt: date,
+          updatedAt: date,
+        },
+        0,
+      );
+    })) as RootNode;
+
+    if (!root.children?.length) {
+      const date = Date.now();
+      const defaultTaskListPOJO: OptionalID<Task> = {
+        name: 'My Tasks',
+        parent: root.id,
+        type: 'task',
+        createdAt: date,
+        updatedAt: date,
+      };
+      const defaultTaskList = await Data.create(defaultTaskListPOJO);
+      root.children = [defaultTaskList.id];
+      root.updatedAt = Date.now();
+      Data.pushRootData(root, 0);
+      root = root;
+    }
+
+    if (root.children?.length) {
+      childTaskLists = await Promise.all(
+        root.children.map((taskListID) => Data.getByID(taskListID) as Promise<Task>),
+      );
+    } else {
+      childTaskLists = [];
+    }
   }
 </script>
 
 <div class="task-list-container">
-  {#await getOwnTasks() then items}
-    <TaskList listName="My Tasks" {items} />
+  {#await init()}
+    {#if childTaskLists}
+      {#each childTaskLists as taskList}
+        <TaskList {taskList} />
+      {/each}
+    {/if}
   {/await}
 </div>
 
