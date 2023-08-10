@@ -5,7 +5,7 @@
   "repository": "github:enclavetech/projex",
   "homepage": "https://github.com/enclavetech/projex#readme",
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=16.0.0 <=20.0.0"
   },
   "type": "module",
   "workspaces": [
