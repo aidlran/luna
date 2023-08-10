@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Data } from '@enclavetech/api';
+  import { Data, HttpResponseError } from '@enclavetech/api';
   import { TaskList } from '$lib/client/components';
   import type { Task } from '$lib/client/interfaces/task';
   import type { OptionalID } from '$lib/client/types/optional-id';
@@ -9,7 +9,13 @@
   let childTaskLists: Task[];
 
   async function init() {
-    root = (await Data.pullRootData(0).catch(() => {
+    root = (await Data.pullRootData(0).catch((e) => {
+      if (e) {
+        if (!(e instanceof HttpResponseError && e.status == 404)) {
+          throw e;
+        }
+      }
+
       const date = Date.now();
       return Data.pushRootData(
         {

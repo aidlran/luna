@@ -123,6 +123,11 @@ export class EncryptedDataController {
 
     try {
       const rootData = await this.encryptedDataService.getRootData(appID, userID);
+
+      if (!rootData) {
+        throw this.getError(new NotFoundError());
+      }
+
       return json(rootData);
     } catch (e) {
       throw this.getError(e);
