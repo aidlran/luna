@@ -2,10 +2,6 @@
 	path = lib/api
 	url = https://github.com/enclavetech/lib-api-js
 
-[submodule "lib/kms"]
-	path = lib/kms
-	url = https://github.com/enclavetech/kms
-
 [submodule "lib/sveltekit-validator"]
 	path = lib/sveltekit-validator
 	url = https://github.com/aidlran/sveltekit-validator
