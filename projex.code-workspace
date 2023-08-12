@@ -5,16 +5,20 @@
       "path": "."
     },
     {
-      "name": "SvelteKit Validator",
-      "path": "lib/sveltekit-validator"
-    },
-    {
       "name": "JS API Library",
       "path": "lib/api"
     },
     {
-      "name": "KMS",
-      "path": "lib/kms"
+      "name": "JS API Library: KMS",
+      "path": "lib/api/lib/kms"
+    },
+    {
+      "name": "Svelte API Library",
+      "path": "lib/svelte"
+    },
+    {
+      "name": "SvelteKit Validator",
+      "path": "lib/sveltekit-validator"
     }
   ],
   "settings": {
