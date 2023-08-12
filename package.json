@@ -14,7 +14,7 @@
   "scripts": {
     "build": "concurrently npm:build:lib:* && npm run build:app",
     "build:app": "vite build",
-    "build:lib:svelte": "cd lib/svelte && npm run build",
+    "build:lib:svelte": "cd lib/svelte && npm run build:api",
     "build:lib:sveltekit-validator": "cd lib/sveltekit-validator && npm run build",
     "check": "concurrently npm:check:*",
     "check:app": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
