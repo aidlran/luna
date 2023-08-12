@@ -103,14 +103,14 @@
   }
 </script>
 
-<section class="task-list">
+<section>
   <header>
     <h1>{taskList.name}</h1>
     <button on:click={onAddItemClick}>+</button>
   </header>
-  <div class="task-entries">
+  <div class="entries">
     {#if isAddingItem}
-      <form class="task" on:submit|preventDefault={onSubmit}>
+      <form on:submit|preventDefault={onSubmit}>
         <input required use:focus on:blur={cancel} bind:value={newItemName} />
       </form>
     {/if}
@@ -123,61 +123,50 @@
 </section>
 
 <style>
-  .task-list {
+  section {
     width: 100%;
+    overflow: hidden;
     display: flex;
     flex-flow: column nowrap;
-    box-shadow: var(--shadow);
+    margin-top: 8px;
   }
 
   header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border: var(--border);
-    background: rgba(var(--colour-background), var(--alpha-level-2));
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    padding: 10px 18px 8px;
+    padding: 4px;
   }
 
   h1 {
     margin: 3px 0 0;
+    font-size: 1.2em;
   }
 
-  .task-entries {
+  .entries {
     flex-grow: 1;
-    padding: 2px 8px;
-    border: var(--border);
-    border-top: none;
-    background: rgba(var(--colour-background), var(--alpha-level-1));
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
+    overflow-y: auto;
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 8px;
+    padding: 6px 4px;
   }
 
-  @media only screen and (min-width: 600px) {
-    .task-list {
-      width: 360px;
-      border-radius: 18px;
+  form {
+    padding: 8px;
+    border-radius: 8px;
+    border: var(--border);
+    background: rgba(var(--colour-background), var(--alpha-level-1));
+    cursor: pointer;
+  }
+
+  @media only screen and (min-width: 480px) {
+    section {
+      width: 340px;
     }
 
     header {
-      border-radius: 18px 18px 0 0;
+      border-bottom: var(--border);
     }
-
-    .task-entries {
-      border-radius: 0 0 18px 18px;
-    }
-  }
-
-  .task {
-    border: var(--border);
-    background: rgba(var(--colour-background), var(--alpha-level-1));
-    backdrop-filter: blur(2px);
-    -webkit-backdrop-filter: blur(2px);
-    margin: 8px 0;
-    padding: 8px;
-    border-radius: 8px;
-    cursor: pointer;
   }
 </style>

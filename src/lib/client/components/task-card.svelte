@@ -54,7 +54,6 @@
   .task {
     justify-content: space-between;
     align-items: center;
-    margin: 8px 0;
     padding: 8px;
     border-radius: 8px;
     cursor: pointer;

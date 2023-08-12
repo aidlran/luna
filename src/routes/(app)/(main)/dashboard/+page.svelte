@@ -81,15 +81,16 @@
 
 <style>
   .task-list-container {
-    display: flex;
-    justify-content: center;
     height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-flow: row nowrap;
   }
 
-  @media only screen and (min-width: 600px) {
+  @media only screen and (min-width: 480px) {
     .task-list-container {
-      height: calc(100% - 48px);
-      margin: 24px;
+      gap: 16px;
+      margin: 0 16px;
     }
   }
 </style>
