@@ -23,10 +23,11 @@ export const prismaClient = dev ? (global as any).prisma : new PrismaClient();
 
 export const jwtService = new JwtService();
 export const keyPairService = new KeyPairService(prismaClient);
+const encryptedDataIncludeFactory = new EncryptedDataIncludeFactory();
 export const encryptedDataService = new EncryptedDataService(
-  new EncryptedDataRepository(prismaClient, new EncryptedDataIncludeFactory()),
+  new EncryptedDataRepository(prismaClient, encryptedDataIncludeFactory),
   new EncryptedDataKeyRepository(prismaClient),
-  new RootDataRepository(prismaClient),
+  new RootDataRepository(prismaClient, encryptedDataIncludeFactory),
   keyPairService,
 );
 export const sessionService = new SessionService(jwtService, prismaClient);

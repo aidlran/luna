@@ -1,8 +1,12 @@
 import type { PrismaClient } from '@prisma/client';
 import type { IEncryptedDataCreate } from '$lib/shared/interfaces';
+import type { EncryptedDataIncludeFactory } from '../factories/encrypted-data-include.factory';
 
 export class RootDataRepository {
-  constructor(private readonly prismaClient: PrismaClient) {}
+  constructor(
+    private readonly prismaClient: PrismaClient,
+    private readonly includeFactory: EncryptedDataIncludeFactory,
+  ) {}
 
   create(appID: number, userID: string, data: IEncryptedDataCreate) {
     return this.prismaClient.encryptedDataKey.create({
@@ -19,8 +23,25 @@ export class RootDataRepository {
             payload: data.payload,
             rootDatas: {
               create: {
-                appID,
-                userID,
+                // TODO: hack
+                // we won't have this in backend rewrite anyway
+                app: {
+                  connectOrCreate: {
+                    where: {
+                      id: appID,
+                    },
+                    create: {
+                      id: appID,
+                      name: 'projex',
+                    },
+                  },
+                },
+                // end hack :)
+                user: {
+                  connect: {
+                    id: userID,
+                  },
+                },
               },
             },
           },
@@ -38,8 +59,10 @@ export class RootDataRepository {
             userID,
           },
         },
-        include: {
-          data: true,
+        select: {
+          data: {
+            include: this.includeFactory.getEncryptedDataKeysIncludeForUser(userID),
+          },
         },
       })
       .then((rootData) => rootData?.data);

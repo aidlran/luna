@@ -16,11 +16,11 @@
 <div role="none" class="app" on:click={drawer.close}>
   <Header username={data.sessionContext.user.username} />
 
-  <main>
-    {#await init() then}
+  {#await init() then}
+    <main>
       <slot />
-    {/await}
-  </main>
+    </main>
+  {/await}
 
   <Drawer control={drawer} />
 </div>
@@ -40,5 +40,6 @@
 
   main {
     flex-grow: 1;
+    overflow: hidden;
   }
 </style>

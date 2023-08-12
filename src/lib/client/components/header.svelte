@@ -5,8 +5,6 @@
 <header>
   <span>{username}</span>
   <div class="button">
-    <!-- TODO: replace with AJAX
-      SvelteKit's link data preload is quite problematic here -->
     <a data-sveltekit-preload-data="tap" href="/logout">Log Out</a>
   </div>
 </header>
@@ -16,9 +14,8 @@
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    height: var(--header-height);
-    gap: 8px;
-    padding: 8px;
+    gap: 16px;
+    padding: 16px;
     border-bottom: var(--border);
     background: rgba(var(--colour-background), var(--alpha-level-1));
     backdrop-filter: blur(6px);
@@ -28,7 +25,6 @@
   header div.button {
     display: flex;
     height: 100%;
-    width: var(--header-height);
     border-radius: 4px;
     cursor: pointer;
   }
