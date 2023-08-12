@@ -1,7 +1,3 @@
-[submodule "lib/api"]
-	path = lib/api
-	url = https://github.com/enclavetech/lib-api-js
-
 [submodule "lib/svelte"]
 	path = lib/svelte
 	url = https://github.com/enclavetech/lib-svelte
