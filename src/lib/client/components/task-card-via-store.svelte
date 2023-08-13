@@ -20,7 +20,7 @@
   on:click|stopPropagation={onActivate}
   on:keypress|stopPropagation={onActivate}
 >
-  <span>{$task.name}</span>
+  <span>{$task?.name}</span>
 </div>
 
 <style>

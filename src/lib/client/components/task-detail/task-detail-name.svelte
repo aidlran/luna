@@ -54,9 +54,9 @@
   }
 
   h1 input {
+    width: calc(100% - 43px);
     margin-top: -12px;
     margin-left: -2px;
-    margin-right: 2px;
     font-weight: bold;
     padding: 0 2px;
     border: none;

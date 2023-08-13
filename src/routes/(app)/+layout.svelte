@@ -7,19 +7,15 @@
 
   export let data;
 
-  initAPI();
+  const init = Session.resume().catch(() => goto('/login'));
 
-  async function init(): Promise<void> {
-    await Session.resume().catch(() => {
-      goto('/login');
-    });
-  }
+  initAPI();
 </script>
 
 <div role="none" class="app" on:click={drawer.close}>
   <Header username={data.sessionContext.user.username} />
 
-  {#await init() then}
+  {#await init then}
     <main>
       <slot />
     </main>

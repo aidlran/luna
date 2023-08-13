@@ -17,9 +17,17 @@
 
   async function initChildTasks() {
     if (taskList.children?.length) {
-      childTasks = await Promise.all(
+      childTasks = await Promise.allSettled(
         taskList.children.map((taskID) => Data.getByID(taskID) as Promise<Task>),
-      );
+      ).then((results) => {
+        const childTasks = [];
+        for (const promise of results) {
+          if (promise.status === 'fulfilled') {
+            childTasks.push(promise.value);
+          }
+        }
+        return childTasks;
+      });
       sort();
     } else {
       childTasks = [];
