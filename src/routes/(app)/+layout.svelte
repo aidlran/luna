@@ -1,28 +1,20 @@
 <script lang="ts">
-  import { Session } from '@enclavetech/api';
-  import { init as initAPI } from '@enclavetech/svelte';
-  import { goto } from '$app/navigation';
+  import { SignedIn } from '@enclavetech/svelte';
   import { Drawer, Header } from '$lib/client/components';
   import { drawer } from '$lib/client/utils/stores';
 
   export let data;
-
-  const init = Session.resume().catch(() => goto('/login'));
-
-  initAPI();
 </script>
 
-<div role="none" class="app" on:click={drawer.close}>
-  <Header username={data.sessionContext.user.username} />
-
-  {#await init then}
+<SignedIn appID={0} noAuthRedirect={'/login'}>
+  <div role="none" class="app" on:click={drawer.close}>
+    <Header username={data.sessionContext.user.username} />
     <main>
       <slot />
     </main>
-  {/await}
-
-  <Drawer control={drawer} />
-</div>
+    <Drawer control={drawer} />
+  </div>
+</SignedIn>
 
 <style>
   :global(body) {
