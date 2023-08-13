@@ -6,7 +6,7 @@
   export let data;
 </script>
 
-<SignedIn appID={0} noAuthRedirect={'/login'}>
+<SignedIn noAuthRedirect={'/login'}>
   <div role="none" class="app" on:click={drawer.close}>
     <Header username={data.sessionContext.user.username} />
     <main>
