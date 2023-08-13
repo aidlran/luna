@@ -4,7 +4,7 @@
   import type { Task } from '../interfaces/task';
   import type { OptionalID } from '../types/optional-id';
   import { drawer } from '../utils/stores';
-  import TaskDetail from './task-detail.svelte';
+  import TaskDetail from './task-detail/task-detail.svelte';
 
   export let task: OptionalID<Task>;
 
@@ -32,7 +32,7 @@
   }
 
   function onActivate() {
-    drawer.open(TaskDetail, { task });
+    drawer.open(TaskDetail, { id: task.id });
   }
 </script>
 

@@ -5,6 +5,6 @@ import Header from './header.svelte';
 import Modal from './modal.svelte';
 import TaskList from './task-list.svelte';
 
-export { Header, LoadingSpinner, Modal, TaskList, Tick };
-
 export * from './drawer';
+
+export { Header, LoadingSpinner, Modal, TaskList, Tick };

@@ -2,7 +2,7 @@
   import { data } from '@enclavetech/svelte';
   import type { Task } from '../interfaces/task';
   import { drawer } from '../utils/stores';
-  import TaskDetail from './task-detail-via-store.svelte';
+  import TaskDetail from './task-detail/task-detail.svelte';
 
   export let id: string;
 

@@ -1,6 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
   import { Data } from '@enclavetech/api';
+  import { autofocus } from '@enclavetech/svelte';
   import type { Task } from '../interfaces/task';
   import type { OptionalID } from '../types/optional-id';
   import TaskCard from './task-card.svelte';
@@ -23,10 +24,6 @@
     } else {
       childTasks = [];
     }
-  }
-
-  function focus(e: HTMLElement) {
-    e.focus();
   }
 
   function cancel() {
@@ -112,7 +109,7 @@
   <div class="entries">
     {#if isAddingItem}
       <form on:submit|preventDefault={onSubmit}>
-        <input required use:focus on:blur={cancel} bind:value={newItemName} />
+        <input required use:autofocus on:blur={cancel} bind:value={newItemName} />
       </form>
     {/if}
     {#await initChildTasks() then}
