@@ -1,10 +1,13 @@
 <script lang="ts">
+  import { Session } from '@enclavetech/api';
+  import { init as initAPI } from '@enclavetech/svelte';
   import { goto } from '$app/navigation';
   import { Drawer, Header } from '$lib/client/components';
   import { drawer } from '$lib/client/utils/stores';
-  import { Session } from '@enclavetech/api';
 
   export let data;
+
+  initAPI();
 
   async function init(): Promise<void> {
     await Session.resume().catch(() => {

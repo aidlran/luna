@@ -4,6 +4,7 @@
   import type { Task } from '../interfaces/task';
   import type { OptionalID } from '../types/optional-id';
   import TaskCard from './task-card.svelte';
+  import TaskCardViaStore from './task-card-via-store.svelte';
 
   export let taskList: Task;
   let childTasks: OptionalID<Task>[];
@@ -117,6 +118,9 @@
     {#await initChildTasks() then}
       {#each childTasks as task}
         <TaskCard {task} on:delete={onDelete} />
+        {#if task.id}
+          <TaskCardViaStore id={task.id}></TaskCardViaStore>
+        {/if}
       {/each}
     {/await}
   </div>
