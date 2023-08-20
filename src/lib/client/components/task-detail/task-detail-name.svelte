@@ -3,6 +3,8 @@
   import type { KeyboardEventHandler } from 'svelte/elements';
   import type { Task } from '../../interfaces/task';
 
+  // TODO: reuse this
+
   export let task: DataStore<Task>;
   let isEditingName = false;
   let newName: string;
