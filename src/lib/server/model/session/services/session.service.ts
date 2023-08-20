@@ -33,9 +33,11 @@ export class SessionService {
     if (jwt)
       this.jwtService.verify(jwt).then((sessionContext) => {
         if (sessionContext.sessionID) {
-          this.prismaClient.session.delete({ where: { id: sessionContext.sessionID } }).catch(() => {
-            /* empty */
-          });
+          this.prismaClient.session
+            .delete({ where: { id: sessionContext.sessionID } })
+            .catch(() => {
+              /* empty */
+            });
         }
       });
   }

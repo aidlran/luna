@@ -4,7 +4,9 @@ import type { EncryptedData, EncryptedDataKey, PrismaClient } from '@prisma/clie
 export class EncryptedDataKeyRepository {
   constructor(private readonly prismaClient: PrismaClient) {}
 
-  public async createForExistingData(encryptedDataKey: EncryptedDataKey): Promise<EncryptedDataKey> {
+  public async createForExistingData(
+    encryptedDataKey: EncryptedDataKey,
+  ): Promise<EncryptedDataKey> {
     return await this.prismaClient.encryptedDataKey.create({
       data: encryptedDataKey,
     });

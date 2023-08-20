@@ -1,5 +1,9 @@
 /.svelte-kit
 /.vercel
+
 /node_modules
+
 .env*
+
+
 vite.config.js.*

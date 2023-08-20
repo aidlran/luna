@@ -27,7 +27,11 @@ export class EncryptedDataController {
   }
 
   private getError(e: unknown): unknown {
-    return e instanceof NotFoundError ? error(404) : e instanceof PermissionDeniedError ? error(403) : e;
+    return e instanceof NotFoundError
+      ? error(404)
+      : e instanceof PermissionDeniedError
+      ? error(403)
+      : e;
   }
 
   public async deleteByIdAndUser({
@@ -49,7 +53,10 @@ export class EncryptedDataController {
     cookies,
     params,
     request,
-  }: RequestEvent & { params: { id: string }; request: { dto: EncryptedDataCreateDTO } }): Promise<Response> {
+  }: RequestEvent & {
+    params: { id: string };
+    request: { dto: EncryptedDataCreateDTO };
+  }): Promise<Response> {
     // TODO: sign messages in client, check signature here
 
     const userID = await this.getUserID(cookies);
@@ -85,9 +92,8 @@ export class EncryptedDataController {
 
   public async getByUserIncludeKeys({ cookies }: RequestEvent): Promise<Response> {
     // Find the items, type check
-    const response: EncryptedDataWithKeysResponse[] = await this.encryptedDataService.getByUserIncludeKeys(
-      await this.getUserID(cookies),
-    );
+    const response: EncryptedDataWithKeysResponse[] =
+      await this.encryptedDataService.getByUserIncludeKeys(await this.getUserID(cookies));
 
     return json(response);
   }

@@ -1,5 +1,5 @@
 {
-  "printWidth": 110,
-  "singleQuote": true,
-  "plugins": ["prettier-plugin-prisma", "prettier-plugin-svelte"]
+  "plugins": ["prettier-plugin-prisma", "prettier-plugin-svelte"],
+  "printWidth": 100,
+  "singleQuote": true
 }

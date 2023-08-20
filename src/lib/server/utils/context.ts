@@ -33,6 +33,9 @@ export const encryptedDataService = new EncryptedDataService(
 export const sessionService = new SessionService(jwtService, prismaClient);
 export const userService = new UserService(prismaClient);
 
-export const encryptedDataController = new EncryptedDataController(sessionService, encryptedDataService);
+export const encryptedDataController = new EncryptedDataController(
+  sessionService,
+  encryptedDataService,
+);
 export const sessionController = new SessionController(prismaClient, sessionService, userService);
 export const userController = new UserController(sessionService, userService);

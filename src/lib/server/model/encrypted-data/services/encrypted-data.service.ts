@@ -107,8 +107,8 @@ export class EncryptedDataService implements IEncryptedDataMethods {
   }
 
   public async getByUserIncludeKeys(userID: string): Promise<EncryptedDataWithKeysResponse[]> {
-    return (await this.encryptedDataRepository.getByUserIncludeKeys(userID)).map((encryptedDataItem) =>
-      this.prepareEncryptedDataItemForUser(encryptedDataItem),
+    return (await this.encryptedDataRepository.getByUserIncludeKeys(userID)).map(
+      (encryptedDataItem) => this.prepareEncryptedDataItemForUser(encryptedDataItem),
     );
   }
 

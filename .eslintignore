@@ -4,3 +4,6 @@
 /node_modules
 /static
 .env*
+LICENSE
+package-lock.json
+vite.config.js.*
