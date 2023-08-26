@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { autofocus, type DataStore } from '@enclavetech/svelte';
+  import { autofocus, type DataStore } from 'trusync-svelte';
   import type { KeyboardEventHandler } from 'svelte/elements';
   import type { Task } from '../../interfaces/task';
 

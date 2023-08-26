@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { data } from '@enclavetech/svelte';
+  import { data } from 'trusync-svelte';
   import type { Task } from '../interfaces/task';
   import { drawer } from '../utils/stores';
   import TaskDetail from './task-detail/task-detail.svelte';

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
-  import { Data } from '@enclavetech/api';
-  import { autofocus } from '@enclavetech/svelte';
+  import { Data } from 'trusync';
+  import { autofocus } from 'trusync-svelte';
   import type { Task } from '../interfaces/task';
   import type { OptionalID } from '../types/optional-id';
   import TaskCard from './task-card.svelte';

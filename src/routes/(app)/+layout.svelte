@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { SignedIn } from '@enclavetech/svelte';
+  import { SignedIn } from 'trusync-svelte';
   import { Drawer, Header } from '$lib/client/components';
   import { drawer } from '$lib/client/utils/stores';
 

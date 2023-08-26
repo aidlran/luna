@@ -46,7 +46,11 @@
   onDestroy(unsubscribe);
 </script>
 
-<div class="container" class:open={isOpen} style:--transition-duration={`${currentTransitionDuration}ms`}>
+<div
+  class="container"
+  class:open={isOpen}
+  style:--transition-duration={`${currentTransitionDuration}ms`}
+>
   <div role="none" class="overlay" />
 
   <div role="none" class="drawer" on:click|stopPropagation>

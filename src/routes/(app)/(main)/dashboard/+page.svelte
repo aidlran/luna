@@ -1,11 +1,9 @@
 <script lang="ts">
-  import { Data, HttpResponseError } from '@enclavetech/api';
-  import { autofocus, create, data, root, type DataStore } from '@enclavetech/svelte';
-  import { TaskList } from '$lib/client/components';
-  import type { Task } from '$lib/client/interfaces/task';
-  import type { OptionalID } from '$lib/client/types/optional-id';
-  import type { RootNode } from '$lib/client/types/root-node';
   import type { KeyboardEventHandler } from 'svelte/elements';
+  import { Data } from 'trusync';
+  import { autofocus, data, root, type DataStore } from 'trusync-svelte';
+  import type { Task } from '$lib/client/interfaces/task';
+  import type { RootNode } from '$lib/client/types/root-node';
 
   // TODO: can we make it so that lib-svelte automatically converts references to data stores?
   const rootStore = root<RootNode>(0);
@@ -28,7 +26,6 @@
 
   function onNewListCreate() {
     if (isCreatingList && newListName) {
-      debugger;
       const now = Date.now();
       Data.create({
         type: 'task',

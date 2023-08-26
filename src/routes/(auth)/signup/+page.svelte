@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { User } from '@enclavetech/api';
+  import { User } from 'trusync';
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
   import { getServices } from '$lib/client/utils/services';
@@ -88,7 +88,12 @@
 
   <label>
     Username
-    <input name="username" placeholder={usernameGenerated} maxLength="32" bind:value={usernameInput} />
+    <input
+      name="username"
+      placeholder={usernameGenerated}
+      maxLength="32"
+      bind:value={usernameInput}
+    />
   </label>
 
   {#if errors?.username}

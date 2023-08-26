@@ -19,7 +19,7 @@
     "build:libs": "npm run build --workspace lib/trusync/packages/lib-js && conc -n sveltekit-validator,trusync-svelte \"npm run build --workspace lib/sveltekit-validator\" \"npm run build --workspace lib/trusync/packages/lib-svelte\"",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "dev": "vite dev",
-    "format": "conc -n projex,sveltekit-validator,trusync \"prettier --write .\" \"npm run format --workspace lib/sveltekit-validator\" \"cd lib/trusync && npm run format\"",
+    "format": "conc -n projex,sveltekit-validator,trusync \"prettier --write --plugin prettier-plugin-svelte .\" \"npm run format --workspace lib/sveltekit-validator\" \"cd lib/trusync && npm run format\"",
     "lc": "echo Projex: $(find src -type f -exec cat {} \\; | wc -l) lines",
     "lint": "conc -n projex,sveltekit-validator,trusync \" eslint .\" \"npm run lint --workspace lib/sveltekit-validator\" \"cd lib/trusync && npm run lint\"",
     "postinstall": "npm run prisma:generate",
@@ -31,13 +31,13 @@
     "watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@enclavetech/api": "file:lib/trusync/packages/lib-js",
-    "@enclavetech/svelte": "file:lib/trusync/packages/lib-svelte",
     "@prisma/client": "^5.0.0",
     "argon2": "^0.31.0",
     "class-validator": "^0.14.0",
     "jose": "^4.14.4",
-    "sveltekit-validator": "file:lib/sveltekit-validator"
+    "sveltekit-validator": "file:lib/sveltekit-validator",
+    "trusync": "file:lib/trusync/packages/lib-js",
+    "trusync-svelte": "file:lib/trusync/packages/lib-svelte"
   },
   "devDependencies": {
     "@openpgp/web-stream-tools": "^0.0.14",

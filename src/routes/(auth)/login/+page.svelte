@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Session } from '@enclavetech/api';
+  import { Session } from 'trusync';
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
 
@@ -20,12 +20,14 @@
     // try/catch blocks within are for displaying a relevant error message
     try {
       // Try to log in
-      const loginResult = await Session.signInWithCredentials(identifier, passphrase).catch((error) => {
-        if (error instanceof Error) {
-          displayedError = error.message;
-        }
-        throw error;
-      });
+      const loginResult = await Session.signInWithCredentials(identifier, passphrase).catch(
+        (error) => {
+          if (error instanceof Error) {
+            displayedError = error.message;
+          }
+          throw error;
+        },
+      );
 
       // Display error message on fail
       if (loginResult.message) {

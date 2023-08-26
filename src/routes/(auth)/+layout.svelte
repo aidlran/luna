@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Session } from '@enclavetech/api';
+  import { Session } from 'trusync';
   import { Modal } from '$lib/client/components';
 
   Session.destroy();

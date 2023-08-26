@@ -5,7 +5,8 @@
 
   export let form;
 
-  let error = form?.error ?? ($page.url.searchParams.has('invalid') ? 'Invalid sign up code.' : undefined);
+  let error =
+    form?.error ?? ($page.url.searchParams.has('invalid') ? 'Invalid sign up code.' : undefined);
 
   let initialFocus: HTMLInputElement;
 
