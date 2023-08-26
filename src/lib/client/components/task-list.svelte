@@ -1,7 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
   import { Data } from 'trusync';
-  import { autofocus } from 'trusync-svelte';
   import type { Task } from '../interfaces/task';
   import type { OptionalID } from '../types/optional-id';
   import TaskCard from './task-card.svelte';
@@ -106,6 +105,11 @@
 
   function onDelete({ detail: id }: CustomEvent<string>) {
     childTasks = childTasks.filter((todo) => todo.id !== id);
+  }
+
+  // todo: move to `svelte-stuff`.
+  export function autofocus(node: HTMLElement) {
+    node.focus();
   }
 </script>
 

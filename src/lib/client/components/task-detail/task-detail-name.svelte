@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { autofocus, type DataStore } from 'trusync-svelte';
+  import type { DataStore } from 'trusync-svelte';
   import type { KeyboardEventHandler } from 'svelte/elements';
   import type { Task } from '../../interfaces/task';
 
@@ -35,6 +35,11 @@
     }
 
     isEditingName = false;
+  }
+
+  // TODO: move to svelte-stuff
+  export function autofocus(node: HTMLElement) {
+    node.focus();
   }
 </script>
 

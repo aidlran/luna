@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { KeyboardEventHandler } from 'svelte/elements';
   import { Data } from 'trusync';
-  import { autofocus, data, root, type DataStore } from 'trusync-svelte';
+  import { data, root, type DataStore } from 'trusync-svelte';
   import type { Task } from '$lib/client/interfaces/task';
   import type { RootNode } from '$lib/client/types/root-node';
 
@@ -120,6 +120,11 @@
     // }
     // rootNode.updatedAt = Date.now();
     // Data.pushRootData(rootNode, 0);
+  }
+
+  // todo: move to `svelte-stuff`.
+  export function autofocus(node: HTMLElement) {
+    node.focus();
   }
 </script>
 
