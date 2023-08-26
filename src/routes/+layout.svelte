@@ -1,9 +1,8 @@
-<script>
-  import '../styles.css';
-  import { initServices } from '$lib/client/utils/services';
-
-  // Make services available for DI
-  initServices();
+<script lang="ts">
+  import { MemoryDriver } from 'trusync';
+  import { TrusyncApp } from 'trusync-svelte';
 </script>
 
-<slot />
+<TrusyncApp drivers={[new MemoryDriver()]}>
+  <slot />
+</TrusyncApp>

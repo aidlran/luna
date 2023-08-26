@@ -2,9 +2,9 @@
   import { User } from 'trusync';
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
-  import { getServices } from '$lib/client/utils/services';
+  import { UsernameService } from '$lib/client/services';
 
-  const { usernameService } = getServices();
+  const usernameService = new UsernameService();
 
   let errors: Record<string, string[]> = {};
 
