@@ -2,7 +2,6 @@
 /.vercel
 /lib
 /node_modules
-/static
 .env*
 LICENSE
 package-lock.json

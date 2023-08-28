@@ -1,12 +1,12 @@
 <script lang="ts">
-  import { data } from 'trusync-svelte';
+  // import { data } from 'trusync-svelte';
   import type { Task } from '../interfaces/task';
   import { drawer } from '../utils/stores';
   import TaskDetail from './task-detail/task-detail.svelte';
 
   export let id: string;
 
-  const task = data<Task>(id);
+  // const task = data<Task>(id);
 
   function onActivate() {
     drawer.open(TaskDetail, { id });
@@ -20,7 +20,7 @@
   on:click|stopPropagation={onActivate}
   on:keypress|stopPropagation={onActivate}
 >
-  <span>{$task?.name}</span>
+  <!-- <span>{$task?.name}</span> -->
 </div>
 
 <style>

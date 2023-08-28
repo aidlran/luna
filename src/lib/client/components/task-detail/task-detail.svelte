@@ -1,13 +1,13 @@
 <script lang="ts">
-  import { data } from 'trusync-svelte';
-  import type { Task } from '../../interfaces/task';
-  import TaskDetailName from './task-detail-name.svelte';
+  // import { data } from 'trusync-svelte';
+  // import type { Task } from '../../interfaces/task';
+  // import TaskDetailName from './task-detail-name.svelte';
 
-  export let id: string;
+  // export let id: string;
 
-  const task = data<Task>(id);
+  // const task = data<Task>(id);
 </script>
 
 <section>
-  <TaskDetailName {task} />
+  <!-- <TaskDetailName {task} /> -->
 </section>

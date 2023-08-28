@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Data } from 'trusync';
+  // import { Data } from 'trusync';
   import { createEventDispatcher } from 'svelte';
   import type { Task } from '../interfaces/task';
   import type { OptionalID } from '../types/optional-id';
@@ -13,22 +13,19 @@
   $: display = 'flex';
 
   function onDelete() {
-    if (!task.id) return;
-
-    // TODO: Data items will be stores in future.
-    // The TaskDetail component would subscribe to the item.
-    // on delete, it will handle closing the drawer/itself.
-    drawer.close();
-
-    display = 'none';
-    Data.deleteByID(task.id)
-      .catch((error) => {
-        display = 'flex';
-        throw error;
-      })
-      .then(() => dispatch('delete', task.id));
-
-    // TODO: fix double delete bug
+    // if (!task.id) return;
+    // // TODO: Data items will be stores in future.
+    // // The TaskDetail component would subscribe to the item.
+    // // on delete, it will handle closing the drawer/itself.
+    // drawer.close();
+    // display = 'none';
+    // Data.deleteByID(task.id)
+    //   .catch((error) => {
+    //     display = 'flex';
+    //     throw error;
+    //   })
+    //   .then(() => dispatch('delete', task.id));
+    // // TODO: fix double delete bug
   }
 
   function onActivate() {

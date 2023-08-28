@@ -1,6 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
-  import { Data } from 'trusync';
+  // import { Data } from 'trusync';
   import type { Task } from '../interfaces/task';
   import type { OptionalID } from '../types/optional-id';
   import TaskCard from './task-card.svelte';
@@ -15,22 +15,22 @@
   const dispatch = createEventDispatcher();
 
   async function initChildTasks() {
-    if (taskList.children?.length) {
-      childTasks = await Promise.allSettled(
-        taskList.children.map((taskID) => Data.getByID(taskID) as Promise<Task>),
-      ).then((results) => {
-        const childTasks = [];
-        for (const promise of results) {
-          if (promise.status === 'fulfilled') {
-            childTasks.push(promise.value);
-          }
-        }
-        return childTasks;
-      });
-      sort();
-    } else {
-      childTasks = [];
-    }
+    // if (taskList.children?.length) {
+    //   childTasks = await Promise.allSettled(
+    //     taskList.children.map((taskID) => Data.getByID(taskID) as Promise<Task>),
+    //   ).then((results) => {
+    //     const childTasks = [];
+    //     for (const promise of results) {
+    //       if (promise.status === 'fulfilled') {
+    //         childTasks.push(promise.value);
+    //       }
+    //     }
+    //     return childTasks;
+    //   });
+    //   sort();
+    // } else {
+    childTasks = [];
+    // }
   }
 
   function cancel() {
@@ -48,59 +48,52 @@
   }
 
   async function onSubmit() {
-    if (!newItemName) return;
-
-    const newTask: OptionalID<Task> = {
-      type: 'task',
-      name: newItemName,
-      parent: taskList.id,
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
-    };
-
-    // Add item to top of list
-    childTasks = [newTask].concat(childTasks);
-    newItemName = '';
-
-    // Push change
-    await Data.create(newTask)
-      .then((result) => {
-        if (result.errors || result.message) throw new Error();
-
-        // Add ID to todo
-        newTask.id = result.id;
-        if (!taskList.children) {
-          taskList.children = [result.id];
-        } else {
-          taskList.children.push(result.id);
-        }
-        childTasks = childTasks;
-      })
-      .catch((e) => {
-        // Remove item if push failed
-        childTasks = childTasks.filter((todo) => todo !== newTask);
-        throw e;
-      });
-
-    const { id: taskListID, ...taskListData } = taskList;
-
-    await Data.replaceByID(taskListID, taskListData)
-      .then(({ id }) => {
-        taskList.id = id;
-      })
-      .catch((e) => {
-        // Remove item if push failed
-        if (newTask.id) {
-          Data.deleteByID(newTask.id);
-        }
-        childTasks = childTasks.filter((todo) => todo !== newTask);
-        throw e;
-      });
-
-    dispatch('update', {
-      id: taskListID,
-      new: taskList,
-    });
+    // if (!newItemName) return;
+    // const newTask: OptionalID<Task> = {
+    //   type: 'task',
+    //   name: newItemName,
+    //   parent: taskList.id,
+    //   createdAt: Date.now(),
+    //   updatedAt: Date.now(),
+    // };
+    // // Add item to top of list
+    // childTasks = [newTask].concat(childTasks);
+    // newItemName = '';
+    // // Push change
+    // await Data.create(newTask)
+    //   .then((result) => {
+    //     if (result.errors || result.message) throw new Error();
+    //     // Add ID to todo
+    //     newTask.id = result.id;
+    //     if (!taskList.children) {
+    //       taskList.children = [result.id];
+    //     } else {
+    //       taskList.children.push(result.id);
+    //     }
+    //     childTasks = childTasks;
+    //   })
+    //   .catch((e) => {
+    //     // Remove item if push failed
+    //     childTasks = childTasks.filter((todo) => todo !== newTask);
+    //     throw e;
+    //   });
+    // const { id: taskListID, ...taskListData } = taskList;
+    // await Data.replaceByID(taskListID, taskListData)
+    //   .then(({ id }) => {
+    //     taskList.id = id;
+    //   })
+    //   .catch((e) => {
+    //     // Remove item if push failed
+    //     if (newTask.id) {
+    //       Data.deleteByID(newTask.id);
+    //     }
+    //     childTasks = childTasks.filter((todo) => todo !== newTask);
+    //     throw e;
+    //   });
+    // dispatch('update', {
+    //   id: taskListID,
+    //   new: taskList,
+    // });
   }
 
   function onDelete({ detail: id }: CustomEvent<string>) {
