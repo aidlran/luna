@@ -1,6 +1,6 @@
 <script lang="ts">
   // import { onMount } from 'svelte';
-  import { app as getApp } from 'trusync-svelte';
+  import { getApp } from 'trusync-svelte';
 
   // let passphrase: string;
 
@@ -13,14 +13,13 @@
 
   async function onSubmit() {
     disabled = true;
-    const result = await app.createIdentity();
+    const result = await $app.createIdentity();
 
     // TODO: present private key recovery phrase
 
     // TODO: passphrase used to create a local encrypted session
     //       to store the keys (probably the concern of truSync KMS)
 
-    debugger;
     disabled = false;
   }
 </script>

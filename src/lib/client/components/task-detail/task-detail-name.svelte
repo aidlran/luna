@@ -1,16 +1,16 @@
 <script lang="ts">
-  import type { DataStore } from 'trusync-svelte';
+  // import type { DataStore } from 'trusync-svelte';
   import type { KeyboardEventHandler } from 'svelte/elements';
   import type { Task } from '../../interfaces/task';
 
   // TODO: reuse this
 
-  export let task: DataStore<Task>;
+  // export let task: DataStore<Task>;
   let isEditingName = false;
   let newName: string;
 
   function onClick() {
-    newName = $task.name;
+    // newName = $task.name;
     isEditingName = true;
   }
 
@@ -18,7 +18,7 @@
     switch (event.key) {
       case 'Escape':
         isEditingName = false;
-        newName = $task.name;
+        // newName = $task.name;
         event.currentTarget.blur();
         break;
       case 'Enter':
@@ -28,11 +28,11 @@
   };
 
   function onUpdate() {
-    const currentTask = $task;
+    // const currentTask = $task;
 
-    if (isEditingName && newName && currentTask.name !== newName) {
-      task.put({ ...currentTask, name: newName });
-    }
+    // if (isEditingName && newName && currentTask.name !== newName) {
+    //   task.put({ ...currentTask, name: newName });
+    // }
 
     isEditingName = false;
   }
@@ -47,7 +47,7 @@
   {#if isEditingName}
     <input bind:value={newName} use:autofocus on:blur={onUpdate} on:keydown={onInputKeyPress} />
   {:else}
-    <span role="button" tabindex="0" on:click={onClick} on:keydown={onClick}>{$task.name}</span>
+    <!-- <span role="button" tabindex="0" on:click={onClick} on:keydown={onClick}>{$task.name}</span> -->
   {/if}
 </h1>
 

@@ -1,7 +1,7 @@
 <script lang="ts">
   // import { Session } from 'trusync';
   import { onMount } from 'svelte';
-  import { goto } from '$app/navigation';
+  // import { goto } from '$app/navigation';
 
   let displayedError: string | undefined;
 
@@ -55,7 +55,7 @@
     <input bind:value={privateKey} required type="password" />
   </label>
 
-  <input type="submit" value="Log In" {disabled} />
+  <input type="submit" value="Import identity" {disabled} />
 </form>
 
 {#if displayedError}
