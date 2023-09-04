@@ -1,37 +1,21 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte';
-  // import { Data } from 'trusync';
+  import type { Hash } from 'trusync';
+  import { getApp } from 'trusync-svelte';
   import type { Task } from '../interfaces/task';
   import type { OptionalID } from '../types/optional-id';
   import TaskCard from './task-card.svelte';
   import TaskCardViaStore from './task-card-via-store.svelte';
 
-  export let taskList: Task;
+  const app = getApp();
+
+  export let hash: Hash;
+  let taskList: Task;
   let childTasks: OptionalID<Task>[];
 
   let isAddingItem = false;
   let newItemName: string;
 
-  const dispatch = createEventDispatcher();
-
-  async function initChildTasks() {
-    // if (taskList.children?.length) {
-    //   childTasks = await Promise.allSettled(
-    //     taskList.children.map((taskID) => Data.getByID(taskID) as Promise<Task>),
-    //   ).then((results) => {
-    //     const childTasks = [];
-    //     for (const promise of results) {
-    //       if (promise.status === 'fulfilled') {
-    //         childTasks.push(promise.value);
-    //       }
-    //     }
-    //     return childTasks;
-    //   });
-    //   sort();
-    // } else {
-    childTasks = [];
-    // }
-  }
+  $app.getJSON<Task>(hash).then((value) => (taskList = value));
 
   function cancel() {
     isAddingItem = false;
@@ -100,33 +84,33 @@
     childTasks = childTasks.filter((todo) => todo.id !== id);
   }
 
-  // todo: move to `svelte-stuff`.
+  // TODO: move to `svelte-stuff`.
   export function autofocus(node: HTMLElement) {
     node.focus();
   }
 </script>
 
-<section>
-  <header>
-    <h1>{taskList.name}</h1>
-    <button on:click={onAddItemClick}>+</button>
-  </header>
-  <div class="entries">
-    {#if isAddingItem}
-      <form on:submit|preventDefault={onSubmit}>
-        <input required use:autofocus on:blur={cancel} bind:value={newItemName} />
-      </form>
-    {/if}
-    {#await initChildTasks() then}
-      {#each childTasks as task}
-        <TaskCard {task} on:delete={onDelete} />
-        {#if task.id}
-          <TaskCardViaStore id={task.id}></TaskCardViaStore>
-        {/if}
-      {/each}
-    {/await}
-  </div>
-</section>
+{#if taskList}
+  <section>
+    <header>
+      <h1>{taskList.name}</h1>
+      <button on:click={onAddItemClick}>+</button>
+    </header>
+    <div class="entries">
+      {#if isAddingItem}
+        <form on:submit|preventDefault={onSubmit}>
+          <input required use:autofocus on:blur={cancel} bind:value={newItemName} />
+        </form>
+      {/if}
+      <!-- {#each childTasks as task} -->
+      <!-- <TaskCard {task} on:delete={onDelete} /> -->
+      <!-- {#if task.id} -->
+      <!-- <TaskCardViaStore id={task.id}></TaskCardViaStore> -->
+      <!-- {/if} -->
+      <!-- {/each} -->
+    </div>
+  </section>
+{/if}
 
 <style>
   section {
