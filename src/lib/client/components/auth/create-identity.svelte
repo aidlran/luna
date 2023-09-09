@@ -13,7 +13,7 @@
 
   async function onSubmit() {
     disabled = true;
-    const result = await $app.createIdentity();
+    const result = await app.identity.create();
 
     // TODO: present private key recovery phrase
 

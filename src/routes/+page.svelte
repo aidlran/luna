@@ -4,7 +4,7 @@
   import { TaskList } from '$lib/client/components';
 
   interface ProjexRootData {
-    children: Array<Hash>;
+    children: Hash[];
   }
 
   interface ITaskList {
@@ -19,12 +19,12 @@
   let newListName: string;
 
   async function updateRoot(payload: ProjexRootData): Promise<void> {
-    rootHash = await $app.putNamedJSON(root, rootKey);
+    rootHash = await app.data.putNamedJSON(root, rootKey);
     root = payload;
   }
 
   async function createTaskList(taskList: ITaskList): Promise<void> {
-    const hash = await $app.putJSON(taskList);
+    const hash = await app.data.putJSON(taskList);
     let newRoot: ProjexRootData;
     if (!root) {
       newRoot = { children: [hash] };
@@ -39,10 +39,7 @@
     await updateRoot(newRoot);
   }
 
-  $app
-    .getNamedJSON<ProjexRootData>(rootKey)
-    .then((data) => (root = data))
-    .catch(() => {});
+  app.data.getNamedJSON<ProjexRootData>(rootKey).then((data) => (root = data));
 </script>
 
 <div class="board-view">
@@ -62,6 +59,8 @@
             parent: rootHash,
             name: currentTarget.value,
           });
+          currentTarget.blur();
+          break;
         case 'Escape':
           currentTarget.blur();
           break;

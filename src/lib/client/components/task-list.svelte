@@ -15,7 +15,7 @@
   let isAddingItem = false;
   let newItemName: string;
 
-  $app.getJSON<Task>(hash).then((value) => (taskList = value));
+  app.data.getJSON<Task>(hash).then((value) => (taskList = value));
 
   function cancel() {
     isAddingItem = false;
