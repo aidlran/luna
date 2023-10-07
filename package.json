@@ -1,13 +1,13 @@
 {
-  "name": "projex",
+  "name": "delamain",
   "version": "1.0.0-preview.1",
-  "description": "A collaborative project management application based on the truSync protocol.",
+  "description": "Collaborative project management based on the truSync protocol.",
   "license": "AGPL-3.0-only",
   "private": true,
   "author": "Aidan Loughran",
-  "repository": "github:aidlran/projex",
-  "bugs": "https://github.com/aidlran/projex/issues",
-  "homepage": "https://github.com/aidlran/projex#readme",
+  "repository": "github:aidlran/delamain",
+  "bugs": "https://github.com/aidlran/delamain/issues",
+  "homepage": "https://github.com/aidlran/delamain#readme",
   "type": "module",
   "workspaces": [
     "lib/sveltekit-validator",
@@ -16,19 +16,12 @@
   ],
   "scripts": {
     "build": "npm run build:libs && vite build",
-    "build:libs": "npm run build -w lib/trusync/packages/lib-js && conc -n sveltekit-validator,trusync-svelte \"npm run build -w lib/sveltekit-validator\" \"npm run build -w lib/trusync/packages/lib-svelte\"",
-    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-    "dev": "vite dev",
-    "format": "conc -n projex,sveltekit-validator,trusync \"prettier --write --plugin prettier-plugin-svelte .\" \"npm run format -w lib/sveltekit-validator\" \"cd lib/trusync && npm run format\"",
-    "lc": "echo Projex: $(find src -type f -exec cat {} \\; | wc -l) lines",
-    "lint": "conc -n projex,sveltekit-validator,trusync \" eslint .\" \"npm run lint -w lib/sveltekit-validator\" \"cd lib/trusync && npm run lint\"",
-    "postinstall": "npm run prisma:generate",
+    "build:libs": "npm run build --workspaces",
+    "format": "prettier --write --plugin prettier-plugin-svelte .",
+    "lc": "echo Delamain: $(find src -type f -exec cat {} \\; | wc -l) lines",
+    "lint": "eslint .",
     "preview": "vite preview",
-    "prisma:generate": "prisma generate",
-    "prisma:push": "prisma db push",
-    "start": "npm run build:libs && conc -kn projex-dev,projex-check,sveltekit-validator,trusync-js,trusync-svelte \"npm run dev\" \"npm run watch\" \"npm start -w lib/sveltekit-validator\" \"npm start -w lib/trusync/packages/lib-js\" \"npm start -w lib/trusync/packages/lib-svelte\"",
-    "start:db": "docker run -d --restart=unless-stopped -p 5432:5432 -v projex-db:/var/lib/postgresql/data -e POSTGRES_USER=projex -e POSTGRES_PASSWORD=projex -e POSTGRES_DB=projex postgres:15-alpine",
-    "watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch --preserveWatchOutput"
+    "start": "npm run build:libs && svelte-kit sync && conc -kn vite-dev,svelte-check,sveltekit-validator,trusync-js,trusync-svelte \"vite dev\" \"svelte-check --watch --preserveWatchOutput\" \"npm start -w lib/sveltekit-validator\" \"npm start -w lib/trusync/packages/lib-js\" \"npm start -w lib/trusync/packages/lib-svelte\""
   },
   "dependencies": {
     "@prisma/client": "^5.0.0",
