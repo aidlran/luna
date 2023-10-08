@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { Hash } from 'trusync';
-  import { getApp } from 'trusync-svelte';
+  import { SignedIn, getApp } from 'trusync-svelte';
   import { TaskList } from '$lib/client/components';
 
   interface ProjexRootData {
@@ -42,32 +42,34 @@
   app.data.getNamedJSON<ProjexRootData>(rootKey).then((data) => (root = data));
 </script>
 
-<div class="board-view">
-  {#if root?.children}
-    {#each root.children as hash}
-      <TaskList {hash} />
-    {/each}
-  {/if}
-  <input
-    placeholder="+ Create List"
-    bind:value={newListName}
-    on:blur={() => (newListName = '')}
-    on:keydown={({ currentTarget, key }) => {
-      switch (key) {
-        case 'Enter':
-          createTaskList({
-            parent: rootHash,
-            name: currentTarget.value,
-          });
-          currentTarget.blur();
-          break;
-        case 'Escape':
-          currentTarget.blur();
-          break;
-      }
-    }}
-  />
-</div>
+<SignedIn noAuthRedirect="/identity">
+  <div class="board-view">
+    {#if root?.children}
+      {#each root.children as hash}
+        <TaskList {hash} />
+      {/each}
+    {/if}
+    <input
+      placeholder="+ Create List"
+      bind:value={newListName}
+      on:blur={() => (newListName = '')}
+      on:keydown={({ currentTarget, key }) => {
+        switch (key) {
+          case 'Enter':
+            createTaskList({
+              parent: rootHash,
+              name: currentTarget.value,
+            });
+            currentTarget.blur();
+            break;
+          case 'Escape':
+            currentTarget.blur();
+            break;
+        }
+      }}
+    />
+  </div>
+</SignedIn>
 
 <style>
   .board-view {
