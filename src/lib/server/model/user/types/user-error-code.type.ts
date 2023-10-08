@@ -1,4 +1,0 @@
-export type UserErrorCode =
-  | 'INCORRECT_PASSPHRASE'
-  | 'USER_NOT_FOUND'
-  | 'USERNAME_OR_EMAIL_UNAVAILABLE';
