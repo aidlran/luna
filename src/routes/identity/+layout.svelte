@@ -20,7 +20,7 @@
         <a href="/identity/import">Import</a>
         <a href="/identity/create">Create</a>
       </header>
-      {#each $identity.publicKeys.map(base64Url.encode) as key}
+      {#each $identity.publicKeys as key}
         <a href={`/identity/manage/${key}`}>{getShortKey(key)}</a>
       {/each}
     </nav>

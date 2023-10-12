@@ -1,12 +1,11 @@
 <script>
-  import { base64Url } from 'trusync';
   import { getIdentity } from 'trusync-svelte';
   import { goto } from '$app/navigation';
 
   const identity = getIdentity();
-  const id = base64Url.decode(location.pathname.split('/')[2]);
+  const id = location.pathname.split('/').pop();
 
-  if (!$identity.publicKeys.includes(id)) {
+  if (id && !$identity.publicKeys.includes(id)) {
     goto('./');
   }
 </script>

@@ -18,7 +18,7 @@
   </p>
   <button
     on:click={async () => {
-      // await app.identity.import(identity.address.value, base58.encode(identity.secret));
+      await app.identity.import(identity.address.value, identity.secret);
       await goto(`manage/${identity.address.value}`);
     }}>Continue</button
   >
