@@ -10,7 +10,6 @@
   "homepage": "https://github.com/aidlran/delamain#readme",
   "type": "module",
   "workspaces": [
-    "lib/sveltekit-validator",
     "lib/trusync/packages/lib-js",
     "lib/trusync/packages/lib-svelte"
   ],
@@ -21,14 +20,12 @@
     "lc": "echo Delamain: $(find src -type f -exec cat {} \\; | wc -l) lines",
     "lint": "eslint .",
     "preview": "vite preview",
-    "start": "npm run build:libs && svelte-kit sync && conc -kn vite-dev,svelte-check,sveltekit-validator,trusync-js,trusync-svelte \"vite dev\" \"svelte-check --watch --preserveWatchOutput\" \"npm start -w lib/sveltekit-validator\" \"npm start -w lib/trusync/packages/lib-js\" \"npm start -w lib/trusync/packages/lib-svelte\""
+    "start": "npm run build:libs && svelte-kit sync && conc -kn vite-dev,svelte-check,trusync-js,trusync-svelte \"vite dev\" \"svelte-check --watch --preserveWatchOutput\" \"npm start -w lib/trusync/packages/lib-js\" \"npm start -w lib/trusync/packages/lib-svelte\""
   },
   "dependencies": {
     "@prisma/client": "^5.0.0",
     "argon2": "^0.31.0",
-    "class-validator": "^0.14.0",
     "jose": "^4.14.4",
-    "sveltekit-validator": "file:lib/sveltekit-validator",
     "trusync": "file:lib/trusync/packages/lib-js",
     "trusync-svelte": "file:lib/trusync/packages/lib-svelte"
   },
