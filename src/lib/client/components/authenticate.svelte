@@ -1,7 +1,5 @@
 <script lang="ts">
-  import CreateIdentity from './create-identity.svelte';
-  import ImportIdentity from './import-identity.svelte';
-  import { Card, Modal } from '$lib/client/components';
+  import { Modal } from '$lib/client/components';
 
   enum Mode {
     IMPORT_IDENTITY,
@@ -24,13 +22,7 @@
   </div>
   <!-- <Card> -->
   <div class="form-container">
-    <div class="form-card">
-      {#if currentMode === Mode.IMPORT_IDENTITY}
-        <ImportIdentity />
-      {:else if currentMode === Mode.CREATE_IDENTITY}
-        <CreateIdentity />
-      {/if}
-    </div>
+    <div class="form-card"></div>
   </div>
   <!-- </Card> -->
 </Modal>

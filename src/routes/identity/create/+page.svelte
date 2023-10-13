@@ -7,7 +7,7 @@
 
 <h1>Create an identity</h1>
 
-{#await app.identity.create() then identity}
+{#await app.identity.generate() then identity}
   <p>
     <span>Your address:</span>
     <code>{identity.address.value}</code>

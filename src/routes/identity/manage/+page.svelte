@@ -3,7 +3,7 @@
   const identity = getIdentity();
 </script>
 
-{#if $identity.publicKeys.length}
+{#if $identity.importedAddresses.length}
   <p>Use the menu to manage your imported identities.</p>
 {:else}
   <h1>Let's get started.</h1>

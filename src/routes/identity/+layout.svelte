@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { base64Url } from 'trusync';
   import { getIdentity } from 'trusync-svelte';
 
   const identity = getIdentity();
@@ -14,13 +13,13 @@
 </script>
 
 <main>
-  {#if $identity.publicKeys.length}
+  {#if $identity.importedAddresses.length}
     <nav>
       <header>
         <a href="/identity/import">Import</a>
         <a href="/identity/create">Create</a>
       </header>
-      {#each $identity.publicKeys as key}
+      {#each $identity.importedAddresses as key}
         <a href={`/identity/manage/${key}`}>{getShortKey(key)}</a>
       {/each}
     </nav>
