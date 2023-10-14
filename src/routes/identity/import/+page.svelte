@@ -1,3 +1,31 @@
+<script lang="ts">
+  import { base58 } from 'trusync';
+  import { getApp } from 'trusync-svelte';
+  import { focus } from '$lib/client/actions/focus';
+
+  const app = getApp();
+
+  let address: string;
+  let secret: string;
+
+  function submit() {
+    const decoded = base58.decode(secret);
+    app.identity.import(address, decoded);
+  }
+</script>
+
 <h1>Import an identity</h1>
 
 <p>You can also <a href="create">create an identity</a> instead.</p>
+
+<form on:submit|preventDefault={submit}>
+  <label>
+    Address
+    <input bind:value={address} use:focus />
+  </label>
+  <label>
+    Secret Key
+    <input bind:value={secret} />
+  </label>
+  <input type="submit" value="Import" />
+</form>
