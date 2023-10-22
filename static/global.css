@@ -33,21 +33,19 @@ p.error {
   color: var(--colour-danger);
 }
 
+label, input, select {
+  border-radius: 12px;
+  background: #00000009;
+}
+
 label {
+  position: relative;
   display: block;
   margin-bottom: 14px;
-  padding: 6px 8px;
-  border-radius: 12px;
-  border: 1px solid #5a5a7019;
-  background: #00000009;
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  cursor: text;
+  padding: 6px 8px 29px;
   font-size: 0.8rem;
   color: #555;
   user-select: none;
-  -moz-user-select: none;
-  -webkit-user-select: none;
 }
 
 label.error {
@@ -56,26 +54,41 @@ label.error {
   border-color: var(--colour-danger);
 }
 
-input {
+select {
   width: 100%;
-  padding: 3px 0 0;
-  background: none;
-  border: none;
+  cursor: pointer;
+}
+
+input {
+  width: calc(100% - 18px);
+}
+
+input, select {
   font-size: 1.15rem;
   font-family: var(--font);
+  padding: 8px;
+  border: 1px solid #5a5a7019;
 }
 
-input:focus {
-  outline: none;
-  border-color: var(--colour-link);
+label > input,
+label > select {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding-top: 22px;
+  padding-bottom: 5px;
+  background: none;
 }
 
-input:not([type='submit']) {
-  width: calc(100% - 14px);
+input:focus,
+select:focus {
+  outline: 1px solid #5a5a7057;
 }
 
 input[type='submit'] {
+  width: 100%;
   padding: 14px;
+  border: none;
   border-radius: 12px;
   font-size: 1.25rem;
   font-weight: bold;

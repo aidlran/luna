@@ -21,8 +21,8 @@
     return sessions as GetSessionsResult<SessionMetadata>;
   });
 
-  function getSessionName(session: GetSessionsResult<SessionMetadata>[0]) {
-    return session.metadata?.displayName ?? session.id;
+  function sessionName(session?: GetSessionsResult<SessionMetadata>[0]) {
+    return session?.metadata?.displayName ?? session?.id ?? '?';
   }
 
   async function onChange(event: Event & { currentTarget: EventTarget & HTMLSelectElement }) {
@@ -38,32 +38,32 @@
   }
 </script>
 
-<select on:change={onChange}>
-  {#await allSessionsPromise then allSessions}
-    <optgroup label="Active">
-      <option selected disabled bind:this={selected}>
-        {$identity.activeSession
-          ? (() => {
-              const session = allSessions.find((session) => session.id === $identity.activeSession);
-              return session ? getSessionName(session) : '?';
-            })()
-          : 'Anonymous'}
-      </option>
-    </optgroup>
-    {#if allSessions.length > 1 || (allSessions.length === 1 && !$identity.activeSession)}
-      <optgroup label="Switch">
-        {#each allSessions as session}
-          {#if session.id !== $identity.activeSession}
-            <option>{getSessionName(session)}</option>
-          {/if}
-        {/each}
+<label>
+  Session
+  <select on:change={onChange}>
+    {#await allSessionsPromise then allSessions}
+      <optgroup label="Active">
+        <option selected disabled bind:this={selected}>
+          {$identity.activeSession
+            ? sessionName(allSessions.find((session) => session.id === $identity.activeSession))
+            : 'Anonymous'}
+        </option>
       </optgroup>
-    {/if}
-    <optgroup>
-      {#if $identity.activeSession}
-        <option>Go Anonymous</option>
+      {#if allSessions.length > 1 || (allSessions.length === 1 && !$identity.activeSession)}
+        <optgroup label="Switch">
+          {#each allSessions as session}
+            {#if session.id !== $identity.activeSession}
+              <option>{sessionName(session)}</option>
+            {/if}
+          {/each}
+        </optgroup>
       {/if}
-      <option value="create">Create a new session</option>
-    </optgroup>
-  {/await}
-</select>
+      <optgroup>
+        {#if $identity.activeSession}
+          <option>Go Anonymous</option>
+        {/if}
+        <option value="create">Create a new session</option>
+      </optgroup>
+    {/await}
+  </select>
+</label>
