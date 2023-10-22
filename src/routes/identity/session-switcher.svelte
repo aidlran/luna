@@ -26,15 +26,22 @@
   }
 
   function onChange(event: Event & { currentTarget: EventTarget & HTMLSelectElement }): void {
-    // TODO
-    // if session selected -> show password modal -> useSession
-    // if anon selected -> show confirm modal -> clearSession
-    // if anon selected but identities exist, warn they'll be lost
-    const value = event.currentTarget.value
+    const value = event.currentTarget.value;
     event.currentTarget.value = selected.value;
-    if (value === 'create') {
-      goto('/identity/create/session');
-    }
+
+    if (Number.isInteger(Number(value))) {
+      // TODO: if session selected -> show password modal -> useSession
+      // TODO: it should set a query param, modal is shown if present. Allows refresh or redirect here to show it.
+    } else
+      switch (value) {
+        case 'create':
+          goto('/identity/create/session');
+          break;
+        case 'anon':
+          // TODO: if anon selected -> show confirm modal -> clearSession
+          // TODO: if anon selected but identities exist, warn they'll be lost
+          break;
+      }
   }
 </script>
 
@@ -60,7 +67,7 @@
       {/if}
       <optgroup label="Actions">
         {#if $identity.activeSession}
-          <option value=anon>Go Anonymous</option>
+          <option value="anon">Go Anonymous</option>
         {/if}
         <option value="create">Create a new session</option>
       </optgroup>

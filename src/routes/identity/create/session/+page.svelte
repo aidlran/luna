@@ -1,7 +1,7 @@
 <script lang="ts">
   import { getApp } from 'trusync-svelte';
-  import { focus } from '$lib/client/actions/focus';
   import { goto } from '$app/navigation';
+  import { focus } from '$lib/client/actions/focus';
 
   const app = getApp();
 
@@ -18,7 +18,7 @@
 
   let working = false;
 
-  async function onSubmit() {
+  async function onSubmit(): Promise<void> {
     working = true;
     while (errors.length) {
       errors.pop();
@@ -33,10 +33,18 @@
       confirmError = true;
     } else {
       const metadata = displayName?.length ? { displayName } : undefined;
-      await app.identity.initSession(password, metadata).catch((error) => {
-        errors.push(error instanceof Error ? error.message : 'Unknown error.');
-      });
-      await goto('identity');
+      try {
+        await app.identity.initSession(password, metadata);
+        await goto('identity');
+      } catch (error) {
+        if (error instanceof Error) {
+          errors.push(error.message);
+        } else if (typeof error === 'string') {
+          errors.push(error);
+        } else {
+          errors.push('Unknown error.');
+        }
+      }
     }
     errors = errors;
     working = false;
@@ -59,6 +67,7 @@
   display name (like a username) to help identify it when there are multiple sessions.
 </p>
 
+<!-- TODO: common errors or form component -->
 {#if errors.length}
   <div>
     <h1>There {errors.length > 1 ? 'were problems' : 'was a problem'} creating the session.</h1>
