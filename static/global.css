@@ -35,23 +35,30 @@ p.error {
 
 label {
   display: block;
-  padding: 8px;
+  margin-bottom: 14px;
+  padding: 6px 8px;
   border-radius: 12px;
-  border: 1px solid #5a5a7010;
+  border: 1px solid #5a5a7019;
   background: #00000009;
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
   cursor: text;
   font-size: 0.8rem;
-  color: #9f9f9f;
+  color: #555;
   user-select: none;
   -moz-user-select: none;
   -webkit-user-select: none;
 }
 
+label.error {
+  background: #ff000009;
+  color: var(--colour-danger);
+  border-color: var(--colour-danger);
+}
+
 input {
   width: 100%;
-  padding: 4px 0 0;
+  padding: 3px 0 0;
   background: none;
   border: none;
   font-size: 1.15rem;
