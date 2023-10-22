@@ -5,7 +5,7 @@
   const app = getApp();
 </script>
 
-<a href="../../">Back</a>
+<a href="../">Back</a>
 
 <h1>Create an identity</h1>
 

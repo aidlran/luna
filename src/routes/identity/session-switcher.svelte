@@ -38,8 +38,8 @@
   }
 </script>
 
-{#await allSessionsPromise then allSessions}
-  <select on:change={onChange}>
+<select on:change={onChange}>
+  {#await allSessionsPromise then allSessions}
     <optgroup label="Active">
       <option selected disabled bind:this={selected}>
         {$identity.activeSession
@@ -63,7 +63,7 @@
       {#if $identity.activeSession}
         <option>Go Anonymous</option>
       {/if}
-      <option value="create">Create New Session</option>
+      <option value="create">Create a new session</option>
     </optgroup>
-  </select>
-{/await}
+  {/await}
+</select>

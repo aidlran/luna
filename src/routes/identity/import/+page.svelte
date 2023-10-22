@@ -14,9 +14,11 @@
   }
 </script>
 
+<a href="./">Back</a>
+
 <h1>Import an identity</h1>
 
-<p>You can also <a href="create">create an identity</a> instead.</p>
+<p>You can also <a href="create/identity">create an identity</a> instead.</p>
 
 <form on:submit|preventDefault={submit}>
   <label>
@@ -27,5 +29,5 @@
     Secret Key
     <input bind:value={secret} />
   </label>
-  <input type="submit" value="Import" />
+  <input type="submit" value="Import identity" />
 </form>
