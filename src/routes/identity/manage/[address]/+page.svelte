@@ -16,6 +16,8 @@
   }
 </script>
 
+<a href="./">Back</a>
+
 <h1>Manage Identity</h1>
 
 <div class="border">

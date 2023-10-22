@@ -4,52 +4,82 @@
   const identity = getIdentity();
 </script>
 
-<div class="layout flex">
-  <nav style="max-width: 240px;">
-    <header>
-      <SessionSwitcher />
-      <div class="flex">
+<div class="layout">
+  <nav>
+    <SessionSwitcher />
+    <section>
+      <h1>Identity</h1>
+      <div class="buttons">
         <a href="/identity/import">Import</a>
         <a href="/identity/create/identity">Create</a>
       </div>
-    </header>
-    {#each $identity.importedAddresses as key}
-      <div>
-        <a href={`/identity/manage/${key}`}>
-          {key.length > 24 ? `${key.slice(0, 24)}...` : key}
-        </a>
-      </div>
-    {/each}
+    </section>
+    {#if !!$identity.importedAddresses.length}
+      <section>
+        <h1>Imported identities</h1>
+        {#each $identity.importedAddresses as key}
+          <a href={`/identity/manage/${key}`}>
+            {key}
+          </a>
+        {/each}
+      </section>
+    {/if}
   </nav>
 
-  <main style="width: 100%;">
+  <main>
     <slot />
   </main>
 </div>
 
 <style>
   .layout {
-    --padding: 24px;
-    max-width: 960px;
+    --padding: 20px;
     margin: auto;
-    padding: var(--padding);
+    display: flex;
+    max-width: 960px;
+    padding: calc(var(--padding) * 2) var(--padding);
   }
 
-  .flex {
+  .layout > * {
+    padding: 0 var(--padding);
+  }
+
+  main {
+    width: 100%;
+    border-left: 1px solid var(--colour-border);
+  }
+
+  nav {
+    --width: 280px;
+    min-width: var(--width);
+    width: var(--width);
+  }
+
+  .buttons {
     display: flex;
-    flex-flow: row;
     justify-content: space-between;
     gap: var(--padding);
   }
 
-  a {
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+  h1 {
+    font-size: 1em;
+    margin: calc(var(--padding) * 2) 0 7px;
   }
 
-  nav {
-    min-width: 180px;
-    max-width: 240px;
+  a {
+    display: block;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    border: 1px solid var(--colour-border);
+    border-radius: 4px;
+    padding: 8px;
+    margin-bottom: 14px;
+  }
+
+  .buttons a {
+    flex-grow: 1;
+    text-align: center;
+    margin-bottom: 0;
   }
 </style>

@@ -14,7 +14,7 @@
   }
 </script>
 
-<a href="./">Back</a>
+<a href="manage">Back</a>
 
 <h1>Import an identity</h1>
 
@@ -22,12 +22,12 @@
 
 <form on:submit|preventDefault={submit}>
   <label>
-    Address
-    <input bind:value={address} use:focus />
+    Address (required)
+    <input required bind:value={address} use:focus />
   </label>
   <label>
-    Secret Key
-    <input bind:value={secret} />
+    Secret key (required)
+    <input required bind:value={secret} />
   </label>
   <input type="submit" value="Import identity" />
 </form>

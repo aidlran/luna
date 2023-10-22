@@ -43,7 +43,7 @@
   }
 </script>
 
-<a href="../">Back</a>
+<a href="../manage">Back</a>
 
 <h1>Create a Session</h1>
 
@@ -72,11 +72,11 @@
 
 <form on:submit|preventDefault={onSubmit}>
   <label class:error={passwordError} use:focus>
-    Password
+    Password (required)
     <input required type="password" bind:value={password} />
   </label>
   <label class:error={confirmError}>
-    Confirm your password
+    Confirm your password (required)
     <input required type="password" bind:value={confirm} />
   </label>
   <label class:error={displayNameError}>

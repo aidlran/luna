@@ -25,42 +25,42 @@
     return session?.metadata?.displayName ?? session?.id ?? '?';
   }
 
-  async function onChange(event: Event & { currentTarget: EventTarget & HTMLSelectElement }) {
+  function onChange(event: Event & { currentTarget: EventTarget & HTMLSelectElement }): void {
     // TODO
     // if session selected -> show password modal -> useSession
     // if anon selected -> show confirm modal -> clearSession
     // if anon selected but identities exist, warn they'll be lost
-    const value = event.currentTarget.value;
+    const value = event.currentTarget.value
     event.currentTarget.value = selected.value;
     if (value === 'create') {
-      await goto('/identity/create/session');
+      goto('/identity/create/session');
     }
   }
 </script>
 
 <label>
-  Session
+  Active session
   <select on:change={onChange}>
     {#await allSessionsPromise then allSessions}
-      <optgroup label="Active">
-        <option selected disabled bind:this={selected}>
+      <optgroup label="Active session">
+        <option selected disabled value={$identity.activeSession} bind:this={selected}>
           {$identity.activeSession
             ? sessionName(allSessions.find((session) => session.id === $identity.activeSession))
             : 'Anonymous'}
         </option>
       </optgroup>
       {#if allSessions.length > 1 || (allSessions.length === 1 && !$identity.activeSession)}
-        <optgroup label="Switch">
+        <optgroup label="Switch session">
           {#each allSessions as session}
             {#if session.id !== $identity.activeSession}
-              <option>{sessionName(session)}</option>
+              <option value={session.id}>{sessionName(session)}</option>
             {/if}
           {/each}
         </optgroup>
       {/if}
-      <optgroup>
+      <optgroup label="Actions">
         {#if $identity.activeSession}
-          <option>Go Anonymous</option>
+          <option value=anon>Go Anonymous</option>
         {/if}
         <option value="create">Create a new session</option>
       </optgroup>
