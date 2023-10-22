@@ -11,7 +11,7 @@
   <nav>
     <header>
       <a href="/identity/import">Import</a>
-      <a href="/identity/create">Create</a>
+      <a href="/identity/create/identity">Create</a>
     </header>
     {#each $identity.importedAddresses as key}
       <a href={`/identity/manage/${key}`}>{key.length > 24 ? `${key.slice(0, 24)}...` : key}</a>
