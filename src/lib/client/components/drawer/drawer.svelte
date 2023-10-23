@@ -61,9 +61,7 @@
   <div
     role="none"
     class="drawer"
-    style:right={$control.isOpen
-      ? 0
-      : 'calc(0px - max(calc(var(--min-width) + var(--padding) * 2), var(--width))'}
+    style:right={$control.isOpen ? 0 : 'var(--right-opened)'}
     style:--width={width}
     style:--min-width={minWidth}
     style:--padding={padding}
@@ -81,17 +79,17 @@
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    min-width: 100vw;
-    min-height: 100vh;
+    width: 100vw;
+    height: 100vh;
     transition: background-color var(--transition-duration) ease;
   }
 
   .drawer {
-    position: absolute;
+    --right-opened: calc(0px - max(calc(var(--min-width) + var(--padding) * 2), var(--width)));
+    position: fixed;
     top: 0;
-    height: calc(100% - calc(var(--padding) * 6));
+    height: calc(100vh - calc(var(--padding) * 6));
+    overflow-y: scroll;
     width: calc(100% - calc(var(--padding) * 2));
     min-width: var(--min-width);
     max-width: calc(var(--width) - calc(var(--padding) * 2));
