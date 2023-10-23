@@ -1,7 +1,7 @@
 <script lang="ts">
   // import type { DataStore } from 'trusync-svelte';
   import type { KeyboardEventHandler } from 'svelte/elements';
-  import type { Task } from '../../interfaces/task';
+  // import type { Task } from '../../interfaces/task';
 
   // TODO: reuse this
 
@@ -9,10 +9,10 @@
   let isEditingName = false;
   let newName: string;
 
-  function onClick() {
-    // newName = $task.name;
-    isEditingName = true;
-  }
+  // function onClick() {
+  //   // newName = $task.name;
+  //   isEditingName = true;
+  // }
 
   const onInputKeyPress: KeyboardEventHandler<HTMLInputElement> = (event) => {
     switch (event.key) {
@@ -71,17 +71,17 @@
     background: #0000;
   }
 
-  h1 span {
+  /* h1 span {
     padding: 12px 12px 6px;
     margin-left: -12px;
     border-radius: 12px;
     cursor: pointer;
     user-select: none;
-  }
+  } */
 
-  h1 span:hover {
+  /* h1 span:hover {
     background: #0001;
-  }
+  } */
 
   input {
     border: 1px solid black;

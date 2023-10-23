@@ -2,15 +2,15 @@
   import type { Hash } from 'trusync';
   import { getApp } from 'trusync-svelte';
   import type { Task } from '../interfaces/task';
-  import type { OptionalID } from '../types/optional-id';
-  import TaskCard from './task-card.svelte';
-  import TaskCardViaStore from './task-card-via-store.svelte';
+  // import type { OptionalID } from '../types/optional-id';
+  // import TaskCard from './task-card.svelte';
+  // import TaskCardViaStore from './task-card-via-store.svelte';
 
   const app = getApp();
 
   export let hash: Hash;
   let taskList: Task;
-  let childTasks: OptionalID<Task>[];
+  // let childTasks: OptionalID<Task>[];
 
   let isAddingItem = false;
   let newItemName: string;
@@ -22,9 +22,9 @@
     newItemName = '';
   }
 
-  async function sort() {
-    childTasks = childTasks.sort((a, b) => b.createdAt - a.createdAt);
-  }
+  // async function sort() {
+  //   childTasks = childTasks.sort((a, b) => b.createdAt - a.createdAt);
+  // }
 
   async function onAddItemClick() {
     if (isAddingItem) await onSubmit();
@@ -80,9 +80,9 @@
     // });
   }
 
-  function onDelete({ detail: id }: CustomEvent<string>) {
-    childTasks = childTasks.filter((todo) => todo.id !== id);
-  }
+  // function onDelete({ detail: id }: CustomEvent<string>) {
+  //   childTasks = childTasks.filter((todo) => todo.id !== id);
+  // }
 
   // TODO: move to `svelte-stuff`.
   export function autofocus(node: HTMLElement) {
