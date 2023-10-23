@@ -1,30 +1,26 @@
 <script lang="ts">
+  import { scale } from 'svelte/transition';
   import { getIdentity } from 'trusync-svelte';
   import SessionSwitcher from './session-switcher.svelte';
   const identity = getIdentity();
 </script>
 
 <div class="layout">
-  <nav>
-    <SessionSwitcher />
-    <section>
-      <h1 style:padding-top="26px">Identity</h1>
+  <div>
+    <nav>
+      <SessionSwitcher />
+      <h1>Session Identities</h1>
       <div class="buttons">
         <a href="/identity/import">Import</a>
         <a href="/identity/create/identity">Create</a>
       </div>
-    </section>
-    {#if !!$identity.importedAddresses.length}
-      <section>
-        <h1>Imported identities</h1>
-        {#each $identity.importedAddresses as key}
-          <a href={`/identity/manage/${key}`}>
-            {key}
-          </a>
-        {/each}
-      </section>
-    {/if}
-  </nav>
+      {#each $identity.importedAddresses as key}
+        <a href={`/identity/manage/${key}`} in:scale>
+          {key}
+        </a>
+      {/each}
+    </nav>
+  </div>
 
   <main>
     <slot />
@@ -34,25 +30,26 @@
 <style>
   .layout {
     --padding: 20px;
+    --section-padding: calc(var(--padding) * 2) var(--padding);
     margin: auto;
     display: flex;
     max-width: 960px;
-    padding: calc(var(--padding) * 2) var(--padding);
-  }
-
-  .layout > * {
-    padding: 0 var(--padding);
   }
 
   main {
     width: 100%;
+    padding: var(--section-padding);
     border-left: 1px solid var(--colour-border);
   }
 
   nav {
-    --width: 280px;
-    min-width: var(--width);
-    width: var(--width);
+    position: sticky;
+    top: 0;
+    height: calc(100vh - calc(var(--padding) * 4));
+    width: 280px;
+    padding: var(--section-padding);
+    border-right: 1px solid var(--colour-border);
+    overflow-y: auto;
   }
 
   .buttons {
@@ -63,7 +60,7 @@
 
   h1 {
     font-size: 1em;
-    margin: calc(var(--padding) * 2) 0 7px;
+    margin: 74px 0 0;
   }
 
   a {
@@ -73,13 +70,12 @@
     overflow: hidden;
     border: 1px solid var(--colour-border);
     border-radius: 4px;
-    padding: 8px;
-    margin-bottom: 14px;
+    padding: 12px 4px;
+    margin-top: var(--padding);
   }
 
   .buttons a {
     flex-grow: 1;
     text-align: center;
-    margin-bottom: 0;
   }
 </style>
