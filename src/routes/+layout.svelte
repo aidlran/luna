@@ -1,10 +1,11 @@
-<script lang="ts">
+<script>
   import { LocalStorageDriver, MemoryDriver } from 'trusync';
   import { TrusyncApp } from 'trusync-svelte';
-
-  // TODO: remember last sessionID, prompt for password to useSession
+  import { Drawer } from '$lib/client/components';
 </script>
 
 <TrusyncApp drivers={[new MemoryDriver(), new LocalStorageDriver()]}>
-  <slot />
+  <Drawer>
+    <slot />
+  </Drawer>
 </TrusyncApp>

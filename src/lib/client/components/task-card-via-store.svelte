@@ -1,15 +1,15 @@
 <script lang="ts">
   // import { data } from 'trusync-svelte';
-  import type { Task } from '../interfaces/task';
-  import { drawer } from '../utils/stores';
+  // import type { Task } from '../interfaces/task';
+  import { drawerControl } from './drawer';
   import TaskDetail from './task-detail/task-detail.svelte';
 
-  export let id: string;
+  // export let id: string;
 
   // const task = data<Task>(id);
 
   function onActivate() {
-    drawer.open(TaskDetail, { id });
+    drawerControl().open(TaskDetail);
   }
 </script>
 

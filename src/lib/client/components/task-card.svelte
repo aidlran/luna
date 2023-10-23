@@ -1,14 +1,16 @@
 <script lang="ts">
   // import { Data } from 'trusync';
-  import { createEventDispatcher } from 'svelte';
+  // import { createEventDispatcher } from 'svelte';
   import type { Task } from '../interfaces/task';
   import type { OptionalID } from '../types/optional-id';
-  import { drawer } from '../utils/stores';
+  import { drawerControl } from './drawer';
   import TaskDetail from './task-detail/task-detail.svelte';
 
   export let task: OptionalID<Task>;
 
-  const dispatch = createEventDispatcher();
+  const drawer = drawerControl();
+
+  // const dispatch = createEventDispatcher();
 
   $: display = 'flex';
 
@@ -29,7 +31,7 @@
   }
 
   function onActivate() {
-    drawer.open(TaskDetail, { id: task.id });
+    drawer.open(TaskDetail);
   }
 </script>
 

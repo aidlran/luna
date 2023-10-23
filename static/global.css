@@ -23,6 +23,7 @@
 }
 
 body {
+  overflow-x: hidden;
   margin: 0;
   background-color: #e0f6ff;
   /* background by SVGBackgrounds.com */

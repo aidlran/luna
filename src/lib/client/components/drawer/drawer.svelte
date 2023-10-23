@@ -1,71 +1,82 @@
 <script lang="ts">
-  import { onDestroy } from 'svelte';
-  import type { DrawerControl } from './drawer-control';
-  import type { DrawerState } from './drawer-state';
+  import { setContext } from 'svelte';
+  import { drawerControl } from './drawer-control';
 
-  export let control: DrawerControl;
+  /**
+   * The identifer for the drawer. Used when accessing the `drawerControl()`.
+   */
+  export let key = 'default';
 
-  let isOpen = false;
+  // TODO: move following props to drawerControl store.
+  // TODO: different positions, i.e. left.
 
-  const baseTransitionDuration = 200;
-  let currentTransitionDuration = baseTransitionDuration;
+  /**
+   * Whether the drawer will dim the background while open.
+   */
+  export let dim = true;
 
-  let state: DrawerState = {};
+  /**
+   * Whether the user can click through to background elements while drawer is open.
+   */
+  export let clickthrough = true;
 
-  const unsubscribe = control.subscribe((value) => {
-    if (!value?.component) {
-      close();
-      return;
-    }
+  /**
+   * Drawer opening/closing transition duration in milliseconds.
+   */
+  export let transitionDuration = 200;
 
-    value.props = value.props ?? {};
+  /**
+   * Width of the drawer.
+   */
+  export let width = '30%';
 
-    if (!isOpen) {
-      open(value);
-      return;
-    }
+  /**
+   * Minimum width of the drawer.
+   */
+  export let minWidth = '300px';
 
-    currentTransitionDuration = 80;
-    isOpen = false;
-    setTimeout(() => {
-      currentTransitionDuration = baseTransitionDuration;
-      open(value);
-    }, currentTransitionDuration);
-  });
+  /**
+   * Padding of drawer inner elements.
+   */
+  export let padding = '16px';
 
-  function open(value: DrawerState) {
-    state = value;
-    isOpen = true;
-  }
-
-  function close() {
-    state = {};
-    isOpen = false;
-  }
-
-  onDestroy(unsubscribe);
+  const control = drawerControl();
+  setContext(`drawerControl.${key}`, control);
 </script>
 
 <div
-  class="container"
-  class:open={isOpen}
-  style:--transition-duration={`${currentTransitionDuration}ms`}
+  role="none"
+  style:min-height="100vh"
+  style:--transition-duration={`${transitionDuration}ms`}
+  on:click={control.close}
 >
-  <div role="none" class="overlay" />
+  <slot />
 
-  <div role="none" class="drawer" on:click|stopPropagation>
-    {#if isOpen}
-      <button class="close" on:click|stopPropagation={close}>X</button>
-      <svelte:component this={state.component} {...state.props} />
+  <div
+    class="overlay"
+    style:background-color={dim && $control.isOpen ? '#0002' : '#0000'}
+    style:pointer-events={$control.isOpen && !clickthrough ? 'initial' : 'none'}
+  />
+
+  <div
+    role="none"
+    class="drawer"
+    style:right={$control.isOpen
+      ? 0
+      : 'calc(0px - max(calc(var(--min-width) + var(--padding) * 2), var(--width))'}
+    style:--width={width}
+    style:--min-width={minWidth}
+    style:--padding={padding}
+    on:click|stopPropagation
+  >
+    {#if $control.isOpen}
+      <button class="close" on:click={control.close}>X</button>
+      <svelte:component this={$control.component} {...$control.props} />
     {/if}
   </div>
 </div>
 
 <style>
-  .container {
-    display: contents;
-  }
-
   .overlay {
     position: fixed;
     top: 0;
@@ -74,35 +85,22 @@
     height: 100%;
     min-width: 100vw;
     min-height: 100vh;
-    pointer-events: none;
     transition: background-color var(--transition-duration) ease;
-    background-color: #0000;
-  }
-
-  .container.open .overlay {
-    background-color: #0002;
   }
 
   .drawer {
-    --width: 300px;
-    --padding: 16px;
-    --padding-x2: calc(var(--padding) * 2);
-
     position: absolute;
-    height: calc(100% - var(--padding-x2));
-    width: calc(100% - var(--padding-x2));
-    max-width: calc(var(--width) - var(--padding-x2));
-    padding: var(--padding);
+    top: 0;
+    height: calc(100% - calc(var(--padding) * 6));
+    width: calc(100% - calc(var(--padding) * 2));
+    min-width: var(--min-width);
+    max-width: calc(var(--width) - calc(var(--padding) * 2));
+    padding: calc(var(--padding) * 3) var(--padding);
     background: rgba(var(--colour-background), 0.9);
     backdrop-filter: blur(2px);
     -webkit-backdrop-filter: blur(2px);
     box-shadow: var(--shadow);
     transition: right var(--transition-duration) ease;
-    right: calc(0px - var(--width));
-  }
-
-  .container.open .drawer {
-    right: 0;
   }
 
   button.close {

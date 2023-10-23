@@ -1,23 +1,29 @@
+import type { ComponentProps, ComponentType, SvelteComponent } from 'svelte';
 import { writable, type Readable } from 'svelte/store';
-import type { DrawerState } from './drawer-state';
-import type { ComponentType } from 'svelte';
+
+export interface DrawerState {
+  component?: ComponentType;
+  props?: ComponentProps<SvelteComponent>;
+  isOpen: boolean;
+}
 
 export interface DrawerControl extends Readable<DrawerState> {
   close: () => void;
-  open: (component: ComponentType, props?: object) => void;
+  open: <T extends SvelteComponent>(component: ComponentType<T>, props?: ComponentProps<T>) => void;
 }
 
 export function drawerControl(): DrawerControl {
-  const { set, subscribe } = writable<DrawerState>();
+  const { set, subscribe } = writable<DrawerState>({ isOpen: false });
 
   function close() {
-    set({});
+    set({ isOpen: false });
   }
 
-  function open(component: ComponentType, props?: object) {
+  function open<T extends SvelteComponent>(component: ComponentType<T>, props?: ComponentProps<T>) {
     set({
       component,
-      props: props ?? {},
+      props,
+      isOpen: true,
     });
   }
 
