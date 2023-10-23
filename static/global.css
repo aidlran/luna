@@ -38,17 +38,17 @@ p.error {
 
 label, input, select {
   border-radius: 12px;
-  background: #00000009;
 }
 
 label {
   position: relative;
   display: block;
-  margin-bottom: 14px;
-  padding: 6px 8px 29px;
+  margin-bottom: 45px;
+  padding: 6px 8px 0;
   font-size: 0.8rem;
   color: #555;
   user-select: none;
+  white-space: nowrap;
 }
 
 label.error {
@@ -70,7 +70,9 @@ input, select {
   font-size: 1.15rem;
   font-family: var(--font);
   padding: 8px;
-  border: 1px solid var(--colour-border);
+  background: #00000009;
+  border: none;
+  outline: 1px solid var(--colour-border);
 }
 
 label > input,
@@ -80,12 +82,11 @@ label > select {
   left: 0;
   padding-top: 22px;
   padding-bottom: 5px;
-  background: none;
 }
 
 input:focus:not([type=submit]),
 select:focus {
-  outline: 1px solid var(--colour-border-focus);
+  outline: 2px solid var(--colour-border-focus);
 }
 
 input[type='submit'] {
@@ -98,6 +99,8 @@ input[type='submit'] {
   box-shadow: 0 1px 16px 6px #5a5a701f;
   transition-duration: 100ms;
 }
+
+/* TODO: a.button and button to have similar style */
 
 input[type='submit']:not(:disabled) {
   background: rgb(131, 58, 180);

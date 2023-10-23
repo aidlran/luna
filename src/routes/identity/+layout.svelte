@@ -8,7 +8,7 @@
   <nav>
     <SessionSwitcher />
     <section>
-      <h1>Identity</h1>
+      <h1 style:padding-top="26px">Identity</h1>
       <div class="buttons">
         <a href="/identity/import">Import</a>
         <a href="/identity/create/identity">Create</a>
