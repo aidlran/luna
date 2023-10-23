@@ -1,19 +1,17 @@
 <script lang="ts">
   import { getIdentity } from 'trusync-svelte';
   import { goto } from '$app/navigation';
+  import { page } from '$app/stores';
 
   const identity = getIdentity();
-  const address = location.pathname.split('/').pop() ?? '';
 
-  if (address && !$identity.importedAddresses.includes(address)) {
-    goto('./');
+  $: {
+    if (!$identity.importedAddresses.includes($page.params.address)) {
+      goto('./');
+    }
   }
 
-  async function forget() {
-    // TODO: "Are you sure?" modal
-    await $identity.forget(address);
-    goto('./');
-  }
+  // TODO: "Are you sure?" modal on forget
 </script>
 
 <a href="./">Back</a>
@@ -26,11 +24,7 @@
     This is the identity's public address. It is derived from the public keys associated with the
     identity.
   </p>
-  <code>{address}</code>
-</div>
-
-<div class="border">
-  <h2>Recovery Methods</h2>
+  <code>{$page.params.address}</code>
 </div>
 
 <div class="border danger" style="display: flex">
@@ -44,7 +38,9 @@
     </p>
   </div>
   <div>
-    <button class="danger" on:click={forget}>Forget identity</button>
+    <button class="danger" on:click={() => $identity.forget($page.params.address)}
+      >Forget identity</button
+    >
   </div>
 </div>
 
