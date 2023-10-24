@@ -40,6 +40,7 @@ label, input, select {
   border-radius: 12px;
 }
 
+/* TODO: solve z-index issue */
 label {
   position: relative;
   display: block;
@@ -84,9 +85,14 @@ label > select {
   padding-bottom: 5px;
 }
 
+label.error input,
+label.error select {
+  outline-color: var(--colour-danger);
+}
+
 input:focus:not([type=submit]),
 select:focus {
-  outline: 2px solid var(--colour-border-focus);
+  outline-width: 2px;
 }
 
 input[type='submit'] {
@@ -112,4 +118,14 @@ input[type='submit']:not(:disabled) {
   );
   color: #fff;
   cursor: pointer;
+}
+
+.card {
+  padding: 14px 24px;
+  border: var(--border);
+  border-radius: 18px;
+  background: rgba(var(--colour-background), 97%);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  box-shadow: var(--shadow);
 }
