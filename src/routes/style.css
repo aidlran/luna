@@ -60,15 +60,6 @@ label.error {
   border-color: var(--colour-danger);
 }
 
-select {
-  width: 100%;
-  cursor: pointer;
-}
-
-input {
-  width: calc(100% - 18px);
-}
-
 input,
 select {
   font-size: 1.15rem;
@@ -78,6 +69,21 @@ select {
   border: none;
   outline: 1px solid var(--colour-border);
 }
+
+select {
+  width: 100%;
+  cursor: pointer;
+  /* disable appearance for Safari, implement custom arrow style */
+  appearance: none;
+  background-image: url("data:image/svg+xml,<svg height='16px' width='16px' viewBox='0 0 16 16' fill='%235a5a70ff' xmlns='http://www.w3.org/2000/svg'><path d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: calc(100% - 0.75rem) center;
+}
+
+input {
+  width: calc(100% - 18px);
+}
+
 
 label > input,
 label > select {
