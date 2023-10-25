@@ -13,11 +13,6 @@
 
   const app = getApp();
   const identity = getIdentity();
-  let selectElement: HTMLSelectElement;
-  let desiredSession: Session | undefined;
-  let displayModal = false;
-  let modalInputElement: HTMLInputElement;
-  let modalInputError = false;
 
   // TODO: reactive sessions store
   let allSessionsPromise: Promise<GetSessionsResult<SessionMetadata>>;
@@ -30,6 +25,15 @@
       return sessions as GetSessionsResult<SessionMetadata>;
     });
   }
+
+  let selectElement: HTMLSelectElement;
+  let desiredSession: Session | undefined;
+
+  let displayPasswordModal = false;
+  let modalInputElement: HTMLInputElement;
+  let modalInputError = false;
+
+  let displayConfirmResetModal = false;
 
   function findSession(sessionID: number): Promise<Session | undefined> {
     return allSessionsPromise.then((sessions) =>
@@ -53,7 +57,7 @@
     if (isInt) {
       desiredSession = await findSession(asNumber);
       if (desiredSession) {
-        displayModal = true;
+        displayPasswordModal = true;
         return;
       }
       // TODO: it should set a query param, modal is shown if present. Allows refresh or redirect here to show it.
@@ -63,12 +67,17 @@
           goto('/identity/create/session');
           break;
         case 'anon':
-        // TODO: if anon selected -> show confirm modal -> clearSession
-        // TODO: if anon selected but identities exist, warn they'll be lost
+          if ($identity.activeSession)
+            if ($identity.activeSession) {
+              displayConfirmResetModal = true;
+            } else if ($identity.importedAddresses.length) {
+              // TODO: warn they'll be lost
+              displayConfirmResetModal = true;
+            }
       }
     }
 
-    selectElement.value = activeSessionSelectValue();
+    // selectElement.value = activeSessionSelectValue();
   }
 
   async function onModalPasswordSubmit(): Promise<void> {
@@ -82,13 +91,14 @@
         return;
       }
     }
-    displayModal = false;
+    displayPasswordModal = false;
   }
 
   function cancel(): void {
     selectElement.value = activeSessionSelectValue();
     desiredSession = undefined;
-    displayModal = false;
+    displayConfirmResetModal = false;
+    displayPasswordModal = false;
   }
 </script>
 
@@ -122,7 +132,7 @@
   </select>
 </label>
 
-{#if displayModal}
+{#if displayPasswordModal}
   <div
     role="presentation"
     class="modal-overlay"
@@ -132,12 +142,31 @@
     <div role="none" class="card" style:margin="auto" on:click|stopPropagation>
       <h1>Switch to session {sessionName(desiredSession)}</h1>
       <form on:submit|preventDefault={onModalPasswordSubmit}>
-        <label class:error={modalInputError}>
+        <label class:error={modalInputError} use:focus>
           Enter your password (required)
-          <input required type="password" use:focus bind:this={modalInputElement} />
+          <input required type="password" bind:this={modalInputElement} />
         </label>
         <input type="submit" value="Switch session" />
       </form>
+    </div>
+  </div>
+{:else if displayConfirmResetModal}
+  <div
+    role="presentation"
+    class="modal-overlay"
+    on:click={cancel}
+    on:keydown={(event) => event.key === 'Escape' && cancel()}
+  >
+    <div role="none" class="card" style:margin="auto" on:click|stopPropagation>
+      <h1>Are you sure you want to continue?</h1>
+      <p>Your session will end and you will enter anonymous mode.</p>
+      <button on:click={cancel} use:focus>Cancel</button>
+      <button
+        on:click={() => {
+          app.identity.reset();
+          displayConfirmResetModal = false;
+        }}>Continue</button
+      >
     </div>
   </div>
 {/if}
