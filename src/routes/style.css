@@ -46,7 +46,7 @@ select {
 label {
   position: relative;
   display: block;
-  margin-bottom: 45px;
+  margin-bottom: 50px;
   padding: 6px 8px 0;
   font-size: 0.8rem;
   color: #555;
@@ -62,7 +62,7 @@ label.error {
 
 input,
 select {
-  font-size: 1.15rem;
+  font-size: 1.1rem;
   font-family: var(--font);
   padding: 8px;
   background: #00000009;
@@ -90,8 +90,7 @@ label > select {
   position: absolute;
   top: 0;
   left: 0;
-  padding-top: 22px;
-  padding-bottom: 5px;
+  padding-top: 28px;
 }
 
 label.error input,
