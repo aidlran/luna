@@ -36,7 +36,9 @@ p.error {
   color: var(--colour-danger);
 }
 
-label, input, select {
+label,
+input,
+select {
   border-radius: 12px;
 }
 
@@ -67,7 +69,8 @@ input {
   width: calc(100% - 18px);
 }
 
-input, select {
+input,
+select {
   font-size: 1.15rem;
   font-family: var(--font);
   padding: 8px;
@@ -90,7 +93,7 @@ label.error select {
   outline-color: var(--colour-danger);
 }
 
-input:focus:not([type=submit]),
+input:focus:not([type='submit']),
 select:focus {
   outline-width: 2px;
 }

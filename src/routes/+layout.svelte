@@ -9,3 +9,7 @@
     <slot />
   </Drawer>
 </TrusyncApp>
+
+<style>
+  @import './style.css';
+</style>
