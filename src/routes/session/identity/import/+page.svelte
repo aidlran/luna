@@ -57,7 +57,7 @@
   }
 </script>
 
-<a href="manage">Back</a>
+<a href="../">Back</a>
 
 <h1>Import an identity</h1>
 

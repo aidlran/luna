@@ -7,14 +7,14 @@
 
   $: {
     if (!$identity.importedAddresses.includes($page.params.address)) {
-      goto('./');
+      goto('../../');
     }
   }
 
   // TODO: "Are you sure?" modal on forget
 </script>
 
-<a href="./">Back</a>
+<a href="../../">Back</a>
 
 <h1>Manage Identity</h1>
 

@@ -1,49 +1,49 @@
 <script lang="ts">
-  import type { Hash } from 'trusync';
-  import { SignedIn, getApp } from 'trusync-svelte';
-  import { TaskList } from '$lib/client/components';
+  // import type { Hash } from 'trusync';
+  import { SignedIn } from 'trusync-svelte';
+  // import { TaskList } from '$lib/client/components';
 
-  interface ProjexRootData {
-    children: Hash[];
-  }
+  // interface ProjexRootData {
+  //   children: Hash[];
+  // }
 
-  interface ITaskList {
-    name: string;
-    parent: Hash;
-  }
+  // interface ITaskList {
+  //   name: string;
+  //   parent: Hash;
+  // }
 
-  const app = getApp();
-  const rootKey = 'projex';
-  let rootHash: Hash;
-  let root: ProjexRootData;
-  let newListName: string;
+  // const app = getApp();
+  // const rootKey = 'projex';
+  // let rootHash: Hash;
+  // let root: ProjexRootData;
+  // let newListName: string;
 
-  async function updateRoot(payload: ProjexRootData): Promise<void> {
-    rootHash = await app.data.putNamedJSON(root, rootKey);
-    root = payload;
-  }
+  // async function updateRoot(payload: ProjexRootData): Promise<void> {
+  //   rootHash = await app.data.putNamedJSON(root, rootKey);
+  //   root = payload;
+  // }
 
-  async function createTaskList(taskList: ITaskList): Promise<void> {
-    const hash = await app.data.putJSON(taskList);
-    let newRoot: ProjexRootData;
-    if (!root) {
-      newRoot = { children: [hash] };
-    } else {
-      newRoot = structuredClone(root);
-      if (!newRoot.children) {
-        newRoot.children = [hash];
-      } else {
-        newRoot.children.push(hash);
-      }
-    }
-    await updateRoot(newRoot);
-  }
+  // async function createTaskList(taskList: ITaskList): Promise<void> {
+  //   const hash = await app.data.putJSON(taskList);
+  //   let newRoot: ProjexRootData;
+  //   if (!root) {
+  //     newRoot = { children: [hash] };
+  //   } else {
+  //     newRoot = structuredClone(root);
+  //     if (!newRoot.children) {
+  //       newRoot.children = [hash];
+  //     } else {
+  //       newRoot.children.push(hash);
+  //     }
+  //   }
+  //   await updateRoot(newRoot);
+  // }
 
-  app.data.getNamedJSON<ProjexRootData>(rootKey).then((data) => (root = data));
+  // app.data.getNamedJSON<ProjexRootData>(rootKey).then((data) => (root = data));
 </script>
 
-<SignedIn noAuthRedirect="/identity">
-  <div class="board-view">
+<SignedIn noAuthRedirect="session/">
+  <!-- <div class="board-view">
     {#if root?.children}
       {#each root.children as hash}
         <TaskList {hash} />
@@ -68,10 +68,10 @@
         }
       }}
     />
-  </div>
+  </div> -->
 </SignedIn>
 
-<style>
+<!-- <style>
   .board-view {
     height: 100%;
     overflow: hidden;
@@ -85,4 +85,4 @@
       margin: 0 16px;
     }
   }
-</style>
+</style> -->

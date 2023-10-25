@@ -12,7 +12,7 @@
 {/if}
 
 <ul>
-  <li><a href="create/session">Create a session</a></li>
-  <li><a href="create/identity">Create an identity</a></li>
-  <li><a href="import">Import an identity</a></li>
+  <li><a href="create">Create a session</a></li>
+  <li><a href="identity/create">Create an identity</a></li>
+  <li><a href="identity/import">Import an identity</a></li>
 </ul>

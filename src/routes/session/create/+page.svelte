@@ -35,7 +35,7 @@
       const metadata = displayName?.length ? { displayName } : undefined;
       try {
         await app.identity.initSession(password, metadata);
-        await goto('identity');
+        await goto('.');
       } catch (error) {
         if (error instanceof Error) {
           errors.push(error.message);
@@ -51,7 +51,7 @@
   }
 </script>
 
-<a href="../manage">Back</a>
+<a href=".">Back</a>
 
 <h1>Create a Session</h1>
 

@@ -5,7 +5,7 @@
   const app = getApp();
 </script>
 
-<a href="../manage">Back</a>
+<a href="../">Back</a>
 
 <h1>Create an identity</h1>
 
@@ -21,9 +21,7 @@
   <button
     on:click={async () => {
       await app.identity.import(identity.address.value, identity.secret);
-      await goto(`../manage/${identity.address.value}`);
+      await goto(`manage/${identity.address.value}`);
     }}>Continue</button
   >
 {/await}
-
-<p>You can also <a href="../import">import an identity</a> instead.</p>
