@@ -1,10 +1,10 @@
 <script>
-  import { LocalStorageDriver, MemoryDriver } from 'trusync';
+  import { LocalStorageChannel, MemoryChannel } from 'trusync/channel';
   import { TrusyncApp } from 'trusync-svelte';
   import { Drawer } from '$lib/client/components';
 </script>
 
-<TrusyncApp drivers={[new MemoryDriver(), new LocalStorageDriver()]}>
+<TrusyncApp channels={[new MemoryChannel(), new LocalStorageChannel()]}>
   <Drawer>
     <slot />
   </Drawer>
