@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { useSession, type Session, type ActiveSession } from 'trusync/session';
+  import { tick } from 'svelte';
+  import { useSession, type Session } from 'trusync/session';
   import { activeSessionStore, allSessionsStore, getApp } from 'trusync-svelte';
   import { goto } from '$app/navigation';
   import { focus } from '$lib/client/actions/focus';
@@ -10,7 +11,6 @@
   }
 
   const app = getApp();
-  let activeSession: ActiveSession<SessionMetadata> | undefined;
   let desiredSession: Session<SessionMetadata> | undefined;
   let selectElement: HTMLSelectElement;
   let modalInputElement: HTMLInputElement;
@@ -19,15 +19,8 @@
 
   // TODO: individual session stores
 
-  $: {
-    if ($allSessionsStore) {
-      if (!Object.values($allSessionsStore).length) {
-        goto('/session/create');
-      }
-    }
-    if ($activeSessionStore) {
-      activeSession = $activeSessionStore as ActiveSession<SessionMetadata> | undefined;
-    }
+  $: if ($allSessionsStore && !Object.values($allSessionsStore).length) {
+    goto('/session/create');
   }
 
   // onMount(() => {
@@ -70,7 +63,7 @@
           goto(`/session/create`);
           return;
         case 'anon':
-          if (activeSession) {
+          if ($activeSessionStore) {
             displayConfirmResetModal = true;
           }
           return;
@@ -80,21 +73,24 @@
   }
 
   function onModalPasswordSubmit(): void {
-    // TODO: display error message on modal
     if (desiredSession) {
       useSession(desiredSession.id, modalInputElement.value, (error) => {
         if (error && error instanceof Error) {
+          // TODO: display error message on modal
           modalInputError = true;
           modalInputElement.focus();
-          return;
+        } else {
+          // Await tick - the select options will be updated and we need to keep the
+          // "active session" <option> not-disabled so it doesn't get unselected
+          tick().then(() => (desiredSession = undefined));
         }
+        return;
       });
     }
-    cancel();
   }
 
   function cancel(): void {
-    selectElement.value = sessionName(activeSession);
+    selectElement.value = $activeSessionStore?.id.toString() ?? 'anon';
     desiredSession = undefined;
     displayConfirmResetModal = false;
   }
@@ -104,9 +100,13 @@
   Active session
   <select on:change={onChange} bind:this={selectElement}>
     <optgroup label="Active session">
-      <option selected disabled value={$activeSessionStore?.id.toString() ?? 'anon'}>
-        {#if activeSession}
-          {sessionName(activeSession)}
+      <option
+        selected
+        disabled={!desiredSession}
+        value={$activeSessionStore?.id.toString() ?? 'anon'}
+      >
+        {#if $activeSessionStore}
+          {sessionName($activeSessionStore)}
         {:else}
           {'Anonymous'}
         {/if}
@@ -115,14 +115,14 @@
     {#if $allSessionsStore}
       <optgroup label="Switch session">
         {#each Object.values($allSessionsStore) as session}
-          {#if session && session !== activeSession}
+          {#if session && session !== $activeSessionStore}
             <option value={session.id.toString()}>{sessionName(session)}</option>
           {/if}
         {/each}
       </optgroup>
     {/if}
     <optgroup label="Actions">
-      {#if activeSession}
+      {#if $activeSessionStore}
         <option value="anon">Go Anonymous</option>
       {/if}
       <option value="create">Create a new session</option>
