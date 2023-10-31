@@ -1,8 +1,7 @@
 <script lang="ts">
   import { scale } from 'svelte/transition';
-  import { getIdentity } from 'trusync-svelte';
+  import { activeSessionStore } from 'trusync-svelte';
   import { SessionSwitcher } from '$lib/client/components';
-  const identity = getIdentity();
 </script>
 
 <div class="layout">
@@ -14,11 +13,13 @@
         <a href="/session/identity/import">Import</a>
         <a href="/session/identity/create">Create</a>
       </div>
-      {#each $identity.importedAddresses as key}
-        <a href={`/session/identity/manage/${key}`} in:scale>
-          {key}
-        </a>
-      {/each}
+      {#if $activeSessionStore?.identities}
+        {#each $activeSessionStore.identities as key}
+          <a href={`/session/identity/manage/${key}`} in:scale>
+            {key}
+          </a>
+        {/each}
+      {/if}
     </nav>
   </div>
 

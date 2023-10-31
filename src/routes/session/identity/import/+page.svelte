@@ -1,10 +1,7 @@
 <script lang="ts">
-  import { base58 } from 'trusync';
-  import { getApp } from 'trusync-svelte';
+  import { base58, importIdentity } from 'trusync';
   import { goto } from '$app/navigation';
   import { focus } from '$lib/client/actions/focus';
-
-  const app = getApp();
 
   let errors = new Array<string>();
 
@@ -39,18 +36,12 @@
       }
     }
     if (!errors.length) {
-      try {
-        await app.identity.import(address, rawSecret);
-        await goto(`manage/${address}`);
-      } catch (error) {
-        if (error instanceof Error) {
+      importIdentity(address, rawSecret, (error) => {
+        if (error) {
           errors.push(error.message);
-        } else if (typeof error === 'string') {
-          errors.push(error);
-        } else {
-          errors.push('Unknown error.');
         }
-      }
+        goto(`manage/${address}`);
+      });
     }
     errors = errors;
     working = false;

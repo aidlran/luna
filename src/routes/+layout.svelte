@@ -1,14 +1,10 @@
 <script>
-  import { LocalStorageChannel, MemoryChannel } from 'trusync/channel';
-  import { TrusyncApp } from 'trusync-svelte';
   import { Drawer } from '$lib/client/components';
 </script>
 
-<TrusyncApp channels={[new MemoryChannel(), new LocalStorageChannel()]}>
-  <Drawer>
-    <slot />
-  </Drawer>
-</TrusyncApp>
+<Drawer>
+  <slot />
+</Drawer>
 
 <style>
   @import './style.css';

@@ -1,11 +1,10 @@
 <script>
-  import { getIdentity } from 'trusync-svelte';
-  const identity = getIdentity();
+  import { activeSessionStore } from 'trusync-svelte';
 </script>
 
 <h1>Identity & Session Manager</h1>
 
-{#if !!$identity.importedAddresses.length}
+{#if $activeSessionStore?.identities.size}
   <p>Use the menu to manage your imported identities.</p>
 {:else}
   <p>Generate an identity now to get started, or import an existing identity.</p>

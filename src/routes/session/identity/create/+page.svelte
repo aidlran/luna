@@ -1,15 +1,13 @@
 <script lang="ts">
-  import { getApp } from 'trusync-svelte';
+  import { base58, generateIdentity, importIdentity } from 'trusync';
   import { goto } from '$app/navigation';
-  import { base58 } from 'trusync';
-  const app = getApp();
 </script>
 
 <a href="../">Back</a>
 
 <h1>Create an identity</h1>
 
-{#await app.identity.generate() then identity}
+{#await generateIdentity() then identity}
   <p>
     <span>Your address:</span>
     <code>{identity.address.value}</code>
@@ -19,9 +17,9 @@
     <code>{base58.encode(identity.secret)}</code>
   </p>
   <button
-    on:click={async () => {
-      await app.identity.import(identity.address.value, identity.secret);
-      await goto(`manage/${identity.address.value}`);
-    }}>Continue</button
+    on:click={() =>
+      importIdentity(identity.address.value, identity.secret, () =>
+        goto(`manage/${identity.address.value}`),
+      )}>Continue</button
   >
 {/await}

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { tick } from 'svelte';
-  import { useSession, type Session } from 'trusync/session';
-  import { activeSessionStore, allSessionsStore, getApp } from 'trusync-svelte';
+  import { useSession, type Session, clearSession, type InactiveSession } from 'trusync/session';
+  import { activeSessionStore, allSessionsStore } from 'trusync-svelte';
   import { goto } from '$app/navigation';
   import { focus } from '$lib/client/actions/focus';
 
@@ -10,7 +10,6 @@
     displayName?: string;
   }
 
-  const app = getApp();
   let desiredSession: Session<SessionMetadata> | undefined;
   let selectElement: HTMLSelectElement;
   let modalInputElement: HTMLInputElement;
@@ -74,7 +73,7 @@
 
   function onModalPasswordSubmit(): void {
     if (desiredSession) {
-      useSession(desiredSession.id, modalInputElement.value, (error) => {
+      useSession((desiredSession as InactiveSession).id, modalInputElement.value, (error) => {
         if (error && error instanceof Error) {
           // TODO: display error message on modal
           modalInputError = true;
@@ -90,7 +89,7 @@
   }
 
   function cancel(): void {
-    selectElement.value = $activeSessionStore?.id.toString() ?? 'anon';
+    selectElement.value = $activeSessionStore?.id?.toString() ?? 'anon';
     desiredSession = undefined;
     displayConfirmResetModal = false;
   }
@@ -103,7 +102,7 @@
       <option
         selected
         disabled={!desiredSession}
-        value={$activeSessionStore?.id.toString() ?? 'anon'}
+        value={$activeSessionStore?.id?.toString() ?? 'anon'}
       >
         {#if $activeSessionStore}
           {sessionName($activeSessionStore)}
@@ -116,7 +115,7 @@
       <optgroup label="Switch session">
         {#each Object.values($allSessionsStore) as session}
           {#if session && session !== $activeSessionStore}
-            <option value={session.id.toString()}>{sessionName(session)}</option>
+            <option value={session.id?.toString()}>{sessionName(session)}</option>
           {/if}
         {/each}
       </optgroup>
@@ -159,12 +158,8 @@
       <h1>Are you sure you want to continue?</h1>
       <p>Your session will end and you will enter anonymous mode.</p>
       <button on:click={cancel} use:focus>Cancel</button>
-      <button
-        on:click={() => {
-          // TODO
-          app.identity.reset();
-          displayConfirmResetModal = false;
-        }}>Continue</button
+      <button on:click={() => clearSession(() => (displayConfirmResetModal = false))}
+        >Continue</button
       >
     </div>
   </div>

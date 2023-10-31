@@ -1,9 +1,7 @@
 <script lang="ts">
-  import { getApp } from 'trusync-svelte';
+  import { initSession } from 'trusync';
   import { goto } from '$app/navigation';
   import { focus } from '$lib/client/actions/focus';
-
-  const app = getApp();
 
   let errors = new Array<string>();
 
@@ -33,18 +31,15 @@
       confirmError = true;
     } else {
       const metadata = displayName?.length ? { displayName } : undefined;
-      try {
-        await app.identity.initSession(password, metadata);
-        await goto('.');
-      } catch (error) {
-        if (error instanceof Error) {
-          errors.push(error.message);
-        } else if (typeof error === 'string') {
-          errors.push(error);
+      initSession(password, metadata, (result) => {
+        if (result instanceof Error) {
+          errors.push(result.message);
+        } else if (typeof result === 'string') {
+          errors.push(result);
         } else {
-          errors.push('Unknown error.');
+          goto('.');
         }
-      }
+      });
     }
     errors = errors;
     working = false;

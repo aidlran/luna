@@ -1,21 +1,18 @@
 <script lang="ts">
-  import type { Hash } from 'trusync';
-  import { getApp } from 'trusync-svelte';
+  // import type { Hash } from 'trusync';
   import type { Task } from '../interfaces/task';
   // import type { OptionalID } from '../types/optional-id';
   // import TaskCard from './task-card.svelte';
   // import TaskCardViaStore from './task-card-via-store.svelte';
 
-  const app = getApp();
-
-  export let hash: Hash;
+  // export let hash: Hash;
   let taskList: Task;
   // let childTasks: OptionalID<Task>[];
 
   let isAddingItem = false;
   let newItemName: string;
 
-  app.data.getJSON<Task>(hash).then((value) => (taskList = value));
+  // app.data.getJSON<Task>(hash).then((value) => (taskList = value));
 
   function cancel() {
     isAddingItem = false;

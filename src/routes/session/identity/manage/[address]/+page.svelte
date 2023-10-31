@@ -1,14 +1,11 @@
 <script lang="ts">
-  import { getIdentity } from 'trusync-svelte';
+  import { forgetIdentity } from 'trusync';
+  import { activeSessionStore } from 'trusync-svelte';
   import { goto } from '$app/navigation';
   import { page } from '$app/stores';
 
-  const identity = getIdentity();
-
-  $: {
-    if (!$identity.importedAddresses.includes($page.params.address)) {
-      goto('../../');
-    }
+  $: if (!$activeSessionStore?.identities.has($page.params.address)) {
+    goto('../../');
   }
 
   // TODO: "Are you sure?" modal on forget
@@ -38,7 +35,7 @@
     </p>
   </div>
   <div>
-    <button class="danger" on:click={() => $identity.forget($page.params.address)}
+    <button class="danger" on:click={() => forgetIdentity($page.params.address)}
       >Forget identity</button
     >
   </div>
