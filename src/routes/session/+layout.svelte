@@ -44,6 +44,10 @@
     border-left: 1px solid var(--colour-border);
   }
 
+  main :global(label) {
+    margin-bottom: 50px;
+  }
+
   nav {
     position: sticky;
     top: 0;

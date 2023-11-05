@@ -154,8 +154,15 @@
       <h1>Are you sure you want to continue?</h1>
       <p>Your session will end and you will enter anonymous mode.</p>
       <button on:click={cancel} use:focus>Cancel</button>
-      <button on:click={() => clearSession(() => (displayConfirmResetModal = false))}
-        >Continue</button
+      <button
+        on:click={() =>
+          clearSession(() => {
+            sessionParamStore.set(undefined);
+            displayConfirmResetModal = false;
+            tick().then(
+              () => (selectElement.value = $activeSessionStore?.id?.toString() ?? 'anon'),
+            );
+          })}>Continue</button
       >
     </div>
   </div>
