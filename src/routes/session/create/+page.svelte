@@ -38,7 +38,7 @@
         } else if (typeof result === 'string') {
           errors.push(result);
         } else {
-          goto('.');
+          goto(`.${$page.url.hash}`);
         }
       });
     }

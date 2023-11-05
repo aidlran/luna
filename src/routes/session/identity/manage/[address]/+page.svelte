@@ -5,7 +5,7 @@
   import { page } from '$app/stores';
 
   $: if (!$activeSessionStore?.identities.has($page.params.address)) {
-    goto('../../');
+    goto(`../../${$page.url.hash}`);
   }
 
   // TODO: "Are you sure?" modal on forget

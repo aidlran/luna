@@ -22,7 +22,7 @@
 
   $: if ($allSessionsStore) {
     if (!Object.values($allSessionsStore).length) {
-      goto('/session/create');
+      goto(`/session/create${$page.url.hash}`);
     } else {
       fragState = {};
       for (const param of $page.url.hash.slice(1).split('&')) {
@@ -74,8 +74,8 @@
     } else {
       switch (selectedValue) {
         case 'create':
-          goto(`/session/create`);
-          return;
+          goto(`/session/create${$page.url.hash}`);
+          break;
         case 'anon':
           if ($activeSessionStore) {
             displayConfirmResetModal = true;

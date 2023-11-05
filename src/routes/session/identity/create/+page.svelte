@@ -20,7 +20,7 @@
   <button
     on:click={() =>
       importIdentity(identity.address.value, identity.secret, () =>
-        goto(`manage/${identity.address.value}`),
+        goto(`manage/${identity.address.value}${$page.url.hash}`),
       )}>Continue</button
   >
 {/await}

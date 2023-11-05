@@ -41,7 +41,7 @@
         if (error) {
           errors.push(error.message);
         }
-        goto(`manage/${address}`);
+        goto(`manage/${address}${$page.url.hash}`);
       });
     }
     errors = errors;
