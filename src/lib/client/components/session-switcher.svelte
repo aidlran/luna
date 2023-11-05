@@ -4,7 +4,8 @@
   import { activeSessionStore, allSessionsStore } from 'trusync-svelte';
   import { goto } from '$app/navigation';
   import { page } from '$app/stores';
-  import { focus } from '$lib/client/actions/focus';
+  import { focus } from '../actions/focus';
+  import { fragmentParam } from './url-state';
 
   // TODO: find a home
   interface SessionMetadata {
@@ -16,40 +17,18 @@
   let modalInputElement: HTMLInputElement;
   let modalInputError = false;
   let displayConfirmResetModal = false;
-  let fragState: Partial<Record<string, string>>;
+  const sessionParamStore = fragmentParam('sid');
 
   // TODO: individual session stores
 
   $: if ($allSessionsStore) {
     if (!Object.values($allSessionsStore).length) {
       goto(`/session/create${$page.url.hash}`);
-    } else {
-      fragState = {};
-      for (const param of $page.url.hash.slice(1).split('&')) {
-        if (!param) {
-          continue;
-        }
-        const [key, value] = param.split('=');
-        if (key === 'session') {
-          const sessionID = Number.parseInt(value);
-          if (sessionID && $activeSessionStore?.id !== sessionID) {
-            switchSession(sessionID);
-            continue;
-          }
-        }
-        fragState[key] = value;
+    } else if ($sessionParamStore) {
+      const sessionID = Number.parseInt($sessionParamStore);
+      if (sessionID && $activeSessionStore?.id !== sessionID) {
+        switchSession(sessionID);
       }
-      if (!fragState['session'] && $activeSessionStore?.id) {
-        fragState['session'] = $activeSessionStore?.id?.toString();
-      }
-      let hash = '';
-      let once = false;
-      for (const [key, value] of Object.entries(fragState)) {
-        if (once) hash += '&';
-        hash += `${key}=${value}`;
-        once = true;
-      }
-      window.location.hash = hash;
     }
   }
 
@@ -94,6 +73,7 @@
           modalInputError = true;
           modalInputElement.focus();
         } else {
+          sessionParamStore.set($activeSessionStore?.id?.toString());
           // Await tick - the select options will be updated and we need to keep the
           // "active session" <option> not-disabled so it doesn't get unselected
           tick().then(() => (desiredSession = undefined));

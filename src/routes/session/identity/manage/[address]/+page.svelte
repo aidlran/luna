@@ -24,8 +24,8 @@
   <code>{$page.params.address}</code>
 </div>
 
-<div class="border danger" style="display: flex">
-  <div style="flex-grow: 1">
+<div class="border danger" style:display="flex">
+  <div style:flex-grow="1">
     <h2>Forget identity</h2>
     <p>
       <strong>Warning</strong>

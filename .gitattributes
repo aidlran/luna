@@ -1,5 +1,2 @@
 * text=auto
-
-*.config.js linguist-detectable=false
-*.prisma    linguist-detectable=true
-.eslintrc.* linguist-detectable=false
+*.config.* linguist-vendored

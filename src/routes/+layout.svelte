@@ -1,9 +1,11 @@
 <script>
-  import { Drawer } from '$lib/client/components';
+  import { Drawer, UrlState } from '$lib/client/components';
 </script>
 
 <Drawer>
-  <slot />
+  <UrlState>
+    <slot />
+  </UrlState>
 </Drawer>
 
 <style>

@@ -7,5 +7,6 @@ import SessionSwitcher from './session-switcher.svelte';
 import TaskList from './task-list.svelte';
 
 export * from './drawer';
+export * from './url-state';
 
 export { Header, LoadingSpinner, Modal, SessionSwitcher, TaskList, Tick };
