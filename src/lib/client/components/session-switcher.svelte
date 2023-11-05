@@ -67,18 +67,19 @@
 
   function onModalPasswordSubmit(): void {
     if (desiredSession) {
-      useSession((desiredSession as InactiveSession).id, modalInputElement.value, (error) => {
-        if (error && error instanceof Error) {
+      useSession((desiredSession as InactiveSession).id, modalInputElement.value, (result) => {
+        if (result instanceof Error) {
           // TODO: display error message on modal
           modalInputError = true;
           modalInputElement.focus();
-        } else {
-          sessionParamStore.set($activeSessionStore?.id?.toString());
+        } else if (result?.id) {
+          sessionParamStore.set(result.id.toString());
           // Await tick - the select options will be updated and we need to keep the
           // "active session" <option> not-disabled so it doesn't get unselected
           tick().then(() => (desiredSession = undefined));
+        } else {
+          throw new TypeError('SessionSwitcher: unexpected useSession result.');
         }
-        return;
       });
     }
   }
