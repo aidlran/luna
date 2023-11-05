@@ -11,7 +11,7 @@
   // TODO: "Are you sure?" modal on forget
 </script>
 
-<a href="../../">Back</a>
+<a href={`../../${$page.url.hash}`}>Back</a>
 
 <h1>Manage Identity</h1>
 

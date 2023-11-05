@@ -3,6 +3,7 @@
   import { useSession, type Session, clearSession, type InactiveSession } from 'trusync/session';
   import { activeSessionStore, allSessionsStore } from 'trusync-svelte';
   import { goto } from '$app/navigation';
+  import { page } from '$app/stores';
   import { focus } from '$lib/client/actions/focus';
 
   // TODO: find a home
@@ -15,28 +16,42 @@
   let modalInputElement: HTMLInputElement;
   let modalInputError = false;
   let displayConfirmResetModal = false;
+  let fragState: Partial<Record<string, string>>;
 
   // TODO: individual session stores
 
-  $: if ($allSessionsStore && !Object.values($allSessionsStore).length) {
-    goto('/session/create');
+  $: if ($allSessionsStore) {
+    if (!Object.values($allSessionsStore).length) {
+      goto('/session/create');
+    } else {
+      fragState = {};
+      for (const param of $page.url.hash.slice(1).split('&')) {
+        if (!param) {
+          continue;
+        }
+        const [key, value] = param.split('=');
+        if (key === 'session') {
+          const sessionID = Number.parseInt(value);
+          if (sessionID && $activeSessionStore?.id !== sessionID) {
+            switchSession(sessionID);
+            continue;
+          }
+        }
+        fragState[key] = value;
+      }
+      if (!fragState['session'] && $activeSessionStore?.id) {
+        fragState['session'] = $activeSessionStore?.id?.toString();
+      }
+      let hash = '';
+      let once = false;
+      for (const [key, value] of Object.entries(fragState)) {
+        if (once) hash += '&';
+        hash += `${key}=${value}`;
+        once = true;
+      }
+      window.location.hash = hash;
+    }
   }
-
-  // onMount(() => {
-  //   // TODO: the frag state should persist between pages
-  //   // need a standard way to do this
-  //   for (const [k, v] of $page.url.hash
-  //     .slice(1)
-  //     .split('&')
-  //     .map((param) => param.split('=')) as [key?: string, value?: string][]) {
-  //     if (v && k === 'session') {
-  //       const asInt = Number.parseInt(v);
-  //       if (asInt !== $identity.activeSession) {
-  //         switchSession(asInt);
-  //       }
-  //     }
-  //   }
-  // });
 
   function sessionName(session?: Session<SessionMetadata | unknown>): string {
     return (session?.metadata as SessionMetadata)?.displayName ?? session?.id?.toString() ?? '?';
@@ -111,7 +126,7 @@
         {/if}
       </option>
     </optgroup>
-    {#if $allSessionsStore}
+    {#if $allSessionsStore && Object.keys($allSessionsStore).length}
       <optgroup label="Switch session">
         {#each Object.values($allSessionsStore) as session}
           {#if session && session !== $activeSessionStore}

@@ -1,6 +1,7 @@
 <script lang="ts">
   import { initSession } from 'trusync';
   import { goto } from '$app/navigation';
+  import { page } from '$app/stores';
   import { focus } from '$lib/client/actions/focus';
 
   let errors = new Array<string>();
@@ -46,7 +47,7 @@
   }
 </script>
 
-<a href=".">Back</a>
+<a href={`.${$page.url.hash}`}>Back</a>
 
 <h1>Create a Session</h1>
 

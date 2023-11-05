@@ -1,6 +1,7 @@
 <script lang="ts">
   import { scale } from 'svelte/transition';
   import { activeSessionStore } from 'trusync-svelte';
+  import { page } from '$app/stores';
   import { SessionSwitcher } from '$lib/client/components';
 </script>
 
@@ -10,12 +11,12 @@
       <SessionSwitcher />
       <h1>Session Identities</h1>
       <div class="buttons">
-        <a href="/session/identity/import">Import</a>
-        <a href="/session/identity/create">Create</a>
+        <a href={`/session/identity/import${$page.url.hash}`}>Import</a>
+        <a href={`/session/identity/create${$page.url.hash}`}>Create</a>
       </div>
       {#if $activeSessionStore?.identities}
         {#each $activeSessionStore.identities as key}
-          <a href={`/session/identity/manage/${key}`} in:scale>
+          <a href={`/session/identity/manage/${key}${$page.url.hash}`} in:scale>
             {key}
           </a>
         {/each}

@@ -1,9 +1,10 @@
 <script lang="ts">
   import { base58, generateIdentity, importIdentity } from 'trusync';
   import { goto } from '$app/navigation';
+  import { page } from '$app/stores';
 </script>
 
-<a href="../">Back</a>
+<a href={`../${$page.url.hash}`}>Back</a>
 
 <h1>Create an identity</h1>
 
