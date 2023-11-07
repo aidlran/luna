@@ -3,6 +3,9 @@
   import { goto } from '$app/navigation';
   import { page } from '$app/stores';
   import { focus } from '$lib/client/actions/focus';
+  import { fragmentParam } from '$lib/client/components/url-state';
+
+  const sessionParam = fragmentParam('sid');
 
   let errors = new Array<string>();
 
@@ -38,6 +41,7 @@
         } else if (typeof result === 'string') {
           errors.push(result);
         } else {
+          sessionParam.set(result.id?.toString());
           goto(`.${$page.url.hash}`);
         }
       });
