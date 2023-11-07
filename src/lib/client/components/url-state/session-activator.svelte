@@ -3,7 +3,7 @@
   import { activeSessionStore, allSessionsStore } from 'trusync-svelte';
   import { focus } from '../../actions/focus';
   import { fragmentParam } from './fragment-param-function';
-    import { tick } from 'svelte';
+  import { tick } from 'svelte';
 
   // TODO: find a home
   interface SessionMetadata {
@@ -28,16 +28,18 @@
   }
 
   function submit(): void {
-    targetSession?.id && useSession(targetSession.id, password, (result) => {
-      if (result instanceof Error) {
-        error = result.message;
-      } else {
-        tick().then(close);
-      }
-    });
+    targetSession?.id &&
+      useSession(targetSession.id, password, (result) => {
+        if (result instanceof Error) {
+          error = result.message;
+        } else {
+          tick().then(close);
+        }
+      });
   }
 </script>
 
+<!-- TODO: common modal component or system -->
 {#if targetSession}
   <div
     role="presentation"
@@ -57,18 +59,3 @@
     </div>
   </div>
 {/if}
-
-<style>
-  /* TODO: common modal component or system */
-  .modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    display: flex;
-    height: 100vh;
-    width: 100vw;
-    background-color: #0002;
-    backdrop-filter: blur(2px);
-    -webkit-backdrop-filter: blur(2px);
-  }
-</style>

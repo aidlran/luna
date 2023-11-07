@@ -48,4 +48,6 @@
   setContext('fragmentParam', fragmentParam);
 </script>
 
+<SessionActivator />
+
 <slot />
