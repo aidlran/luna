@@ -43,8 +43,7 @@
       importIdentity(address, rawSecret, (error) => {
         if (error) {
           errors.push(error.message);
-        }
-        else {
+        } else {
           idParam.set(address);
           goto(`manage${$page.url.hash}`);
         }
