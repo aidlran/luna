@@ -24,12 +24,9 @@
     "preview": "vite preview",
     "start": "npm run build:libs && svelte-kit sync && conc -kn vite-dev,svelte-check,trusync-js,trusync-svelte \"vite dev\" \"svelte-check --watch --preserveWatchOutput\" \"npm start -w lib/trusync/packages/lib-js\" \"npm start -w lib/trusync/packages/lib-svelte\""
   },
-  "dependencies": {
-    "trusync": "file:lib/trusync/packages/lib-js",
-    "trusync-svelte": "file:lib/trusync/packages/lib-svelte"
-  },
   "devDependencies": {
     "@capacitor/android": "^5.5.1",
+    "@capacitor/app": "^5.0.6",
     "@capacitor/cli": "^5.5.1",
     "@capacitor/core": "^5.5.1",
     "@sveltejs/adapter-static": "^2.0.3",
@@ -48,6 +45,8 @@
     "prettier-plugin-svelte": "^3.0.3",
     "svelte": "^4.2.2",
     "svelte-check": "^3.5.2",
+    "trusync": "file:lib/trusync/packages/lib-js",
+    "trusync-svelte": "file:lib/trusync/packages/lib-svelte",
     "tslib": "^2.6.2",
     "typescript": "^5.2.2",
     "vite": "^4.5.0"
