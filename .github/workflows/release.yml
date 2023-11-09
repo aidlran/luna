@@ -29,7 +29,6 @@ jobs:
   web-deploy:
     needs: web-build
     permissions:
-      contents: read
       pages: write
       id-token: write
     environment:
@@ -37,7 +36,8 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/deploy-pages@v2
+      - id: deployment
+        uses: actions/deploy-pages@v2
 
   android:
     runs-on: ubuntu-latest
