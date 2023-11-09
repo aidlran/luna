@@ -1,6 +1,6 @@
 # dir
 .svelte-kit
-.vercel
+/build
 node_modules
 
 # file

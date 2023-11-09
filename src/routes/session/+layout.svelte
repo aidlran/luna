@@ -1,8 +1,16 @@
 <script lang="ts">
   import { scale } from 'svelte/transition';
   import { activeSessionStore } from 'trusync-svelte';
+  import { goto } from '$app/navigation';
   import { page } from '$app/stores';
-  import { SessionSwitcher } from '$lib/client/components';
+  import { SessionSwitcher, fragmentParam } from '$lib/client/components';
+
+  const idParam = fragmentParam('id');
+
+  function manageIdentity(id: string) {
+    idParam.set(id);
+    goto(`/session/identity/manage${$page.url.hash}`);
+  }
 </script>
 
 <div class="layout">
@@ -15,10 +23,10 @@
         <a href={`/session/identity/create${$page.url.hash}`}>Create</a>
       </div>
       {#if $activeSessionStore?.identities}
-        {#each $activeSessionStore.identities as key}
-          <a href={`/session/identity/manage/${key}${$page.url.hash}`} in:scale>
-            {key}
-          </a>
+        {#each $activeSessionStore.identities as id}
+          <button on:click={() => manageIdentity(id)} in:scale>
+            {id}
+          </button>
         {/each}
       {/if}
     </nav>

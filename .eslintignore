@@ -1,6 +1,7 @@
 # dir
 .svelte-kit
-.vercel
+/android
+/build
 /lib
 node_modules
 /static

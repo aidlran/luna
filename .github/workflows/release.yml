@@ -1,0 +1,66 @@
+name: Create release
+
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  web-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: npm
+      - uses: actions/configure-pages@v3
+      - run: npm ci
+      - run: npm run build:web
+      - uses: actions/upload-pages-artifact@v2
+        with:
+          path: ./build/
+
+  web-deploy:
+    needs: web-build
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/deploy-pages@v2
+
+  android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: npm
+      - uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: gradle
+      - run: npm ci
+      - run: npm run build:web
+      - run: npx cap sync android
+      - run: ./gradlew assemble --no-daemon
+        working-directory: ./android
+      - uses: actions/upload-artifact@v3
+        with:
+          name: luna.apk
+          path: ./android/app/build/outputs/apk/release/app-release.apk
+          if-no-files-found: error

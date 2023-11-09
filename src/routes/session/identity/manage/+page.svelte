@@ -1,17 +1,27 @@
 <script lang="ts">
+  import { onDestroy } from 'svelte';
   import { forgetIdentity } from 'trusync';
   import { activeSessionStore } from 'trusync-svelte';
+  import { browser } from '$app/environment';
   import { goto } from '$app/navigation';
   import { page } from '$app/stores';
+  import { fragmentParam } from '$lib/client/components';
 
-  $: if (!$activeSessionStore?.identities.has($page.params.address)) {
-    goto(`../../${$page.url.hash}`);
+  const idParam = fragmentParam('id');
+
+  $: if (browser && (!$idParam || !$activeSessionStore?.identities.has($idParam))) {
+    goto(`../${$page.url.hash}`);
   }
 
+  onDestroy(() => idParam.set(undefined));
+
   // TODO: "Are you sure?" modal on forget
+  function forget(): void {
+    forgetIdentity($idParam as string);
+  }
 </script>
 
-<a href={`../../${$page.url.hash}`}>Back</a>
+<a href={`../${$page.url.hash}`}>Back</a>
 
 <h1>Manage Identity</h1>
 
@@ -21,7 +31,7 @@
     This is the identity's public address. It is derived from the public keys associated with the
     identity.
   </p>
-  <code>{$page.params.address}</code>
+  <code>{$idParam}</code>
 </div>
 
 <div class="border danger" style:display="flex">
@@ -35,9 +45,7 @@
     </p>
   </div>
   <div>
-    <button class="danger" on:click={() => forgetIdentity($page.params.address)}
-      >Forget identity</button
-    >
+    <button class="danger" on:click={forget}>Forget identity</button>
   </div>
 </div>
 

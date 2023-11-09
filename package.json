@@ -14,7 +14,9 @@
     "lib/trusync/packages/lib-svelte"
   ],
   "scripts": {
-    "build": "npm run build:libs && vite build",
+    "build": "npm run build:android",
+    "build:android": "npm run build:web && cap sync && cap build android",
+    "build:web": "npm run build:libs && vite build",
     "build:libs": "npm run build --workspaces",
     "format": "prettier --write --plugin prettier-plugin-svelte .",
     "lc": "echo LUNA: $(find src -type f -exec cat {} \\; | wc -l) lines",
@@ -27,7 +29,11 @@
     "trusync-svelte": "file:lib/trusync/packages/lib-svelte"
   },
   "devDependencies": {
-    "@sveltejs/kit": "^1.27.3",
+    "@capacitor/android": "^5.5.1",
+    "@capacitor/cli": "^5.5.1",
+    "@capacitor/core": "^5.5.1",
+    "@sveltejs/adapter-static": "^2.0.3",
+    "@sveltejs/kit": "^1.27.4",
     "@types/estree": "^1.0.5",
     "@typescript-eslint/eslint-plugin": "^6.10.0",
     "@typescript-eslint/parser": "^6.10.0",

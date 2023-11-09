@@ -51,7 +51,7 @@
     <div role="none" class="card" style:margin="auto" on:click|stopPropagation>
       <h1>Switch to session {targetSession.metadata?.displayName ?? targetSession.id}</h1>
       <form on:submit|preventDefault={submit}>
-        <label class:error={!!error} style:margin-bottom=50px use:focus>
+        <label class:error={!!error} style:margin-bottom="50px" use:focus>
           Enter your password (required)
           <input required type="password" bind:value={password} />
         </label>
