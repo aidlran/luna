@@ -5,7 +5,7 @@
   import { browser } from '$app/environment';
   import { goto } from '$app/navigation';
   import { page } from '$app/stores';
-  import { fragmentParam } from '$lib/client/components';
+  import { fragmentParam } from '$lib/client/components/url-state';
 
   const idParam = fragmentParam('id');
 
@@ -13,7 +13,7 @@
     goto(`../${$page.url.hash}`);
   }
 
-  onDestroy(() => idParam.set(undefined));
+  onDestroy(() => browser && idParam.set(undefined));
 
   // TODO: "Are you sure?" modal on forget
   function forget(): void {

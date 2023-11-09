@@ -59,6 +59,7 @@ jobs:
       - run: npx cap sync android
       - run: ./gradlew assemble --no-daemon
         working-directory: ./android
+      - run: find ./android/app/build
       - uses: actions/upload-artifact@v3
         with:
           name: luna.apk

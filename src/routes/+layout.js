@@ -1,2 +1,2 @@
-// Server side rendering must be disabled (see trusync-svelte readme)
+export const prerender = true;
 export const ssr = false;

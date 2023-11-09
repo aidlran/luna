@@ -1,5 +1,6 @@
 <script>
-  import { Drawer, UrlState } from '$lib/client/components';
+  import { Drawer } from '$lib/client/components/drawer';
+  import { UrlState } from '$lib/client/components/url-state';
 </script>
 
 <Drawer>

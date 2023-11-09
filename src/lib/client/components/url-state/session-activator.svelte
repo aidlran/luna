@@ -1,9 +1,9 @@
 <script lang="ts">
+  import { tick } from 'svelte';
   import { useSession, type Session } from 'trusync';
   import { activeSessionStore, allSessionsStore } from 'trusync-svelte';
   import { focus } from '../../actions/focus';
   import { fragmentParam } from './fragment-param-function';
-  import { tick } from 'svelte';
 
   // TODO: find a home
   interface SessionMetadata {

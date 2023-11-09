@@ -3,7 +3,8 @@
   import { activeSessionStore } from 'trusync-svelte';
   import { goto } from '$app/navigation';
   import { page } from '$app/stores';
-  import { SessionSwitcher, fragmentParam } from '$lib/client/components';
+  import SessionSwitcher from '$lib/client/components/session-switcher.svelte';
+  import { fragmentParam } from '$lib/client/components/url-state';
 
   const idParam = fragmentParam('id');
 
