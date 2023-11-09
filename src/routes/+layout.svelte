@@ -3,6 +3,10 @@
   import { UrlState } from '$lib/client/components/url-state';
 </script>
 
+<svelte:head>
+  <title>LUNA</title>
+</svelte:head>
+
 <Drawer>
   <UrlState>
     <slot />
