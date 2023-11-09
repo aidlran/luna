@@ -63,5 +63,10 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: luna.apk
-          path: ./android/app/build/outputs/apk/release/app-release.apk
+          path: ./android/app/build/outputs/apk/release/app-release-unsigned.apk
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v3
+        with:
+          name: luna-debug.apk
+          path: ./android/app/build/outputs/apk/release/app-debug.apk
           if-no-files-found: error
