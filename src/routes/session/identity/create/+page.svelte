@@ -2,6 +2,9 @@
   import { base58, generateIdentity, importIdentity } from 'trusync';
   import { goto } from '$app/navigation';
   import { page } from '$app/stores';
+  import { fragmentParam } from '$lib/client/components/url-state';
+
+  const idParam = fragmentParam('id');
 </script>
 
 <a href={`../${$page.url.hash}`}>Back</a>
@@ -19,8 +22,9 @@
   </p>
   <button
     on:click={() =>
-      importIdentity(identity.address.value, identity.secret, () =>
-        goto(`manage/${identity.address.value}${$page.url.hash}`),
-      )}>Continue</button
+      importIdentity(identity.address.value, identity.secret, () => {
+        idParam.set(identity.address.value);
+        goto(`manage${$page.url.hash}`);
+      })}>Continue</button
   >
 {/await}

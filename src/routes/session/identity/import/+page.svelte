@@ -3,6 +3,9 @@
   import { goto } from '$app/navigation';
   import { page } from '$app/stores';
   import { focus } from '$lib/client/actions/focus';
+  import { fragmentParam } from '$lib/client/components/url-state';
+
+  const idParam = fragmentParam('id');
 
   let errors = new Array<string>();
 
@@ -41,7 +44,10 @@
         if (error) {
           errors.push(error.message);
         }
-        goto(`manage/${address}${$page.url.hash}`);
+        else {
+          idParam.set(address);
+          goto(`manage${$page.url.hash}`);
+        }
       });
     }
     errors = errors;
