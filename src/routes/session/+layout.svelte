@@ -50,7 +50,7 @@
   main {
     width: 100%;
     padding: var(--section-padding);
-    border-left: 1px solid var(--colour-border);
+    border-left: 1px solid var(--ion-border-color);
   }
 
   main :global(label) {
@@ -63,7 +63,7 @@
     height: calc(100vh - calc(var(--padding) * 4));
     width: 280px;
     padding: var(--section-padding);
-    border-right: 1px solid var(--colour-border);
+    border-right: 1px solid var(--ion-border-color);
     overflow-y: auto;
   }
 
@@ -83,7 +83,7 @@
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
-    border: 1px solid var(--colour-border);
+    border: 1px solid var(--ion-border-color);
     border-radius: 4px;
     padding: 12px 4px;
     margin-top: var(--padding);

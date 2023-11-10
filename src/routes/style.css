@@ -1,39 +1,15 @@
 :root {
-  --colour-text: #111;
-  --colour-link: #00f;
-  --colour-hover: rgba(255, 255, 255, 0.05);
-  --colour-danger: #cd5c5c;
-  --colour-safe: #080;
-  --colour-background: 250, 250, 255;
-  --colour-border: #5a5a7019;
-  --colour-border-focus: #5a5a7057;
-
-  --alpha-level-1: 0.5;
-  --alpha-level-2: 0.7;
-
   --shadow: -4px -4px 24px 4px #5a5a7010;
-
-  --border: 2px solid #fff4;
-
-  --font: sans-serif;
-
-  font-family: var(--font);
-  font-size: 0.9em;
-  color: var(--colour-text);
 }
 
 body {
   overflow-x: hidden;
   margin: 0;
-  background-color: #e0f6ff;
-  /* background by SVGBackgrounds.com */
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25' viewBox='0 0 1200 800'%3E%3Cdefs%3E%3CradialGradient id='a' cx='0' cy='800' r='800' gradientUnits='userSpaceOnUse'%3E%3Cstop offset='0' stop-color='%23dbe8ff'/%3E%3Cstop offset='1' stop-color='%23dbe8ff' stop-opacity='0'/%3E%3C/radialGradient%3E%3CradialGradient id='b' cx='1200' cy='800' r='800' gradientUnits='userSpaceOnUse'%3E%3Cstop offset='0' stop-color='%23f0fbff'/%3E%3Cstop offset='1' stop-color='%23f0fbff' stop-opacity='0'/%3E%3C/radialGradient%3E%3CradialGradient id='c' cx='600' cy='0' r='600' gradientUnits='userSpaceOnUse'%3E%3Cstop offset='0' stop-color='%23fee8ff'/%3E%3Cstop offset='1' stop-color='%23fee8ff' stop-opacity='0'/%3E%3C/radialGradient%3E%3CradialGradient id='d' cx='600' cy='800' r='600' gradientUnits='userSpaceOnUse'%3E%3Cstop offset='0' stop-color='%23E0F6FF'/%3E%3Cstop offset='1' stop-color='%23E0F6FF' stop-opacity='0'/%3E%3C/radialGradient%3E%3CradialGradient id='e' cx='0' cy='0' r='800' gradientUnits='userSpaceOnUse'%3E%3Cstop offset='0' stop-color='%23FCD1FF'/%3E%3Cstop offset='1' stop-color='%23FCD1FF' stop-opacity='0'/%3E%3C/radialGradient%3E%3CradialGradient id='f' cx='1200' cy='0' r='800' gradientUnits='userSpaceOnUse'%3E%3Cstop offset='0' stop-color='%23FFFFFF'/%3E%3Cstop offset='1' stop-color='%23FFFFFF' stop-opacity='0'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect fill='url(%23a)' width='1200' height='800'/%3E%3Crect fill='url(%23b)' width='1200' height='800'/%3E%3Crect fill='url(%23c)' width='1200' height='800'/%3E%3Crect fill='url(%23d)' width='1200' height='800'/%3E%3Crect fill='url(%23e)' width='1200' height='800'/%3E%3Crect fill='url(%23f)' width='1200' height='800'/%3E%3C/svg%3E");
-  background-attachment: fixed;
-  background-size: cover;
+  color: var(--ion-text-color);
 }
 
 p.error {
-  color: var(--colour-danger);
+  color: var(--ion-color-danger);
 }
 
 label,
@@ -49,25 +25,22 @@ label {
   margin-bottom: 38px;
   padding: 6px 8px 0;
   font-size: 0.8rem;
-  color: #555;
+  color: var(--ion-color-dark-shade);
   user-select: none;
   white-space: nowrap;
 }
 
 label.error {
-  background: #ff000009;
-  color: var(--colour-danger);
-  border-color: var(--colour-danger);
+  color: var(--ion-color-danger);
 }
 
 input,
 select {
   font-size: 1.1rem;
-  font-family: var(--font);
   padding: 8px;
-  background: #00000009;
+  background: none;
   border: none;
-  outline: 1px solid var(--colour-border);
+  outline: 1px solid var(--ion-border-color);
 }
 
 select {
@@ -94,7 +67,7 @@ label > select {
 
 label.error input,
 label.error select {
-  outline-color: var(--colour-danger);
+  outline-color: var(--ion-color-danger);
 }
 
 input:focus:not([type='submit']),
@@ -109,7 +82,7 @@ input[type='submit'] {
   border-radius: 12px;
   font-size: 1.25rem;
   font-weight: bold;
-  box-shadow: 0 1px 16px 6px #5a5a701f;
+  box-shadow: var(--shadow);
   transition-duration: 100ms;
 }
 
@@ -129,9 +102,9 @@ input[type='submit']:not(:disabled) {
 
 .card {
   padding: 14px 24px;
-  border: var(--border);
+  border: 2px solid var(--ion-border-color);
   border-radius: 18px;
-  background: rgba(var(--colour-background), 97%);
+  background: var(--ion-item-background);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
   box-shadow: var(--shadow);

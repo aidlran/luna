@@ -94,9 +94,7 @@
     min-width: var(--min-width);
     max-width: calc(var(--width) - calc(var(--padding) * 2));
     padding: calc(var(--padding) * 3) var(--padding);
-    background: rgba(var(--colour-background), 0.9);
-    backdrop-filter: blur(2px);
-    -webkit-backdrop-filter: blur(2px);
+    background: var(--ion-item-background);
     box-shadow: var(--shadow);
     transition: right var(--transition-duration) ease;
   }
