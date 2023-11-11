@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { tick } from 'svelte';
   import { type Session, clearSession } from 'trusync/session';
   import { activeSessionStore, allSessionsStore } from 'trusync-svelte';
   import { goto } from '$app/navigation';
@@ -15,6 +14,8 @@
   let selectElement: HTMLSelectElement;
   let displayConfirmResetModal = false;
   const sessionParamStore = fragmentParam('sid');
+
+  $: selectElement && (selectElement.value = $sessionParamStore ?? 'anon');
 
   function sessionName(session?: Session<SessionMetadata | unknown>): string {
     return (session?.metadata as SessionMetadata)?.displayName ?? session?.id?.toString() ?? '?';
@@ -47,7 +48,7 @@
   }
 
   function cancel(): void {
-    selectElement.value = $activeSessionStore?.id?.toString() ?? 'anon';
+    selectElement.value = $sessionParamStore ?? 'anon';
     displayConfirmResetModal = false;
   }
 </script>
@@ -97,9 +98,6 @@
           clearSession(() => {
             sessionParamStore.set(undefined);
             displayConfirmResetModal = false;
-            tick().then(
-              () => (selectElement.value = $activeSessionStore?.id?.toString() ?? 'anon'),
-            );
           })}>Continue</button
       >
     </div>
