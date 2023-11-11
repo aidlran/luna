@@ -1,7 +1,6 @@
 <script lang="ts">
   import { App } from '@capacitor/app';
   import { Capacitor } from '@capacitor/core';
-  import 'ionic-svelte/components/ion-app';
   import { browser } from '$app/environment';
   import { Drawer } from '$lib/client/components/drawer';
   import { UrlState } from '$lib/client/components/url-state';
@@ -24,13 +23,11 @@
 </svelte:head>
 
 {#if ionReady}
-  <ion-app>
-    <Drawer>
-      <UrlState>
-        <slot />
-      </UrlState>
-    </Drawer>
-  </ion-app>
+  <Drawer>
+    <UrlState>
+      <slot />
+    </UrlState>
+  </Drawer>
 {/if}
 
 <style>
