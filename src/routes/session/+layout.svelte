@@ -1,4 +1,12 @@
 <script lang="ts">
+  import 'ionic-svelte/components/ion-button';
+  import 'ionic-svelte/components/ion-content';
+  import 'ionic-svelte/components/ion-header';
+  import 'ionic-svelte/components/ion-item';
+  import 'ionic-svelte/components/ion-list';
+  import 'ionic-svelte/components/ion-menu';
+  import 'ionic-svelte/components/ion-split-pane';
+
   import { scale } from 'svelte/transition';
   import { activeSessionStore } from 'trusync-svelte';
   import { goto } from '$app/navigation';
@@ -8,89 +16,48 @@
 
   const idParam = fragmentParam('id');
 
-  function manageIdentity(id: string) {
+  function manageIdentity(id: string): void {
     idParam.set(id);
     goto(`/session/identity/manage${$page.url.hash}`);
   }
 </script>
 
-<div class="layout">
-  <div>
-    <nav>
+<ion-split-pane content-id="main">
+  <ion-menu content-id="main">
+    <ion-header class="ion-padding">
       <SessionSwitcher />
-      <h1>Session Identities</h1>
-      <div class="buttons">
-        <a href={`/session/identity/import${$page.url.hash}`}>Import</a>
-        <a href={`/session/identity/create${$page.url.hash}`}>Create</a>
-      </div>
+      <ion-button
+        class="ion-margin-top"
+        expand="block"
+        href={`/session/identity/create${$page.url.hash}`}>Create Identity</ion-button
+      >
+      <ion-button
+        class="ion-margin-top"
+        expand="block"
+        href={`/session/identity/import${$page.url.hash}`}>Import Identity</ion-button
+      >
+    </ion-header>
+    <ion-content class="ion-padding">
       {#if $activeSessionStore?.identities}
         {#each $activeSessionStore.identities as id}
+          <ion-list>
+            <ion-item>{id}</ion-item>
+          </ion-list>
           <button on:click={() => manageIdentity(id)} in:scale>
             {id}
           </button>
         {/each}
       {/if}
-    </nav>
-  </div>
+    </ion-content>
+  </ion-menu>
 
-  <main>
+  <div id="main" style="display:contents">
     <slot />
-  </main>
-</div>
+  </div>
+</ion-split-pane>
 
 <style>
-  .layout {
-    --padding: 20px;
-    --section-padding: calc(var(--padding) * 2) var(--padding);
-    margin: auto;
-    display: flex;
-    max-width: 960px;
-  }
-
-  main {
-    width: 100%;
-    padding: var(--section-padding);
-    border-left: 1px solid var(--ion-border-color);
-  }
-
-  main :global(label) {
-    margin-bottom: 50px;
-  }
-
-  nav {
-    position: sticky;
-    top: 0;
-    height: calc(100vh - calc(var(--padding) * 4));
-    width: 280px;
-    padding: var(--section-padding);
-    border-right: 1px solid var(--ion-border-color);
-    overflow-y: auto;
-  }
-
-  .buttons {
-    display: flex;
-    justify-content: space-between;
-    gap: var(--padding);
-  }
-
-  h1 {
-    font-size: 1em;
-    margin: 74px 0 0;
-  }
-
-  a {
-    display: block;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    border: 1px solid var(--ion-border-color);
-    border-radius: 4px;
-    padding: 12px 4px;
-    margin-top: var(--padding);
-  }
-
-  .buttons a {
-    flex-grow: 1;
-    text-align: center;
+  ion-header :global(label) {
+    margin-bottom: 48px;
   }
 </style>
