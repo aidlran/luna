@@ -26,7 +26,6 @@
   <Drawer>
     <UrlState>
       <slot />
-      <ion-button></ion-button>
     </UrlState>
   </Drawer>
 {/if}
