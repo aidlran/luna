@@ -1,4 +1,9 @@
 <script lang="ts">
+  import 'ionic-svelte/components/ion-card';
+  import 'ionic-svelte/components/ion-card-content';
+  import 'ionic-svelte/components/ion-card-header';
+  import 'ionic-svelte/components/ion-card-title';
+  import { chevronBack } from 'ionicons/icons';
   import { onDestroy } from 'svelte';
   import { forgetIdentity } from 'trusync';
   import { activeSessionStore } from 'trusync-svelte';
@@ -21,54 +26,57 @@
   }
 </script>
 
-<a href={`../${$page.url.hash}`}>Back</a>
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Manage identity</ion-title>
+    <ion-buttons slot="start">
+      <ion-button href={`../${$page.url.hash}`}>
+        <ion-icon icon={chevronBack} />
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
 
-<h1>Manage Identity</h1>
+<ion-content>
+  <ion-card class="ion-margin">
+    <ion-card-header>
+      <ion-card-title>Address</ion-card-title>
+      <ion-card-subtitle>
+        This is the identity's public address. It is derived from the public keys associated with
+        the identity.
+      </ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <code>{$idParam}</code>
+    </ion-card-content>
+  </ion-card>
 
-<div class="border">
-  <h2>Address</h2>
-  <p>
-    This is the identity's public address. It is derived from the public keys associated with the
-    identity.
-  </p>
-  <code>{$idParam}</code>
-</div>
-
-<div class="border danger" style:display="flex">
-  <div style:flex-grow="1">
-    <h2>Forget identity</h2>
-    <p>
-      <strong>Warning</strong>
-      Forgetting this identity will remove its keys from this client, which means it will no longer be
-      able to assume this identity unless you import it again. Ensure you have a recovery method ready
-      or you will be locked out forever. No data will be directly deleted by this action.
-    </p>
-  </div>
-  <div>
-    <button class="danger" on:click={forget}>Forget identity</button>
-  </div>
-</div>
-
-<style>
-  .border {
-    border: 1px solid #000;
-    border-radius: 8px;
-    margin: 24px 0;
-    padding: 24px;
-  }
-
-  .border.danger {
-    display: flex;
-    align-items: center;
-  }
-
-  button {
-    border-radius: 8px;
-    padding: 12px;
-    cursor: pointer;
-  }
-
-  .danger {
-    border: 1px solid #f00;
-  }
-</style>
+  <ion-card class="ion-margin">
+    <ion-card-header>
+      <ion-card-title color="danger">Forget identity</ion-card-title>
+      <ion-card-subtitle>
+        <strong>Read carefully before proceeding.</strong>
+      </ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <p>
+        <span>
+          Forgetting this identity will remove its private keys from this client. It will no longer
+          be usable until you import it again. It will only be removed locally. If has been imported
+          in another client, it will still be available there. No graph data will be deleted.
+        </span>
+        <strong>Ensure you have a recovery method ready or you will be locked out forever.</strong>
+        <span>No data will be directly deleted by this action.</span>
+      </p>
+    </ion-card-content>
+    <ion-button
+      class="ion-margin"
+      role="button"
+      tabindex="0"
+      color="danger"
+      fill="outline"
+      on:keypress
+      on:click={forget}>Forget identity</ion-button
+    >
+  </ion-card>
+</ion-content>

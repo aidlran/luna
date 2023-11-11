@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { chevronBack } from 'ionicons/icons';
   import { base58, importIdentity } from 'trusync';
   import { goto } from '$app/navigation';
   import { page } from '$app/stores';
@@ -54,30 +55,39 @@
   }
 </script>
 
-<a href={`../${$page.url.hash}`}>Back</a>
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Import an identity</ion-title>
+    <ion-buttons slot="start">
+      <ion-button href={`../${$page.url.hash}`}>
+        <ion-icon icon={chevronBack} />
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
 
-<h1>Import an identity</h1>
+<ion-content class="ion-padding">
+  <!-- TODO: common errors or form component -->
+  {#if errors.length}
+    <div>
+      <h1>There {errors.length > 1 ? 'were problems' : 'was a problem'} importing the identity.</h1>
+      <ul>
+        {#each errors as error}
+          <li>{error}</li>
+        {/each}
+      </ul>
+    </div>
+  {/if}
 
-<!-- TODO: common errors or form component -->
-{#if errors.length}
-  <div>
-    <h1>There {errors.length > 1 ? 'were problems' : 'was a problem'} importing the identity.</h1>
-    <ul>
-      {#each errors as error}
-        <li>{error}</li>
-      {/each}
-    </ul>
-  </div>
-{/if}
-
-<form on:submit|preventDefault={onSubmit}>
-  <label class:error={addressError} use:focus>
-    Address (required)
-    <input required bind:value={address} />
-  </label>
-  <label class:error={secretKeyError}>
-    Secret key (required)
-    <input required bind:value={secretKey} />
-  </label>
-  <input type="submit" value="Import identity" disabled={working} />
-</form>
+  <form on:submit|preventDefault={onSubmit}>
+    <label class:error={addressError} use:focus>
+      Address (required)
+      <input required bind:value={address} />
+    </label>
+    <label class:error={secretKeyError}>
+      Secret key (required)
+      <input required bind:value={secretKey} />
+    </label>
+    <input type="submit" value="Import identity" disabled={working} />
+  </form>
+</ion-content>

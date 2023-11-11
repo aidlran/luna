@@ -4,7 +4,6 @@
 
 body {
   overflow-x: hidden;
-  margin: 0;
   color: var(--ion-text-color);
 }
 
@@ -120,4 +119,5 @@ input[type='submit']:not(:disabled) {
   background-color: #0002;
   backdrop-filter: blur(2px);
   -webkit-backdrop-filter: blur(2px);
+  z-index: 1;
 }
