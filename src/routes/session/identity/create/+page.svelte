@@ -1,22 +1,16 @@
 <script lang="ts">
-  import { chevronBack } from 'ionicons/icons';
   import { base58, generateIdentity, importIdentity } from 'trusync';
   import { goto } from '$app/navigation';
   import { page } from '$app/stores';
+  import PageHeader from '$lib/client/components/page-header.svelte';
   import { fragmentParam } from '$lib/client/components/url-state';
+
   const idParam = fragmentParam('id');
 </script>
 
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Create an identity</ion-title>
-    <ion-buttons slot="start">
-      <ion-button href={`../${$page.url.hash}`}>
-        <ion-icon icon={chevronBack} />
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
+<PageHeader backHref={`../${$page.url.hash}`}>
+  <ion-title>Create an identity</ion-title>
+</PageHeader>
 
 <ion-content class="ion-padding">
   {#await generateIdentity() then identity}

@@ -56,7 +56,7 @@
     </ion-list>
   {/if}
 </ion-content>
-<ion-footer>
+<ion-footer class="narrow-only">
   <ion-toolbar class="ion-padding" style:--ion-padding="7px">
     <SessionSwitcher />
   </ion-toolbar>

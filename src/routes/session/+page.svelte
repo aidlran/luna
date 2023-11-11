@@ -2,18 +2,6 @@
   import SessionMenu from './session-menu.svelte';
 </script>
 
-<div>
+<div class="narrow-only">
   <SessionMenu />
 </div>
-
-<style>
-  div {
-    display: contents;
-  }
-
-  @media screen and (min-width: 992px) {
-    div {
-      display: none;
-    }
-  }
-</style>
