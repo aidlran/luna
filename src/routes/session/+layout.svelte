@@ -15,7 +15,7 @@
   <ion-menu content-id="main" menu-id="session">
     <SessionMenu />
   </ion-menu>
-  <div id="main">
+  <div id="main" class="ion-page">
     <slot />
   </div>
 </ion-split-pane>
