@@ -1,15 +1,15 @@
 {
-	"folders": [
-		{
-			"name": "LUNA",
-			"path": "."
-		},
-		{
-			"name": "truSync",
-			"path": "lib/trusync"
-		}
-	],
-	"settings": {
-		"typescript.tsdk": "node_modules/typescript/lib"
-	}
+  "folders": [
+    {
+      "name": "LUNA",
+      "path": "."
+    },
+    {
+      "name": "truSync",
+      "path": "lib/trusync"
+    }
+  ],
+  "settings": {
+    "typescript.tsdk": "node_modules/typescript/lib"
+  }
 }
