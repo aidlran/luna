@@ -50,7 +50,7 @@
           on:click|preventDefault={() => manageIdentity(id)}
           on:keypress|preventDefault={() => manageIdentity(id)}
         >
-          <ion-label>{id}</ion-label>
+          <ion-label color={id === $idParam ? 'primary' : 'dark'}>{id}</ion-label>
         </ion-item>
       {/each}
     </ion-list>
