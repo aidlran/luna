@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { base58, importIdentity } from 'trusync';
+  import { base58, session } from 'trusync';
   import { goto } from '$app/navigation';
   import { page } from '$app/stores';
   import { focus } from '$lib/client/actions/focus';
@@ -41,7 +41,7 @@
       }
     }
     if (!errors.length) {
-      importIdentity(address, rawSecret, (error) => {
+      session().importIdentity(address, rawSecret, (error) => {
         if (error) {
           errors.push(error.message);
         } else {

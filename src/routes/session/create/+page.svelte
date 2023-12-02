@@ -1,12 +1,9 @@
 <script lang="ts">
   import { chevronBack } from 'ionicons/icons';
-  import { initSession } from 'trusync';
+  import { session } from 'trusync';
   import { goto } from '$app/navigation';
   import { page } from '$app/stores';
   import { focus } from '$lib/client/actions/focus';
-  import { fragmentParam } from '$lib/client/components/url-state';
-
-  const sessionParam = fragmentParam('sid');
 
   let errors = new Array<string>();
 
@@ -36,13 +33,12 @@
       confirmError = true;
     } else {
       const metadata = displayName?.length ? { displayName } : undefined;
-      initSession(password, metadata, (result) => {
+      session().initSession(password, metadata, (result) => {
         if (result instanceof Error) {
           errors.push(result.message);
         } else if (typeof result === 'string') {
           errors.push(result);
         } else {
-          sessionParam.set(result.id?.toString());
           goto(`.${$page.url.hash}`);
         }
       });

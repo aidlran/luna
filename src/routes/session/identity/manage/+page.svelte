@@ -4,14 +4,15 @@
   import 'ionic-svelte/components/ion-card-header';
   import 'ionic-svelte/components/ion-card-title';
   import { onDestroy } from 'svelte';
-  import { forgetIdentity } from 'trusync';
-  import { activeSessionStore } from 'trusync-svelte';
+  import { session } from 'trusync';
+  import { activeSession } from 'trusync-svelte';
   import { browser } from '$app/environment';
   import { goto } from '$app/navigation';
   import { page } from '$app/stores';
   import PageHeader from '$lib/client/components/page-header.svelte';
   import { fragmentParam } from '$lib/client/components/url-state';
 
+  const activeSessionStore = activeSession();
   const idParam = fragmentParam('id');
 
   $: if (browser && (!$idParam || !$activeSessionStore?.identities.has($idParam))) {
@@ -22,7 +23,7 @@
 
   // TODO: "Are you sure?" modal on forget
   function forget(): void {
-    forgetIdentity($idParam as string);
+    session().forgetIdentity($idParam as string);
   }
 </script>
 

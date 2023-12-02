@@ -122,19 +122,12 @@ input[type='submit']:not(:disabled) {
   z-index: 1;
 }
 
-.wide-only,
 .narrow-only {
   display: contents;
 }
 
 @media screen and (min-width: 992px) {
   .narrow-only {
-    display: none;
-  }
-}
-
-@media screen and (max-width: 992px) {
-  .wide-only {
     display: none;
   }
 }

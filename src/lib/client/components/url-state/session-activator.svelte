@@ -1,7 +1,7 @@
 <script lang="ts">
   import { tick } from 'svelte';
-  import { useSession, type Session } from 'trusync';
-  import { activeSessionStore, allSessionsStore } from 'trusync-svelte';
+  import { type Session, session } from 'trusync';
+  import { activeSession, allSessions } from 'trusync-svelte';
   import { focus } from '../../actions/focus';
   import { fragmentParam } from './fragment-param-function';
 
@@ -10,7 +10,10 @@
     displayName?: string;
   }
 
+  const activeSessionStore = activeSession();
+  const allSessionsStore = allSessions();
   const sessionParam = fragmentParam('sid');
+
   let password: string;
   let targetSession: Session<SessionMetadata> | undefined;
   let error: string | undefined;
@@ -29,14 +32,15 @@
   }
 
   function submit(): void {
-    targetSession?.id &&
-      useSession(targetSession.id, password, (result) => {
+    if (targetSession?.id) {
+      session().useSession(targetSession.id, password, (result) => {
         if (result instanceof Error) {
           error = result.message;
         } else {
           tick().then(close);
         }
       });
+    }
   }
 </script>
 

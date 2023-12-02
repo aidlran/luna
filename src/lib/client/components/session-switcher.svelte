@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { type Session, clearSession } from 'trusync/session';
-  import { activeSessionStore, allSessionsStore } from 'trusync-svelte';
+  import { type Session, session } from 'trusync/session';
+  import { activeSession, allSessions } from 'trusync-svelte';
   import { goto } from '$app/navigation';
   import { page } from '$app/stores';
   import { focus } from '../actions/focus';
@@ -11,9 +11,12 @@
     displayName?: string;
   }
 
+  const activeSessionStore = activeSession();
+  const allSessionsStore = allSessions();
+  const sessionParamStore = fragmentParam('sid');
+
   let selectElement: HTMLSelectElement;
   let displayConfirmResetModal = false;
-  const sessionParamStore = fragmentParam('sid');
 
   $: selectElement && (selectElement.value = $sessionParamStore ?? 'anon');
 
@@ -95,7 +98,7 @@
       <button on:click={cancel} use:focus>Cancel</button>
       <button
         on:click={() =>
-          clearSession(() => {
+          session().clearSession(() => {
             sessionParamStore.set(undefined);
             displayConfirmResetModal = false;
           })}>Continue</button

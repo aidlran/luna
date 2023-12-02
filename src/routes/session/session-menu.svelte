@@ -10,12 +10,13 @@
   import 'ionic-svelte/components/ion-toolbar';
 
   import { add, duplicate } from 'ionicons/icons';
-  import { activeSessionStore } from 'trusync-svelte';
+  import { activeSession } from 'trusync-svelte';
   import { goto } from '$app/navigation';
   import { page } from '$app/stores';
   import SessionSwitcher from '$lib/client/components/session-switcher.svelte';
   import { fragmentParam } from '$lib/client/components/url-state';
 
+  const activeSessionStore = activeSession();
   const idParam = fragmentParam('id');
 
   function manageIdentity(id: string): void {
@@ -56,7 +57,7 @@
     </ion-list>
   {/if}
 </ion-content>
-<ion-footer class="narrow-only">
+<ion-footer>
   <ion-toolbar class="ion-padding" style:--ion-padding="7px">
     <SessionSwitcher />
   </ion-toolbar>
