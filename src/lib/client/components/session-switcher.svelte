@@ -20,8 +20,10 @@
 
   $: selectElement && (selectElement.value = $sessionParamStore ?? 'anon');
 
-  function sessionName(session?: Session<SessionMetadata | unknown>): string {
-    return (session?.metadata as SessionMetadata)?.displayName ?? session?.id?.toString() ?? '?';
+  function sessionName(session?: Session): string {
+    return (
+      (session?.metadata as SessionMetadata)?.displayName ?? session?.id?.toString() ?? 'Anonymous'
+    );
   }
 
   async function onChange(
@@ -61,7 +63,7 @@
   <select on:change={onChange} bind:this={selectElement}>
     <optgroup label="Active session">
       <option selected value={$activeSessionStore?.id?.toString() ?? 'anon'}>
-        {$activeSessionStore ? sessionName($activeSessionStore) : 'Anonymous'}
+        {sessionName($activeSessionStore)}
       </option>
     </optgroup>
     <!-- TODO: hide if only one session and it is active -->
