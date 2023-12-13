@@ -11,6 +11,11 @@
   });
 </script>
 
+<svelte:head>
+  <title>Sessions | LUNA</title>
+  <meta name="description" content="Manage local sessions in your LUNA client." />
+</svelte:head>
+
 <ion-split-pane content-id="main">
   <ion-menu content-id="main" menu-id="session">
     <SessionMenu />
