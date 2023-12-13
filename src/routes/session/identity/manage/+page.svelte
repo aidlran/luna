@@ -9,7 +9,7 @@
   import { browser } from '$app/environment';
   import { goto } from '$app/navigation';
   import { page } from '$app/stores';
-  import PageHeader from '$lib/client/components/page-header.svelte';
+  import Header from '$lib/client/components/header/header.svelte';
   import { fragmentParam } from '$lib/client/components/url-state';
 
   const activeSessionStore = activeSession();
@@ -27,9 +27,9 @@
   }
 </script>
 
-<PageHeader backHref={`../${$page.url.hash}`}>
+<Header activeApp="session" backHref={`../${$page.url.hash}`}>
   <ion-title>Manage identity</ion-title>
-</PageHeader>
+</Header>
 
 <ion-content>
   <ion-card class="ion-margin">

@@ -3,7 +3,7 @@
   import { goto } from '$app/navigation';
   import { page } from '$app/stores';
   import { focus } from '$lib/client/actions/focus';
-  import PageHeader from '$lib/client/components/page-header.svelte';
+  import Header from '$lib/client/components/header/header.svelte';
   import { fragmentParam } from '$lib/client/components/url-state';
 
   const idParam = fragmentParam('id');
@@ -55,9 +55,9 @@
   }
 </script>
 
-<PageHeader backHref={`../${$page.url.hash}`}>
+<Header activeApp="session" backHref={`../${$page.url.hash}`}>
   <ion-title>Import an identity</ion-title>
-</PageHeader>
+</Header>
 
 <ion-content class="ion-padding">
   <!-- TODO: common errors or form component -->

@@ -4,7 +4,7 @@
   import { page } from '$app/stores';
 
   if (browser) {
-    goto(`session${$page.url.hash}`, {
+    goto(`board${$page.url.hash}`, {
       replaceState: true,
     });
   }

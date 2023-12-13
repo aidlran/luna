@@ -1,9 +1,9 @@
 <script lang="ts">
-  import { chevronBack } from 'ionicons/icons';
   import { session } from 'trusync';
   import { goto } from '$app/navigation';
   import { page } from '$app/stores';
   import { focus } from '$lib/client/actions/focus';
+  import Header from '$lib/client/components/header/header.svelte';
 
   let errors = new Array<string>();
 
@@ -48,16 +48,9 @@
   }
 </script>
 
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Create a session</ion-title>
-    <ion-buttons slot="start">
-      <ion-button href={`.${$page.url.hash}`}>
-        <ion-icon icon={chevronBack} />
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
+<Header activeApp="session" backHref={`.${$page.url.hash}`}>
+  <ion-title>Create a session</ion-title>
+</Header>
 
 <ion-content class="ion-padding">
   <p>
