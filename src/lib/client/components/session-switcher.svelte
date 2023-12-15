@@ -18,6 +18,9 @@
   let selectElement: HTMLSelectElement;
   let displayConfirmResetModal = false;
 
+  $: if (!$sessionParamStore && $activeSessionStore?.id) {
+    sessionParamStore.set($activeSessionStore.id.toString());
+  }
   $: selectElement && (selectElement.value = $sessionParamStore ?? 'anon');
 
   function sessionName(session?: Session): string {

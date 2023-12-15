@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { tick } from 'svelte';
   import { session } from 'trusync';
   import { goto } from '$app/navigation';
   import { page } from '$app/stores';
@@ -39,7 +40,11 @@
         } else if (typeof result === 'string') {
           errors.push(result);
         } else {
-          goto(`.${$page.url.hash}`);
+          tick().then(() => {
+            const url = new URL($page.url);
+            url.pathname = url.pathname.split('create')[0];
+            goto(url);
+          });
         }
       });
     }
