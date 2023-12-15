@@ -27,7 +27,7 @@
   }
 </script>
 
-<Header activeApp="session" backHref={`../${$page.url.hash}`}>
+<Header activeApp="sessions" backHref={`../${$page.url.hash}`}>
   <ion-title>Manage identity</ion-title>
 </Header>
 

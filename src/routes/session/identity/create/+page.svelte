@@ -8,7 +8,7 @@
   const idParam = fragmentParam('id');
 </script>
 
-<Header activeApp="session" backHref={`../${$page.url.hash}`}>
+<Header activeApp="sessions" backHref={`../${$page.url.hash}`}>
   <ion-title>Create an identity</ion-title>
 </Header>
 

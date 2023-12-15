@@ -3,7 +3,7 @@
   import SessionMenu from './session-menu.svelte';
 </script>
 
-<Header activeApp="session" />
+<Header activeApp="sessions" />
 
 <div class="narrow-only">
   <SessionMenu />

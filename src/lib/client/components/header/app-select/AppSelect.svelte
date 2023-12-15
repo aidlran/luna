@@ -1,37 +1,51 @@
-<script lang="ts">
+<script lang="ts" generics="T extends App">
   import { Capacitor } from '@capacitor/core';
   import 'ionic-svelte/components/ion-select';
   import 'ionic-svelte/components/ion-select-option';
+  import { dev } from '$app/environment';
   import { goto } from '$app/navigation';
   import { page } from '$app/stores';
-  import { APPS } from './apps';
-  import type { AppName } from './app-name';
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  import type { App } from './app';
+
+  /** Apps to display. */
+  // eslint-disable-next-line no-undef
+  export let apps: T[];
 
   /** The currently active app. */
-  export let activeApp: AppName;
+  // eslint-disable-next-line no-undef
+  export let activeAppID: T['id'];
+
+  const activeApp = apps.find(({ id }) => id === activeAppID);
+
+  const filteredApps = apps.filter((app) => (dev || !app.devOnly) && activeAppID !== app.id);
 </script>
 
 <div class="horizontal">
-  <!-- Likely unreactive to fragment param state changes between page navigations -->
-  <!-- Unlikely to be issue unless fragment param is tracking global state -->
-  <a href={`/${activeApp}/${$page.url.hash}`}>
-    <ion-title class="ion-no-padding">{APPS[activeApp]}</ion-title>
-  </a>
+  {#if activeApp}
+    <!-- Likely unreactive to fragment param state changes between page navigations -->
+    <!-- Unlikely to be issue unless fragment param is tracking global state -->
+    <a href={`${activeApp.path}${$page.url.hash}`}>
+      <ion-title class="ion-no-padding">{activeApp.name}</ion-title>
+    </a>
+  {/if}
 
-  <ion-buttons>
-    <ion-select
-      interface={Capacitor.isNativePlatform() ? undefined : 'popover'}
-      on:ionChange={({ detail: { value: appName } }) => {
-        goto(`/${appName}/${$page.url.hash}`);
-      }}
-    >
-      {#each Object.entries(APPS) as [value, text]}
-        {#if activeApp !== value}
-          <ion-select-option {value}>{text}</ion-select-option>
-        {/if}
-      {/each}
-    </ion-select>
-  </ion-buttons>
+  {#if filteredApps.length}
+    <ion-buttons>
+      <ion-select
+        interface={Capacitor.isNativePlatform() ? undefined : 'popover'}
+        on:ionChange={({ detail: { value: app } }) => {
+          goto(`${app.path}${$page.url.hash}`);
+        }}
+      >
+        {#each filteredApps as app}
+          {#if !app.devOnly || (dev && activeAppID !== app.id)}
+            <ion-select-option value={app}>{app.name}</ion-select-option>
+          {/if}
+        {/each}
+      </ion-select>
+    </ion-buttons>
+  {/if}
 </div>
 
 <style>

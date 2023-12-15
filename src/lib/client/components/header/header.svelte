@@ -1,7 +1,7 @@
 <script lang="ts">
   import { chevronBack } from 'ionicons/icons';
   import AppSelect from './app-select/AppSelect.svelte';
-  import type { AppName } from './app-select/app-name';
+  import { APPS, type AppName } from './apps';
 
   /** A relative path. If set, the back button appears and will navigate here on click. */
   export let backHref: string | undefined = undefined;
@@ -13,7 +13,7 @@
 <ion-header>
   <ion-toolbar>
     <div slot="start" class="ion-margin-start">
-      <AppSelect {activeApp} />
+      <AppSelect apps={APPS} activeAppID={activeApp} />
     </div>
 
     <ion-buttons slot="start">
