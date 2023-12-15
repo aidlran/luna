@@ -2,23 +2,21 @@
   --shadow: -4px -4px 24px 4px #5a5a7010;
 }
 
-body {
+:global(body) {
   overflow-x: hidden;
   color: var(--ion-text-color);
 }
 
-p.error {
+:global(p.error) {
   color: var(--ion-color-danger);
 }
 
-label,
-input,
-select {
+:global(label, input, select) {
   border-radius: 12px;
 }
 
 /* TODO: solve z-index issue */
-label {
+:global(label) {
   position: relative;
   display: block;
   margin-bottom: 38px;
@@ -29,12 +27,11 @@ label {
   white-space: nowrap;
 }
 
-label.error {
+:global(label.error) {
   color: var(--ion-color-danger);
 }
 
-input,
-select {
+:global(input, select) {
   font-size: 1.1rem;
   padding: 8px;
   background: none;
@@ -42,7 +39,7 @@ select {
   outline: 1px solid var(--ion-border-color);
 }
 
-select {
+:global(select) {
   width: 100%;
   cursor: pointer;
   /* disable appearance for Safari, implement custom arrow style */
@@ -52,29 +49,26 @@ select {
   background-position: calc(100% - 0.75rem) center;
 }
 
-input {
+:global(input) {
   width: calc(100% - 18px);
 }
 
-label > input,
-label > select {
+:global(label > input, label > select) {
   position: absolute;
   top: 0;
   left: 0;
   padding-top: 28px;
 }
 
-label.error input,
-label.error select {
+:global(label.error input, label.error select) {
   outline-color: var(--ion-color-danger);
 }
 
-input:focus:not([type='submit']),
-select:focus {
+:global(input:focus:not([type='submit']), select:focus) {
   outline-width: 2px;
 }
 
-input[type='submit'] {
+:global(input[type='submit']) {
   width: 100%;
   padding: 14px;
   border: none;
@@ -87,7 +81,7 @@ input[type='submit'] {
 
 /* TODO: a.button and button to have similar style */
 
-input[type='submit']:not(:disabled) {
+:global(input[type='submit']:not(:disabled)) {
   background: rgb(131, 58, 180);
   background: linear-gradient(
     240deg,
@@ -99,7 +93,7 @@ input[type='submit']:not(:disabled) {
   cursor: pointer;
 }
 
-.card {
+:global(.card) {
   padding: 14px 24px;
   border: 2px solid var(--ion-border-color);
   border-radius: 18px;
@@ -109,7 +103,7 @@ input[type='submit']:not(:disabled) {
   box-shadow: var(--shadow);
 }
 
-.modal {
+:global(.modal) {
   position: fixed;
   top: 0;
   left: 0;
@@ -122,12 +116,12 @@ input[type='submit']:not(:disabled) {
   z-index: 1;
 }
 
-.narrow-only {
+:global(.narrow-only) {
   display: contents;
 }
 
 @media screen and (min-width: 992px) {
-  .narrow-only {
+  :global(.narrow-only) {
     display: none;
   }
 }

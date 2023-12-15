@@ -1,3 +1,4 @@
 * text=auto
-*.config.* linguist-vendored
-*.java     linguist-vendored
+.eslintrc.* linguist-vendored
+*.config.*  linguist-vendored
+*.java      linguist-vendored

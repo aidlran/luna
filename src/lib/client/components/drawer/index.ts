@@ -2,7 +2,7 @@ import { getContext } from 'svelte';
 import type { DrawerControl } from './drawer-control';
 
 import Drawer from './drawer.svelte';
-export { Drawer, DrawerControl };
+export { Drawer, type DrawerControl };
 
 /**
  * Retrieves a drawer control store. As it is using the Svelte context API, it must be called during component initialisation.

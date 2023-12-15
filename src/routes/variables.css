@@ -76,7 +76,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  body {
+  :global(body) {
     /** primary **/
     --ion-color-primary: #428cff;
     --ion-color-primary-rgb: 66, 140, 255;
@@ -150,7 +150,7 @@
     --ion-color-light-tint: #383a3e;
   }
 
-  .ios body {
+  :global(.ios body) {
     --ion-background-color: #000000;
     --ion-background-color-rgb: 0, 0, 0;
 
@@ -182,13 +182,13 @@
     --ion-card-background: #1c1c1d;
   }
 
-  .ios ion-modal {
+  :global(.ios ion-modal) {
     --ion-background-color: var(--ion-color-step-100);
     --ion-toolbar-background: var(--ion-color-step-150);
     --ion-toolbar-border-color: var(--ion-color-step-250);
   }
 
-  .md body {
+  :global(.md body) {
     --ion-background-color: #121212;
     --ion-background-color-rgb: 18, 18, 18;
 
