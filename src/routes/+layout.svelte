@@ -5,10 +5,12 @@
   import { browser } from '$app/environment';
   import { Drawer } from '$lib/client/components/drawer';
   import { UrlState } from '$lib/client/components/url-state';
-
-  channel().push(new LocalStorageChannel());
+  import { keyCode } from '$lib/client/functions/key-code';
+  import { debugMode } from '$lib/client/stores/debug-mode';
 
   let ionReady = false;
+
+  channel().push(new LocalStorageChannel());
 
   if (browser) {
     import('ionic-svelte').then(({ setupIonicBase }) => setupIonicBase() && (ionReady = true));
@@ -22,6 +24,15 @@
     if (meta && Capacitor.isNativePlatform()) {
       meta.content += ', minimum-scale=1, maximum-scale=1, user-scalable=no';
     }
+    keyCode({
+      code: ['w', 'w', 's', 's', 'a', 'd', 'a', 'd', 'b', 'a'],
+      activates: () => {
+        debugMode.set(true);
+        // eslint-disable-next-line no-console
+        console.log('%cDebug mode enabled', 'color: orange; font-size: 1.5em');
+      },
+      once: true,
+    });
   }
 </script>
 
