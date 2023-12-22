@@ -90,7 +90,6 @@
             <ion-input
               required
               {disabled}
-              class="ion-margin-bottom"
               type="password"
               clear-on-edit={false}
               fill="outline"
@@ -107,7 +106,6 @@
             <ion-input
               required
               {disabled}
-              class="ion-margin-bottom"
               type="password"
               clear-on-edit={false}
               fill="outline"
@@ -123,7 +121,6 @@
           <ion-input
             required
             {disabled}
-            class="ion-margin-bottom"
             fill="outline"
             label="Display name"
             label-placement="stacked"
@@ -161,6 +158,10 @@
 </ion-content>
 
 <style>
+  ion-input {
+    margin-bottom: 22px;
+  }
+
   @media only screen and (min-width: 680px) {
     .row {
       gap: 16px;
