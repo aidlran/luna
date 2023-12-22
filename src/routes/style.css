@@ -34,12 +34,7 @@
   z-index: 1;
 }
 
-:global(.narrow-only) {
-  display: contents;
-}
-
-@media screen and (min-width: 992px) {
-  :global(.narrow-only) {
-    display: none;
-  }
+:global(ion-card) {
+  border-radius: 16px;
+  padding: 16px;
 }

@@ -67,6 +67,8 @@
 
     // TODO: redirect to dedicated session edit/manage screen
     //       to display recovery phrase now and at a later date
+
+    // TODO: verify recovery phrase, ask for each word in random order
   }
 </script>
 
@@ -74,15 +76,15 @@
   <ion-title>Create a session</ion-title>
 </Header>
 
-<ion-content>
+<ion-content style:max-width="1000px">
   {#if !mnemonic}
-    <ion-card class="ion-padding" style:--color="var(--ion-text-color)" out:slide>
+    <ion-card style:--color="var(--ion-text-color)" out:slide>
       <ion-card-header>
         <ion-card-title>Create a session</ion-card-title>
         <ion-card-subtitle></ion-card-subtitle>
       </ion-card-header>
       <ion-card-content>
-        <form class="ion-padding" style:max-width="1000px" on:submit|preventDefault={onSubmit}>
+        <form class="ion-padding" on:submit|preventDefault={onSubmit}>
           <!-- TODO: wrapper component, lotta boilerplate input props here -->
 
           <div class="row">
@@ -137,7 +139,7 @@
       </ion-card-content>
     </ion-card>
   {:else}
-    <ion-card class="ion-padding" in:fade>
+    <ion-card in:fade>
       <ion-card-header>
         <ion-card-title>Your recovery phrase</ion-card-title>
         <ion-card-subtitle>
@@ -162,7 +164,7 @@
 <style>
   @media only screen and (min-width: 680px) {
     .row {
-      gap: var(--padding-start);
+      gap: 16px;
       display: flex;
     }
   }

@@ -5,6 +5,6 @@
 
 <Header activeApp="sessions" />
 
-<div class="narrow-only">
+<div class="ion-hide-lg-up" style="display:contents">
   <SessionMenu />
 </div>
