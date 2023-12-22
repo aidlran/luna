@@ -1,55 +1,72 @@
 <script lang="ts">
-  import { tick } from 'svelte';
+  import 'ionic-svelte/components/ion-button.js';
+  import 'ionic-svelte/components/ion-card.js';
+  import 'ionic-svelte/components/ion-card-header.js';
+  import 'ionic-svelte/components/ion-card-subtitle.js';
+  import 'ionic-svelte/components/ion-card-title.js';
+  import 'ionic-svelte/components/ion-input.js';
+  import 'ionic-svelte/components/ion-item.js';
+  import 'ionic-svelte/components/ion-label.js';
+  import 'ionic-svelte/components/ion-list.js';
+  import 'ionic-svelte/components/ion-note.js';
+  import 'ionic-svelte/components/ion-row.js';
   import { session } from 'trusync';
-  import { goto } from '$app/navigation';
   import { page } from '$app/stores';
-  import { focus } from '$lib/client/actions/focus';
+  import { ionFocus } from '$lib/client/actions/focus';
   import Header from '$lib/client/components/header/header.svelte';
+  import { fade, slide } from 'svelte/transition';
 
-  let errors = new Array<string>();
+  /* eslint no-undef: 0 -- HTMLIonInputElement is a web component */
 
-  let password: string;
-  let passwordError = false;
+  let passphraseInput: HTMLIonInputElement;
+  let passphraseError: string | undefined;
 
-  let confirm: string;
-  let confirmError = false;
+  let confirmInput: HTMLIonInputElement;
+  let confirmError: string | undefined;
 
-  let displayName: string | undefined;
-  let displayNameError = false;
+  let displayNameInput: HTMLIonInputElement;
 
-  let working = false;
+  let mnemonic: string[] | undefined;
+  $: mnemonic && (disabled = true);
+
+  let disabled = false;
 
   async function onSubmit(): Promise<void> {
-    working = true;
-    while (errors.length) {
-      errors.pop();
+    disabled = true;
+
+    passphraseError = confirmError = undefined;
+
+    const passphrase = passphraseInput.value as string;
+    const confirm = confirmInput.value as string;
+    const displayName = (displayNameInput.value as string).trim();
+
+    if (!passphrase.length) {
+      passphraseError = 'Please enter a passphrase';
     }
-    passwordError = confirmError = displayNameError = false;
-    displayName = displayName?.trim();
-    if (!password.length) {
-      errors.push('Please enter a password.');
-      passwordError = true;
-    } else if (password !== confirm) {
-      errors.push('Passwords do not match.');
-      confirmError = true;
-    } else {
-      const metadata = displayName?.length ? { displayName } : undefined;
-      session().initSession(password, metadata, (result) => {
-        if (result instanceof Error) {
-          errors.push(result.message);
-        } else if (typeof result === 'string') {
-          errors.push(result);
-        } else {
-          tick().then(() => {
-            const url = new URL($page.url);
-            url.pathname = url.pathname.split('create')[0];
-            goto(url);
-          });
-        }
-      });
+
+    if (confirm !== passphrase) {
+      confirmError = 'Passphrases do not match';
     }
-    errors = errors;
-    working = false;
+
+    if (passphraseError) {
+      disabled = false;
+      passphraseInput.setFocus();
+      return;
+    }
+
+    if (confirmError) {
+      disabled = false;
+      confirmInput.setFocus();
+      return;
+    }
+
+    mnemonic = await session()
+      .createSession.asPromise({ passphrase, metadata: { displayName } })
+      .then((mnemonic) => mnemonic.split(' '))
+      .finally(() => (disabled = false));
+
+    // TODO: redirect to dedicated session edit/manage screen
+    //       to display recovery phrase now and at a later date
   }
 </script>
 
@@ -57,45 +74,96 @@
   <ion-title>Create a session</ion-title>
 </Header>
 
-<ion-content class="ion-padding">
-  <p>
-    Your session is how your identity secrets are stored and managed securely by your client.
-    Sessions are local to the client and device. If you want to use your identities in another
-    truSync client or on another device, you will need to create a local session there and import
-    your identities.
-  </p>
+<ion-content>
+  {#if !mnemonic}
+    <ion-card class="ion-padding" style:--color="var(--ion-text-color)" out:slide>
+      <ion-card-header>
+        <ion-card-title>Create a session</ion-card-title>
+        <ion-card-subtitle></ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>
+        <form class="ion-padding" style:max-width="1000px" on:submit|preventDefault={onSubmit}>
+          <!-- TODO: wrapper component, lotta boilerplate input props here -->
 
-  <p>
-    Sessions act similarly to a user profile that is stored locally to the device. It is password
-    protected and holds the secrets of identities that you create or import. You can also give it a
-    display name (like a username) to help identify it when there are multiple sessions.
-  </p>
+          <div class="row">
+            <ion-input
+              required
+              {disabled}
+              class="ion-margin-bottom"
+              type="password"
+              clear-on-edit={false}
+              fill="outline"
+              label="Passphrase"
+              label-placement="stacked"
+              class:ion-touched={passphraseError || confirmError}
+              class:ion-invalid={passphraseError || confirmError}
+              error-text={passphraseError}
+              helper-text="Choose a strong passphrase to protect your keys."
+              use:ionFocus={12}
+              bind:this={passphraseInput}
+            />
 
-  <!-- TODO: common errors or form component -->
-  {#if errors.length}
-    <div>
-      <h1>There {errors.length > 1 ? 'were problems' : 'was a problem'} creating the session.</h1>
-      <ul>
-        {#each errors as error}
-          <li>{error}</li>
-        {/each}
-      </ul>
-    </div>
+            <ion-input
+              required
+              {disabled}
+              class="ion-margin-bottom"
+              type="password"
+              clear-on-edit={false}
+              fill="outline"
+              label="Confirm passphrase"
+              label-placement="stacked"
+              class:ion-touched={confirmError}
+              class:ion-invalid={confirmError}
+              error-text={confirmError}
+              bind:this={confirmInput}
+            />
+          </div>
+
+          <ion-input
+            required
+            {disabled}
+            class="ion-margin-bottom"
+            fill="outline"
+            label="Display name"
+            label-placement="stacked"
+            helper-text="Enter a name to help identify the session."
+            bind:this={displayNameInput}
+          />
+
+          <ion-button type="submit" expand="block" class="ion-margin-bottom" {disabled}
+            >Create session</ion-button
+          >
+        </form>
+      </ion-card-content>
+    </ion-card>
+  {:else}
+    <ion-card class="ion-padding" in:fade>
+      <ion-card-header>
+        <ion-card-title>Your recovery phrase</ion-card-title>
+        <ion-card-subtitle>
+          This {mnemonic.length} word recovery phrase is needed to restore access to the session if it
+          is deleted, or to use the session in another client. Keep it safe.
+        </ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-list>
+          {#each mnemonic as word, i}
+            <ion-item>
+              <ion-note slot="start">{(i + 1).toString().padStart(2, '0')}</ion-note>
+              <ion-label>{word}</ion-label>
+            </ion-item>
+          {/each}
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
   {/if}
-
-  <form on:submit|preventDefault={onSubmit}>
-    <label class:error={passwordError} use:focus>
-      Password (required)
-      <input required type="password" bind:value={password} />
-    </label>
-    <label class:error={confirmError}>
-      Confirm your password (required)
-      <input required type="password" bind:value={confirm} />
-    </label>
-    <label class:error={displayNameError}>
-      Display name (optional)
-      <input bind:value={displayName} />
-    </label>
-    <input type="submit" value="Create Session" disabled={working} />
-  </form>
 </ion-content>
+
+<style>
+  @media only screen and (min-width: 680px) {
+    .row {
+      gap: var(--padding-start);
+      display: flex;
+    }
+  }
+</style>
