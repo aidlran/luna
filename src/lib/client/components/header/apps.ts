@@ -1,8 +1,8 @@
 import type { App } from './app-select/app';
 
-export type AppName = 'pass' | 'projects' | 'sessions';
+export type AppID = 'pass' | 'projects' | 'sessions';
 
-export const APPS: App<AppName>[] = [
+export const APPS: App<AppID>[] = [
   {
     id: 'pass',
     name: 'LUNA Pass',

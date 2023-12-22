@@ -5,15 +5,15 @@
   import { dev } from '$app/environment';
   import { goto } from '$app/navigation';
   import { page } from '$app/stores';
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- used in generic
   import type { App } from './app';
 
   /** Apps to display. */
-  // eslint-disable-next-line no-undef
+  // eslint-disable-next-line no-undef -- generic is defined
   export let apps: T[];
 
   /** The currently active app. */
-  // eslint-disable-next-line no-undef
+  // eslint-disable-next-line no-undef -- generic is defined
   export let activeAppID: T['id'];
 
   const activeApp = apps.find(({ id }) => id === activeAppID);
@@ -49,6 +49,11 @@
 </div>
 
 <style>
+  a {
+    color: var(--ion-text-color);
+    text-decoration: none;
+  }
+
   .horizontal {
     display: flex;
     align-items: center;
