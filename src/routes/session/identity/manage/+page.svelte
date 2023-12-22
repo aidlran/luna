@@ -27,9 +27,7 @@
   }
 </script>
 
-<Header activeApp="sessions" backHref={`../${$page.url.hash}`}>
-  <ion-title>Manage identity</ion-title>
-</Header>
+<Header activeApp="sessions" backHref={`../${$page.url.hash}`} title="Manage identity" />
 
 <ion-content>
   <ion-card class="ion-margin">

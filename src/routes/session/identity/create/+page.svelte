@@ -8,9 +8,7 @@
   const idParam = fragmentParam('id');
 </script>
 
-<Header activeApp="sessions" backHref={`../${$page.url.hash}`}>
-  <ion-title>Create an identity</ion-title>
-</Header>
+<Header activeApp="sessions" backHref={`../${$page.url.hash}`} title="Create an identity" />
 
 <ion-content class="ion-padding">
   {#await identity().generate() then { secret, identity }}

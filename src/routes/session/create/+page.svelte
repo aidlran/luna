@@ -14,6 +14,7 @@
   import { page } from '$app/stores';
   import { ionFocus } from '$lib/client/actions/focus';
   import Header from '$lib/client/components/header/header.svelte';
+  import type { SessionMetadata } from '$lib/client/types/session-metadata';
   import { fade, slide } from 'svelte/transition';
 
   /* eslint no-undef: 0 -- HTMLIonInputElement is a web component */
@@ -60,7 +61,7 @@
       return;
     }
 
-    mnemonic = await session()
+    mnemonic = await session<SessionMetadata>()
       .createSession.asPromise({ passphrase, metadata: { displayName } })
       .then((mnemonic) => mnemonic.split(' '))
       .finally(() => (disabled = false));
@@ -72,9 +73,7 @@
   }
 </script>
 
-<Header activeApp="sessions" backHref={`.${$page.url.hash}`}>
-  <ion-title>Create a session</ion-title>
-</Header>
+<Header activeApp="sessions" backHref={`.${$page.url.hash}`} title="Create a session" />
 
 <ion-content style:max-width="1000px">
   {#if !mnemonic}

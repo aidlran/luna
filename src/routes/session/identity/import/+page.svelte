@@ -55,9 +55,7 @@
   }
 </script>
 
-<Header activeApp="sessions" backHref={`../${$page.url.hash}`}>
-  <ion-title>Import an identity</ion-title>
-</Header>
+<Header activeApp="sessions" backHref={`../${$page.url.hash}`} title="Import an identity" />
 
 <ion-content class="ion-padding">
   <!-- TODO: common errors or form component -->

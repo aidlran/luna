@@ -4,12 +4,8 @@
   import { goto } from '$app/navigation';
   import { page } from '$app/stores';
   import { focus } from '../actions/focus';
+  import type { SessionMetadata } from '../types/session-metadata';
   import { fragmentParam } from './url-state';
-
-  // TODO: find a home
-  interface SessionMetadata {
-    displayName?: string;
-  }
 
   const activeSessionStore = activeSession();
   const allSessionsStore = allSessions();

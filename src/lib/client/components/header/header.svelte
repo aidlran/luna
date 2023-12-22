@@ -1,13 +1,16 @@
 <script lang="ts">
+  import { Capacitor } from '@capacitor/core';
   import { chevronBack } from 'ionicons/icons';
   import AppSelect from './app-select/AppSelect.svelte';
   import { APPS, type AppID } from './apps';
 
+  /** The currently active app. */
+  export let activeApp: AppID;
+
   /** A relative path. If set, the back button appears and will navigate here on click. */
   export let backHref: string | undefined = undefined;
 
-  /** The currently active app. */
-  export let activeApp: AppID;
+  export let title: string | undefined = undefined;
 </script>
 
 <ion-header>
@@ -16,14 +19,20 @@
       <AppSelect apps={APPS} activeAppID={activeApp} />
     </div>
 
-    <ion-buttons slot="start">
-      {#if backHref}
-        <ion-button href={backHref}>
-          <ion-icon icon={chevronBack} />
-          <span>Back</span>
-        </ion-button>
+    {#if Capacitor.isNativePlatform()}
+      <ion-buttons slot="start">
+        {#if backHref}
+          <ion-button href={backHref}>
+            <ion-icon icon={chevronBack} />
+            <span>Back</span>
+          </ion-button>
+        {/if}
+      </ion-buttons>
+
+      {#if title}
+        <ion-title>{title}</ion-title>
       {/if}
-    </ion-buttons>
+    {/if}
 
     <slot />
   </ion-toolbar>
