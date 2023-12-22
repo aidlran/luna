@@ -75,9 +75,9 @@
 
 <Header activeApp="sessions" backHref={`.${$page.url.hash}`} title="Create a session" />
 
-<ion-content style:max-width="1000px">
+<ion-content>
   {#if !mnemonic}
-    <ion-card style:--color="var(--ion-text-color)" out:slide>
+    <ion-card out:slide>
       <ion-card-header>
         <ion-card-title>Create a session</ion-card-title>
         <ion-card-subtitle></ion-card-subtitle>
@@ -128,9 +128,7 @@
             bind:this={displayNameInput}
           />
 
-          <ion-button type="submit" expand="block" class="ion-margin-bottom" {disabled}
-            >Create session</ion-button
-          >
+          <ion-button type="submit" expand="block" {disabled}>Create session</ion-button>
         </form>
       </ion-card-content>
     </ion-card>
@@ -159,7 +157,14 @@
 
 <style>
   ion-input {
-    margin-bottom: 22px;
+    margin-bottom: 24px;
+  }
+
+  ion-card {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 800px;
+    color: var(--ion-text-color);
   }
 
   @media only screen and (min-width: 680px) {
