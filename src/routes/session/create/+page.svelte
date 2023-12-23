@@ -75,7 +75,7 @@
 
 <Header activeApp="sessions" backHref={`.${$page.url.hash}`} title="Create a session" />
 
-<ion-content>
+<ion-content class="ion-padding">
   {#if !mnemonic}
     <ion-card out:slide>
       <ion-card-header>
@@ -99,7 +99,7 @@
               class:ion-invalid={passphraseError || confirmError}
               error-text={passphraseError}
               helper-text="Choose a strong passphrase to protect your keys."
-              use:ionFocus={12}
+              use:ionFocus={13}
               bind:this={passphraseInput}
             />
 
@@ -161,8 +161,7 @@
   }
 
   ion-card {
-    margin-left: auto;
-    margin-right: auto;
+    margin: auto;
     max-width: 800px;
     color: var(--ion-text-color);
   }
