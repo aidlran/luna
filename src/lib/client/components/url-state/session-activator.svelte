@@ -2,12 +2,8 @@
   import { type Session, session } from 'trusync';
   import { activeSession, allSessions } from 'trusync-svelte';
   import { focus } from '../../actions/focus';
+  import type { SessionMetadata } from '../../types/session-metadata';
   import { fragmentParam } from './fragment-param-function';
-
-  // TODO: find a home
-  interface SessionMetadata {
-    displayName?: string;
-  }
 
   const activeSessionStore = activeSession();
   const allSessionsStore = allSessions();
@@ -17,10 +13,12 @@
   let targetSession: Session<SessionMetadata> | undefined;
   let error: string | undefined;
 
-  $: if ($sessionParam && $allSessionsStore && Object.keys($allSessionsStore).length) {
-    const sessionID = Number.parseInt($sessionParam);
-    if (sessionID && sessionID !== $activeSessionStore?.id) {
-      targetSession = $allSessionsStore[sessionID] as Session<SessionMetadata>;
+  $: {
+    if ($sessionParam && $allSessionsStore && Object.keys($allSessionsStore).length) {
+      const sessionID = Number.parseInt($sessionParam);
+      if (sessionID && sessionID !== $activeSessionStore?.id) {
+        targetSession = $allSessionsStore[sessionID] as Session<SessionMetadata>;
+      }
     }
   }
 
