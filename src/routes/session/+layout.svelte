@@ -1,14 +1,11 @@
-<script lang="ts">
-  import 'ionic-svelte/components/ion-menu';
-  import 'ionic-svelte/components/ion-split-pane';
-  import { menuController, registerMenu } from 'ionic-svelte';
-  import { onMount } from 'svelte';
-  import SessionMenu from './session-menu.svelte';
-
-  onMount(() => {
-    registerMenu('session');
-    menuController.swipeGesture(false, 'session');
-  });
+<script>
+  import 'ionic-svelte/components/ion-button.js';
+  import 'ionic-svelte/components/ion-card.js';
+  import 'ionic-svelte/components/ion-card-header.js';
+  import 'ionic-svelte/components/ion-card-subtitle.js';
+  import 'ionic-svelte/components/ion-card-title.js';
+  import 'ionic-svelte/components/ion-content.js';
+  import 'ionic-svelte/components/ion-input.js';
 </script>
 
 <svelte:head>
@@ -16,11 +13,6 @@
   <meta name="description" content="Manage local sessions in your LUNA client." />
 </svelte:head>
 
-<ion-split-pane content-id="main">
-  <ion-menu content-id="main" menu-id="session">
-    <SessionMenu />
-  </ion-menu>
-  <div id="main" class="ion-page">
-    <slot />
-  </div>
-</ion-split-pane>
+<div class="ion-page">
+  <slot />
+</div>

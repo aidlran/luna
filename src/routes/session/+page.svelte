@@ -1,21 +1,13 @@
 <script>
-  import { allSessions } from 'trusync-svelte';
-  import Header from '$lib/client/components/header/header.svelte';
-  import SessionMenu from './session-menu.svelte';
+  import { session } from 'trusync';
   import { goto } from '$app/navigation';
+  import Header from '$lib/client/components/header/Header.svelte';
 
-  let hasSessions = false;
-
-  allSessions().subscribe((sessions) => {
-    if (!Object.keys(sessions).length) goto('create');
-    else hasSessions = true;
-  })();
+  session().getSessions((sessions) => {
+    if (!Object.values(sessions).length) {
+      goto('create');
+    }
+  });
 </script>
 
 <Header activeApp="sessions" />
-
-{#if hasSessions}
-  <div class="ion-hide-lg-up" style="display:contents">
-    <SessionMenu />
-  </div>
-{/if}

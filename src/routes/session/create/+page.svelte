@@ -1,23 +1,19 @@
 <script lang="ts">
-  import 'ionic-svelte/components/ion-button.js';
-  import 'ionic-svelte/components/ion-card.js';
-  import 'ionic-svelte/components/ion-card-header.js';
-  import 'ionic-svelte/components/ion-card-subtitle.js';
-  import 'ionic-svelte/components/ion-card-title.js';
-  import 'ionic-svelte/components/ion-input.js';
+  /* eslint-disable no-undef -- HTMLIonInputElement is a custom component */
+
   import 'ionic-svelte/components/ion-item.js';
   import 'ionic-svelte/components/ion-label.js';
   import 'ionic-svelte/components/ion-list.js';
   import 'ionic-svelte/components/ion-note.js';
-  import 'ionic-svelte/components/ion-row.js';
+  import { fade, slide } from 'svelte/transition';
   import { session } from 'trusync';
   import { page } from '$app/stores';
   import { ionFocus } from '$lib/client/actions/focus';
-  import Header from '$lib/client/components/header/header.svelte';
+  import Header from '$lib/client/components/header/Header.svelte';
+  import { fragmentParam } from '$lib/client/components/url-state';
   import type { SessionMetadata } from '$lib/client/types/session-metadata';
-  import { fade, slide } from 'svelte/transition';
 
-  /* eslint no-undef: 0 -- HTMLIonInputElement is a web component */
+  const activeSessionID = fragmentParam('sid');
 
   let passphraseInput: HTMLIonInputElement;
   let passphraseError: string | undefined;
@@ -61,15 +57,24 @@
       return;
     }
 
-    mnemonic = await session<SessionMetadata>()
-      .createSession.asPromise({ passphrase, metadata: { displayName } })
-      .then((mnemonic) => mnemonic.split(' '))
-      .finally(() => (disabled = false));
+    session<SessionMetadata>()
+      .create.asPromise({
+        passphrase,
+        metadata: { displayName },
+      })
+      .then((result) => {
+        mnemonic = result.mnemonic.split(' ');
+        activeSessionID.set(result.id.toString());
 
-    // TODO: redirect to dedicated session edit/manage screen
-    //       to display recovery phrase now and at a later date
+        // TODO: redirect to dedicated session edit/manage screen
+        //       to display recovery phrase now and at a later date
 
-    // TODO: verify recovery phrase, ask for each word in random order
+        // TODO: verify recovery phrase, ask for each word in random order
+      })
+      .catch((error) => {
+        disabled = false;
+        throw error;
+      });
   }
 </script>
 
@@ -80,13 +85,12 @@
     <ion-card out:slide>
       <ion-card-header>
         <ion-card-title>Create a session</ion-card-title>
-        <ion-card-subtitle></ion-card-subtitle>
       </ion-card-header>
       <ion-card-content>
         <form class="ion-padding" on:submit|preventDefault={onSubmit}>
           <!-- TODO: wrapper component, lotta boilerplate input props here -->
 
-          <div class="row">
+          <div class="flex">
             <ion-input
               required
               {disabled}
@@ -167,9 +171,14 @@
   }
 
   @media only screen and (min-width: 680px) {
-    .row {
-      gap: 16px;
+    .flex {
       display: flex;
+      flex-flow: row wrap;
+      justify-content: space-between;
+    }
+
+    .flex ion-input {
+      max-width: calc(50% - 16px);
     }
   }
 </style>

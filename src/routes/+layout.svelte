@@ -1,6 +1,7 @@
 <script lang="ts">
   import { App } from '@capacitor/app';
   import { Capacitor } from '@capacitor/core';
+  import 'ionic-svelte/components/ion-app';
   import { LocalStorageChannel, channel } from 'trusync/channel';
   import { browser } from '$app/environment';
   import { Drawer } from '$lib/client/components/drawer';
@@ -44,7 +45,9 @@
 {#if ionReady}
   <Drawer>
     <UrlState>
-      <slot />
+      <ion-app>
+        <slot />
+      </ion-app>
     </UrlState>
   </Drawer>
 {/if}

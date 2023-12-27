@@ -1,8 +1,11 @@
 <script lang="ts">
   import { Capacitor } from '@capacitor/core';
+  import 'ionic-svelte/components/ion-select';
+  import 'ionic-svelte/components/ion-select-option';
   import { chevronBack } from 'ionicons/icons';
   import AppSelect from './app-select/AppSelect.svelte';
   import { APPS, type AppID } from './apps';
+  import SessionSwitcher from './SessionMenu.svelte';
 
   /** The currently active app. */
   export let activeApp: AppID;
@@ -35,5 +38,9 @@
     {/if}
 
     <slot />
+
+    <div slot="end">
+      <SessionSwitcher />
+    </div>
   </ion-toolbar>
 </ion-header>

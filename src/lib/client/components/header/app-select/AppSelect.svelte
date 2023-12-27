@@ -1,7 +1,5 @@
 <script lang="ts" generics="T extends App">
   import { Capacitor } from '@capacitor/core';
-  import 'ionic-svelte/components/ion-select';
-  import 'ionic-svelte/components/ion-select-option';
   import { dev } from '$app/environment';
   import { goto } from '$app/navigation';
   import { page } from '$app/stores';

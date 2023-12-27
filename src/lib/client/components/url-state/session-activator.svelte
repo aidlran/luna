@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { tick } from 'svelte';
   import { type Session, session } from 'trusync';
   import { activeSession, allSessions } from 'trusync-svelte';
   import { focus } from '../../actions/focus';
@@ -33,11 +32,12 @@
 
   function submit(): void {
     if (targetSession?.id) {
-      session().useSession(targetSession.id, password, (result) => {
+      session().load(targetSession.id, password, (result) => {
         if (result instanceof Error) {
           error = result.message;
         } else {
-          tick().then(close);
+          password = '';
+          targetSession = error = undefined;
         }
       });
     }
