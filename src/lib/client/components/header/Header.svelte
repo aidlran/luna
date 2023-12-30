@@ -39,7 +39,7 @@
 
     <slot />
 
-    <div slot="end">
+    <div slot="end" class="ion-margin-end">
       <SessionSwitcher />
     </div>
   </ion-toolbar>
