@@ -2,11 +2,12 @@
   import 'ionic-svelte/components/ion-avatar';
   import 'ionic-svelte/components/ion-text';
   import { session, type Session } from 'trusync';
-  import { allSessions } from 'trusync-svelte';
+  import { activeSession, allSessions } from 'trusync-svelte';
   import { goto } from '$app/navigation';
   import Header from '$lib/client/components/header/Header.svelte';
   import type { SessionMetadata } from '$lib/client/types/session-metadata';
 
+  const activeSessionStore = activeSession();
   const allSessionsStore = allSessions<SessionMetadata>();
 
   let sessions: Session<SessionMetadata>[];
@@ -21,8 +22,8 @@
 
 <Header activeApp="sessions" />
 
-{#if sessions.length}
-  <ion-content class="ion-padding">
+<ion-content class="ion-padding">
+  {#if !$activeSessionStore}
     <ion-card>
       <ion-card-header>
         <ion-card-title style:text-align="center">Choose a session</ion-card-title>
@@ -49,8 +50,8 @@
         <ion-button fill="clear" href="create" class="ion-margin-top">Create</ion-button>
       </div>
     </ion-card>
-  </ion-content>
-{/if}
+  {/if}
+</ion-content>
 
 <style>
   ion-card {

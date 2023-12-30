@@ -16,7 +16,7 @@ export const APPS: App<AppID>[] = [
   },
   {
     id: 'sessions',
-    name: 'My Sessions',
+    name: 'Session',
     path: '/session/',
     devOnly: true,
   },
