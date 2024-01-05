@@ -10,7 +10,7 @@
   import { fragmentParam } from '$lib/client/components/url-state';
   import type { SessionMetadata } from '$lib/client/types/session-metadata';
 
-  const activeSessionID = fragmentParam('sid');
+  const sessionParamStore = fragmentParam('sid');
 
   const INPUTS = Array.from<HTMLIonInputElement>({ length: 12 });
 
@@ -101,7 +101,7 @@
             metadata: { displayName },
           })
           .then(({ id }) => {
-            activeSessionID.set(id.toString());
+            sessionParamStore.set(id.toString());
             // TODO: redirect somewhere
           })
           .catch((error) => {

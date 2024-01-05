@@ -4,7 +4,6 @@
   import { Capacitor } from '@capacitor/core';
   import type { SelectChangeEventDetail } from '@ionic/core';
   import 'ionic-svelte/components/ion-alert';
-  import { session } from 'trusync';
   import { activeSession } from 'trusync-svelte';
   import { fragmentParam } from '../url-state';
   import { APPS } from './apps';
@@ -14,12 +13,6 @@
 
   let selectElement: HTMLIonSelectElement;
   let displayConfirmResetModal = false;
-
-  $: {
-    if (!$sessionParamStore && $activeSessionStore?.id) {
-      sessionParamStore.set($activeSessionStore.id.toString());
-    }
-  }
 
   function onChange(event: CustomEvent<SelectChangeEventDetail<'end'>>): void {
     if (event.detail.value === 'end' && $activeSessionStore) {
@@ -58,8 +51,7 @@
     {
       text: 'Confirm',
       role: 'destructive',
-      handler: async () => {
-        await session().clear.asPromise();
+      handler: () => {
         sessionParamStore.set(undefined);
         displayConfirmResetModal = false;
       },

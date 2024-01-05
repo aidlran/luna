@@ -7,15 +7,19 @@
 
   const activeSessionStore = activeSession();
   const allSessionsStore = allSessions();
-  const sessionParam = fragmentParam('sid');
+  const sessionParamStore = fragmentParam('sid');
+
+  const { clear: clearSession, load: loadSession } = session();
 
   let password: string;
   let targetSession: Session<SessionMetadata> | undefined;
   let error: string | undefined;
 
   $: {
-    if ($sessionParam && $allSessionsStore && Object.keys($allSessionsStore).length) {
-      const sessionID = Number.parseInt($sessionParam);
+    if (!$sessionParamStore && $activeSessionStore) {
+      clearSession();
+    } else if ($sessionParamStore && $allSessionsStore && Object.keys($allSessionsStore).length) {
+      const sessionID = Number.parseInt($sessionParamStore);
       if (sessionID && sessionID !== $activeSessionStore?.id) {
         targetSession = $allSessionsStore[sessionID] as Session<SessionMetadata>;
       }
@@ -25,12 +29,12 @@
   function close(): void {
     password = '';
     targetSession = error = undefined;
-    sessionParam.set($activeSessionStore?.id?.toString());
+    sessionParamStore.set($activeSessionStore?.id?.toString());
   }
 
   function submit(): void {
     if (targetSession?.id) {
-      session().load(targetSession.id, password, (result) => {
+      loadSession(targetSession.id, password, (result) => {
         if (result instanceof Error) {
           error = result.message;
         } else {
