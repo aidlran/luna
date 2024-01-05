@@ -78,7 +78,7 @@
   }
 </script>
 
-<Header activeApp="sessions" backHref={`.${$page.url.hash}`} title="Create a session" />
+<Header activeApp="sessions" backHref={`./${$page.url.hash}`} title="Create a session" />
 
 <ion-content class="ion-padding">
   {#if !mnemonic}

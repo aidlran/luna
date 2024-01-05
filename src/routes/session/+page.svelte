@@ -1,23 +1,15 @@
 <script lang="ts">
   import 'ionic-svelte/components/ion-avatar';
   import 'ionic-svelte/components/ion-text';
-  import { session, type Session } from 'trusync';
+  import { session } from 'trusync';
   import { activeSession, allSessions } from 'trusync-svelte';
-  import { goto } from '$app/navigation';
   import Header from '$lib/client/components/header/Header.svelte';
   import type { SessionMetadata } from '$lib/client/types/session-metadata';
 
   const activeSessionStore = activeSession();
   const allSessionsStore = allSessions<SessionMetadata>();
 
-  let sessions: Session<SessionMetadata>[];
-  $: sessions = Object.values($allSessionsStore);
-
-  session().getSessions((sessions) => {
-    if (!Object.values(sessions).length) {
-      goto('create');
-    }
-  });
+  session().getSessions();
 </script>
 
 <Header activeApp="sessions" />
@@ -30,8 +22,8 @@
       </ion-card-header>
       <ion-card-content>
         <ion-list>
-          {#each sessions as session}
-            <ion-item>
+          {#each Object.values($allSessionsStore) as session}
+            <ion-item href={`#sid=${session.id}`}>
               <ion-label>
                 <ion-avatar style:background="gray" style:display="flex">
                   <ion-text color="light" style:margin="auto">
@@ -46,8 +38,8 @@
       </ion-card-content>
 
       <div class="buttons">
-        <ion-button fill="clear" href="import" class="ion-margin-top">Import</ion-button>
-        <ion-button fill="clear" href="create" class="ion-margin-top">Create</ion-button>
+        <ion-button fill="clear" href="session/import" class="ion-margin-top">Import</ion-button>
+        <ion-button fill="clear" href="session/create" class="ion-margin-top">Create</ion-button>
       </div>
     </ion-card>
   {/if}

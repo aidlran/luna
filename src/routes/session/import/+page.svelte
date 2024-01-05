@@ -115,7 +115,7 @@
   };
 </script>
 
-<Header activeApp="sessions" backHref={`.${$page.url.hash}`} title="Import a session" />
+<Header activeApp="sessions" backHref={`./${$page.url.hash}`} title="Import a session" />
 
 <ion-content class="ion-padding">
   {#if step == 1}
