@@ -69,15 +69,16 @@
               bind:this={passphraseInput}
             />
 
-            <ion-button class="ion-margin-vertical" type="submit" expand="block"
-              >Unlock session</ion-button
-            >
+            <ion-button class="ion-margin-vertical" type="submit" expand="block">
+              Unlock session
+            </ion-button>
           </form>
         </ion-card-content>
 
         <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
         <ion-button
           fill="clear"
+          expand="block"
           class="ion-margin-top"
           on:click={() => (targetSession = undefined)}
         >
