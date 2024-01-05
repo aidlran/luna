@@ -37,21 +37,19 @@
   {#if !$activeSessionStore}
     <ion-card>
       {#if $allSessionsStore[targetSession]}
-        {@const session = $allSessionsStore[targetSession]}
+        {@const { metadata } = $allSessionsStore[targetSession]}
         <ion-card-header>
           <ion-card-title style:text-align="center">Unlock session</ion-card-title>
         </ion-card-header>
         <ion-card-content>
-          <ion-item>
-            <ion-label class="flex" style:justify-content="center">
-              <ion-avatar>
-                <ion-text color="light">
-                  {session.metadata?.displayName.charAt(0).toLocaleUpperCase()}
-                </ion-text>
-              </ion-avatar>
-              <span>{session.metadata?.displayName}</span>
-            </ion-label>
-          </ion-item>
+          <div class="flex" style:flex-flow="column">
+            <ion-avatar>
+              <ion-text color="light">
+                {metadata?.displayName.charAt(0).toLocaleUpperCase()}
+              </ion-text>
+            </ion-avatar>
+            <span>{metadata?.displayName}</span>
+          </div>
 
           <form class="ion-margin" on:submit|preventDefault={submit}>
             <ion-input
