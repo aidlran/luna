@@ -4,7 +4,6 @@
   import { onMount } from 'svelte';
   import { fade, slide } from 'svelte/transition';
   import { BIP39_WORDLIST_ENGLISH, session } from 'trusync';
-  import { page } from '$app/stores';
   import { ionFocus } from '$lib/client/actions/focus';
   import Header from '$lib/client/components/header/Header.svelte';
   import type { SessionMetadata } from '$lib/client/types/session-metadata';
@@ -110,7 +109,7 @@
   };
 </script>
 
-<Header activeApp="sessions" backHref={`./${$page.url.hash}`} title="Import a session" />
+<Header activeApp="sessions" backHref="./" title="Import a session" />
 
 <ion-content class="ion-padding">
   {#if step == 1}

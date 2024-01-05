@@ -1,10 +1,10 @@
 <script>
   import { browser } from '$app/environment';
   import { goto } from '$app/navigation';
-  import { page } from '$app/stores';
+  import { APPS } from '$lib/client/components/header/apps';
 
   if (browser) {
-    goto(`pass/${$page.url.hash}`, {
+    goto(APPS.find(({ id }) => id == 'pass').path, {
       replaceState: true,
     });
   }

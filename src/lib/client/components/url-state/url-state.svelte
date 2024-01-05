@@ -1,15 +1,14 @@
 <script lang="ts">
+  import { setContext } from 'svelte';
   import { type Writable, writable } from 'svelte/store';
   import { page } from '$app/stores';
-  import { setContext } from 'svelte';
-  import type { FragmentParamKey } from './fragment-param-key';
 
-  const fragmentParamStores: Partial<Record<FragmentParamKey, Writable<string | undefined>>> = {};
+  const fragmentParamStores: Partial<Record<string, Writable<string | undefined>>> = {};
 
   $: for (const param of $page.url.hash.slice(1).split('&')) {
     if (!param) continue;
     const [key, value] = param.split('=');
-    (fragmentParamStores[key as FragmentParamKey] ??= writable()).set(value);
+    (fragmentParamStores[key] ??= writable()).set(value);
   }
 
   function writeFragment() {
@@ -29,7 +28,7 @@
     window.location.hash = hash;
   }
 
-  function fragmentParam(key: FragmentParamKey): Writable<string | undefined> {
+  function fragmentParam(key: string): Writable<string | undefined> {
     const { subscribe, set, update } = (fragmentParamStores[key] ??= writable());
     return {
       subscribe,

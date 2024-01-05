@@ -7,7 +7,6 @@
   import 'ionic-svelte/components/ion-note.js';
   import { fade, slide } from 'svelte/transition';
   import { session } from 'trusync';
-  import { page } from '$app/stores';
   import { ionFocus } from '$lib/client/actions/focus';
   import Header from '$lib/client/components/header/Header.svelte';
   import type { SessionMetadata } from '$lib/client/types/session-metadata';
@@ -74,7 +73,7 @@
   }
 </script>
 
-<Header activeApp="sessions" backHref={`./${$page.url.hash}`} title="Create a session" />
+<Header activeApp="sessions" backHref="./" title="Create a session" />
 
 <ion-content class="ion-padding">
   {#if !mnemonic}

@@ -2,7 +2,6 @@
   import { Capacitor } from '@capacitor/core';
   import { dev } from '$app/environment';
   import { goto } from '$app/navigation';
-  import { page } from '$app/stores';
   // eslint-disable-next-line @typescript-eslint/no-unused-vars -- used in generic
   import type { App } from './app';
 
@@ -21,9 +20,7 @@
 
 <div class="horizontal">
   {#if activeApp}
-    <!-- Likely unreactive to fragment param state changes between page navigations -->
-    <!-- Unlikely to be issue unless fragment param is tracking global state -->
-    <a href={`${activeApp.path}${$page.url.hash}`}>
+    <a href={activeApp.path}>
       <ion-title class="ion-no-padding">{activeApp.name}</ion-title>
     </a>
   {/if}
@@ -33,7 +30,7 @@
       <ion-select
         interface={Capacitor.isNativePlatform() ? undefined : 'popover'}
         on:ionChange={({ detail: { value: app } }) => {
-          goto(`${app.path}${$page.url.hash}`);
+          goto(app.path);
         }}
       >
         {#each filteredApps as app}
