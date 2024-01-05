@@ -3,7 +3,6 @@
   import { page } from '$app/stores';
   import { setContext } from 'svelte';
   import type { FragmentParamKey } from './fragment-param-key';
-  import SessionActivator from './session-activator.svelte';
 
   const fragmentParamStores: Partial<Record<FragmentParamKey, Writable<string | undefined>>> = {};
 
@@ -47,7 +46,5 @@
 
   setContext('fragmentParam', fragmentParam);
 </script>
-
-<SessionActivator />
 
 <slot />

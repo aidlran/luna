@@ -7,10 +7,7 @@
   import { page } from '$app/stores';
   import { ionFocus } from '$lib/client/actions/focus';
   import Header from '$lib/client/components/header/Header.svelte';
-  import { fragmentParam } from '$lib/client/components/url-state';
   import type { SessionMetadata } from '$lib/client/types/session-metadata';
-
-  const sessionParamStore = fragmentParam('sid');
 
   const INPUTS = Array.from<HTMLIonInputElement>({ length: 12 });
 
@@ -100,14 +97,12 @@
             passphrase,
             metadata: { displayName },
           })
-          .then(({ id }) => {
-            sessionParamStore.set(id.toString());
-            // TODO: redirect somewhere
-          })
           .catch((error) => {
             disabled = false;
             throw error;
           });
+
+        // TODO: then redirect somewhere
 
         break;
       }
@@ -220,7 +215,7 @@
 
   ion-card {
     margin: auto;
-    max-width: 800px;
+    max-width: 700px;
     color: var(--ion-text-color);
   }
 

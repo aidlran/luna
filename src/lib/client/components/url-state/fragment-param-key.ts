@@ -1,1 +1,1 @@
-export type FragmentParamKey = 'sid' | 'id';
+export type FragmentParamKey = 'id';

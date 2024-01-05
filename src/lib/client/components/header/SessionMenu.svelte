@@ -4,12 +4,11 @@
   import { Capacitor } from '@capacitor/core';
   import type { SelectChangeEventDetail } from '@ionic/core';
   import 'ionic-svelte/components/ion-alert';
+  import { session } from 'trusync';
   import { activeSession } from 'trusync-svelte';
-  import { fragmentParam } from '../url-state';
   import { APPS } from './apps';
 
   const activeSessionStore = activeSession();
-  const sessionParamStore = fragmentParam('sid');
 
   let selectElement: HTMLIonSelectElement;
   let displayConfirmResetModal = false;
@@ -52,7 +51,7 @@
       text: 'Confirm',
       role: 'destructive',
       handler: () => {
-        sessionParamStore.set(undefined);
+        session().clear();
         displayConfirmResetModal = false;
       },
     },

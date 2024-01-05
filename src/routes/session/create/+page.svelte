@@ -10,10 +10,7 @@
   import { page } from '$app/stores';
   import { ionFocus } from '$lib/client/actions/focus';
   import Header from '$lib/client/components/header/Header.svelte';
-  import { fragmentParam } from '$lib/client/components/url-state';
   import type { SessionMetadata } from '$lib/client/types/session-metadata';
-
-  const sessionParamStore = fragmentParam('sid');
 
   let passphraseInput: HTMLIonInputElement;
   let passphraseError: string | undefined;
@@ -64,7 +61,6 @@
       })
       .then((result) => {
         mnemonic = result.mnemonic.split(' ');
-        sessionParamStore.set(result.id.toString());
 
         // TODO: redirect to dedicated session edit/manage screen
         //       to display recovery phrase now and at a later date
@@ -166,7 +162,7 @@
 
   ion-card {
     margin: auto;
-    max-width: 800px;
+    max-width: 700px;
     color: var(--ion-text-color);
   }
 
