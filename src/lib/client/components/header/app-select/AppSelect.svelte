@@ -2,6 +2,7 @@
   import { Capacitor } from '@capacitor/core';
   import { dev } from '$app/environment';
   import { goto } from '$app/navigation';
+  import { page } from '$app/stores';
   // eslint-disable-next-line @typescript-eslint/no-unused-vars -- used in generic
   import type { App } from './app';
 
@@ -20,7 +21,7 @@
 
 <div class="horizontal">
   {#if activeApp}
-    <a href={activeApp.path}>
+    <a href={`${activeApp.path}${$page.url.hash}`}>
       <ion-title class="ion-no-padding">{activeApp.name}</ion-title>
     </a>
   {/if}

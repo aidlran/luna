@@ -6,12 +6,29 @@
   import 'ionic-svelte/components/ion-alert';
   import { session } from 'trusync';
   import { activeSession } from 'trusync-svelte';
+  import { page } from '$app/stores';
+  import { fragmentParam } from '../url-state';
   import { APPS } from './apps';
 
   const activeSessionStore = activeSession();
+  const thenParam = fragmentParam('then');
 
-  let selectElement: HTMLIonSelectElement;
+  let selectElement: HTMLIonSelectElement | undefined;
   let displayConfirmResetModal = false;
+
+  const loginHrefBase = APPS.find(({ id }) => id === 'sessions').path;
+  let loginHref: string;
+  $: {
+    loginHref = loginHrefBase;
+    if (!$page.url.hash) {
+      loginHref += `#then=${$page.url.pathname}`;
+    } else {
+      loginHref += $page.url.hash;
+      if (!$thenParam) {
+        loginHref += `&then=${$page.url.pathname}`;
+      }
+    }
+  }
 
   function onChange(event: CustomEvent<SelectChangeEventDetail<'end'>>): void {
     if (event.detail.value === 'end' && $activeSessionStore) {
@@ -21,7 +38,7 @@
 
   function cancel(): void {
     displayConfirmResetModal = false;
-    selectElement.value = undefined;
+    if (selectElement) selectElement.value = undefined;
   }
 </script>
 
@@ -35,7 +52,7 @@
     <ion-select-option value="end">End session</ion-select-option>
   </ion-select>
 {:else}
-  <ion-button href={APPS.find(({ id }) => id === 'sessions').path}>Sign in</ion-button>
+  <ion-button href={loginHref}>Sign in</ion-button>
 {/if}
 
 <!-- TODO: common modal component or system -->

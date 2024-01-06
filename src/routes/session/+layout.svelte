@@ -6,6 +6,12 @@
   import 'ionic-svelte/components/ion-card-title.js';
   import 'ionic-svelte/components/ion-content.js';
   import 'ionic-svelte/components/ion-input.js';
+  import { onDestroy } from 'svelte';
+  import { fragmentParam } from '$lib/client/components/url-state';
+
+  const thenParam = fragmentParam('then');
+
+  onDestroy(() => thenParam.set(undefined));
 </script>
 
 <svelte:head>

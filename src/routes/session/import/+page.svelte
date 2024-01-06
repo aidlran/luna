@@ -4,11 +4,15 @@
   import { onMount } from 'svelte';
   import { fade, slide } from 'svelte/transition';
   import { BIP39_WORDLIST_ENGLISH, session } from 'trusync';
+  import { goto } from '$app/navigation';
   import { ionFocus } from '$lib/client/actions/focus';
   import Header from '$lib/client/components/header/Header.svelte';
+  import { fragmentParam } from '$lib/client/components/url-state';
   import type { SessionMetadata } from '$lib/client/types/session-metadata';
 
   const INPUTS = Array.from<HTMLIonInputElement>({ length: 12 });
+
+  const thenParam = fragmentParam('then');
 
   let passphraseInput: HTMLIonInputElement;
   let passphraseError: string | undefined;
@@ -95,6 +99,9 @@
             mnemonic: mnemonic.trimStart(),
             passphrase,
             metadata: { displayName },
+          })
+          .then(() => {
+            if ($thenParam) goto($thenParam);
           })
           .catch((error) => {
             disabled = false;

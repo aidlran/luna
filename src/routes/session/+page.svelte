@@ -5,8 +5,11 @@
   import 'ionic-svelte/components/ion-text';
   import { session } from 'trusync';
   import { activeSession, allSessions } from 'trusync-svelte';
+  import { goto } from '$app/navigation';
+  import { page } from '$app/stores';
   import { ionFocus } from '$lib/client/actions/focus';
   import Header from '$lib/client/components/header/Header.svelte';
+  import { fragmentParam } from '$lib/client/components/url-state';
   import type { SessionMetadata } from '$lib/client/types/session-metadata';
 
   const activeSessionStore = activeSession();
@@ -17,6 +20,8 @@
 
   const { getSessions, load: loadSession } = session();
 
+  let thenParam = fragmentParam('then');
+
   getSessions((sessions) => {
     const sessionsArray = Object.values(sessions);
     if (sessionsArray.length == 1) {
@@ -26,7 +31,11 @@
 
   function submit() {
     if (targetSession) {
-      loadSession(targetSession, passphraseInput.value as string);
+      loadSession(
+        targetSession,
+        passphraseInput.value as string,
+        () => $thenParam && goto($thenParam),
+      );
     }
   }
 </script>
@@ -105,8 +114,8 @@
         </ion-card-content>
 
         <div class="flex ion-margin-top" style:justify-content="space-between">
-          <ion-button fill="clear" href="session/import">Import</ion-button>
-          <ion-button fill="clear" href="session/create">Create</ion-button>
+          <ion-button fill="clear" href={`session/import${$page.url.hash}`}>Import</ion-button>
+          <ion-button fill="clear" href={`session/create${$page.url.hash}`}>Create</ion-button>
         </div>
       {/if}
     </ion-card>

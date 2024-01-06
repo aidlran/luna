@@ -9,7 +9,10 @@
   import { session } from 'trusync';
   import { ionFocus } from '$lib/client/actions/focus';
   import Header from '$lib/client/components/header/Header.svelte';
+  import { fragmentParam } from '$lib/client/components/url-state';
   import type { SessionMetadata } from '$lib/client/types/session-metadata';
+
+  const thenParam = fragmentParam('then');
 
   let passphraseInput: HTMLIonInputElement;
   let passphraseError: string | undefined;
@@ -150,6 +153,8 @@
           {/each}
         </ion-list>
       </ion-card-content>
+
+      <ion-button expand="block" href={$thenParam ?? './'}>Got it</ion-button>
     </ion-card>
   {/if}
 </ion-content>

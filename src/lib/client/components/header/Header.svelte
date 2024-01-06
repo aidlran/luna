@@ -3,6 +3,7 @@
   import 'ionic-svelte/components/ion-select';
   import 'ionic-svelte/components/ion-select-option';
   import { chevronBack } from 'ionicons/icons';
+  import { page } from '$app/stores';
   import AppSelect from './app-select/AppSelect.svelte';
   import { APPS, type AppID } from './apps';
   import SessionSwitcher from './SessionMenu.svelte';
@@ -25,7 +26,7 @@
     {#if Capacitor.isNativePlatform()}
       <ion-buttons slot="start">
         {#if backHref}
-          <ion-button href={backHref}>
+          <ion-button href={`${backHref}${$page.url.hash}`}>
             <ion-icon icon={chevronBack} />
             <span>Back</span>
           </ion-button>
