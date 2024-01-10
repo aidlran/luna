@@ -14,6 +14,8 @@
 
   const thenParam = fragmentParam('then');
 
+  let filteredWordlist: string[];
+
   let passphraseInput: HTMLIonInputElement;
   let passphraseError: string | undefined;
 
@@ -25,10 +27,21 @@
   let disabled = false;
   let step = 1;
 
+  function filterWordlist(this: HTMLInputElement) {
+    if (this.value) {
+      filteredWordlist = BIP39_WORDLIST_ENGLISH.filter((word) => word.startsWith(this.value));
+    } else {
+      filteredWordlist = [];
+    }
+  }
+
   onMount(() => {
     for (const ionInput of INPUTS) {
       ionInput.getInputElement().then((input) => {
         input.setAttribute('list', 'wordlist');
+        input.addEventListener('input', filterWordlist);
+        input.addEventListener('focus', filterWordlist);
+        input.addEventListener('blur', () => (filteredWordlist = []));
       });
     }
     setTimeout(() => INPUTS[0].setFocus(), 0);
@@ -131,9 +144,11 @@
       <ion-card-content>
         <form class="ion-padding" on:submit|preventDefault={onSubmit}>
           <datalist id="wordlist">
-            {#each BIP39_WORDLIST_ENGLISH as word}
-              <option value={word} />
-            {/each}
+            {#if filteredWordlist}
+              {#each filteredWordlist as word}
+                <option value={word} />
+              {/each}
+            {/if}
           </datalist>
 
           <div class="flex">
