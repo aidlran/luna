@@ -33,5 +33,6 @@ module.exports = {
   rules: {
     'deprecation/deprecation': 'warn',
     'no-console': 'error',
+    'svelte/valid-compile': 'off', // TODO: await https://github.com/sveltejs/eslint-plugin-svelte/issues/652
   },
 };

@@ -20,22 +20,24 @@
 <ion-header>
   <ion-toolbar>
     <div slot="start" class="ion-margin-start">
-      <AppSelect apps={APPS} activeAppID={activeApp} />
+      <div style="display:inline-block">
+        <AppSelect apps={APPS} activeAppID={activeApp} />
+      </div>
+
+      {#if !Capacitor.isNativePlatform()}
+        <ion-buttons>
+          {#if backHref}
+            <ion-button href={`${backHref}${$page.url.hash}`}>
+              <ion-icon icon={chevronBack} />
+              <span>Back</span>
+            </ion-button>
+          {/if}
+        </ion-buttons>
+      {/if}
     </div>
 
-    {#if Capacitor.isNativePlatform()}
-      <ion-buttons slot="start">
-        {#if backHref}
-          <ion-button href={`${backHref}${$page.url.hash}`}>
-            <ion-icon icon={chevronBack} />
-            <span>Back</span>
-          </ion-button>
-        {/if}
-      </ion-buttons>
-
-      {#if title}
-        <ion-title>{title}</ion-title>
-      {/if}
+    {#if !Capacitor.isNativePlatform() && title}
+      <ion-title>{title}</ion-title>
     {/if}
 
     <slot />

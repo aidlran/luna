@@ -22,7 +22,7 @@ jobs:
           distribution: temurin
           java-version: '17'
           cache: gradle
-      - run: npm ci
+      - run: npm ci --legacy-peer-deps
       - run: npm run build:web
       - run: npx cap sync android
       - run: ./gradlew assemble --no-daemon
@@ -38,6 +38,6 @@ jobs:
         with:
           node-version: 20
           cache: npm
-      - run: npm ci
+      - run: npm ci --legacy-peer-deps
       - run: npm run build:web
       - run: npm run lint
