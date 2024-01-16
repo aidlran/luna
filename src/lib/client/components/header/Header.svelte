@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { Capacitor } from '@capacitor/core';
   import 'ionic-svelte/components/ion-select';
   import 'ionic-svelte/components/ion-select-option';
   import { chevronBack } from 'ionicons/icons';
