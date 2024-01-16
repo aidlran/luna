@@ -24,19 +24,17 @@
         <AppSelect apps={APPS} activeAppID={activeApp} />
       </div>
 
-      {#if !Capacitor.isNativePlatform()}
-        <ion-buttons>
-          {#if backHref}
-            <ion-button href={`${backHref}${$page.url.hash}`}>
-              <ion-icon icon={chevronBack} />
-              <span>Back</span>
-            </ion-button>
-          {/if}
-        </ion-buttons>
-      {/if}
+      <ion-buttons>
+        {#if backHref}
+          <ion-button href={`${backHref}${$page.url.hash}`}>
+            <ion-icon icon={chevronBack} />
+            <span>Back</span>
+          </ion-button>
+        {/if}
+      </ion-buttons>
     </div>
 
-    {#if !Capacitor.isNativePlatform() && title}
+    {#if title}
       <ion-title>{title}</ion-title>
     {/if}
 
