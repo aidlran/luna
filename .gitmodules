@@ -1,3 +1,3 @@
-[submodule "lib/trusync"]
-	path = lib/trusync
-	url = git@github.com:aidlran/trusync
+[submodule "librebase"]
+	path = lib/librebase
+	url = https://github.com/aidlran/librebase
