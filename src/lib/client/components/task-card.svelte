@@ -1,5 +1,5 @@
 <script lang="ts">
-  // import { Data } from 'trusync';
+  // import { Data } from 'librebase';
   // import { createEventDispatcher } from 'svelte';
   import type { Task } from '../interfaces/task';
   import type { OptionalID } from '../types/optional-id';

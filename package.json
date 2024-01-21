@@ -1,6 +1,6 @@
 {
   "name": "luna",
-  "version": "1.0.0-alpha.1",
+  "version": "0.0.0-next.1",
   "description": "A productivity assistant.",
   "license": "AGPL-3.0-only",
   "private": true,
@@ -10,28 +10,30 @@
   "homepage": "https://github.com/aidlran/luna#readme",
   "type": "module",
   "workspaces": [
-    "lib/trusync/packages/js",
-    "lib/trusync/packages/svelte"
+    "lib/librebase/lib/adamant",
+    "lib/librebase/packages/js",
+    "lib/librebase/packages/svelte"
   ],
   "scripts": {
-    "build": "npm run build:android",
     "build:android": "npm run build:web && cap sync && cap build android",
-    "build:web": "npm run build:libs && vite build",
-    "build:libs": "npm run build --workspaces",
+    "build:web": "npm run build --workspaces && svelte-kit sync && vite build",
     "format": "prettier --write .",
     "lc": "echo LUNA: $(find src -type f -exec cat {} \\; | wc -l) lines",
     "lint": "eslint .",
     "preview": "vite preview",
-    "start": "npm run build:libs && svelte-kit sync && conc -kn vite-dev,svelte-check,trusync-js,trusync-svelte \"vite dev\" \"svelte-check --watch --preserveWatchOutput\" \"npm start -w lib/trusync/packages/js\" \"npm start -w lib/trusync/packages/svelte\""
+    "start": "conc -k npm:start:*",
+    "start:luna:app": "svelte-kit sync && vite dev",
+    "start:luna:svelte-check": "svelte-check --watch --preserveWatchOutput",
+    "start:librebase": "cd lib/librebase && npm start"
   },
   "devDependencies": {
     "@capacitor/android": "^5.5.1",
     "@capacitor/app": "^5.0.6",
     "@capacitor/cli": "^5.5.1",
     "@capacitor/core": "^5.5.1",
-    "@ionic/core": "^7.6.4",
+    "@ionic/core": "^7.6.5",
     "@sveltejs/adapter-static": "^3.0.1",
-    "@sveltejs/kit": "^2.3.3",
+    "@sveltejs/kit": "^2.4.1",
     "@sveltejs/vite-plugin-svelte": "^3.0.1",
     "@types/estree": "^1.0.5",
     "@typescript-eslint/eslint-plugin": "^6.19.0",
@@ -43,15 +45,15 @@
     "eslint-plugin-prettier": "^5.1.3",
     "eslint-plugin-svelte": "^2.35.1",
     "ionic-svelte": "^0.5.82",
-    "prettier": "^3.1.1",
+    "librebase": "file:lib/librebase/packages/js",
+    "librebase-svelte": "file:lib/librebase/packages/svelte",
+    "prettier": "^3.2.4",
     "prettier-plugin-prisma": "^5.0.0",
     "prettier-plugin-svelte": "^3.1.2",
-    "svelte": "^5.0.0-next.36",
+    "svelte": "^5.0.0-next.37",
     "svelte-check": "^3.6.3",
-    "trusync": "file:lib/trusync/packages/js",
-    "trusync-svelte": "file:lib/trusync/packages/svelte",
     "tslib": "^2.6.2",
     "typescript": "~5.3.3",
-    "vite": "^5.0.11"
+    "vite": "^5.0.12"
   }
 }

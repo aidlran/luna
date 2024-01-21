@@ -1,5 +1,5 @@
 <script lang="ts">
-  // import type { Hash } from 'trusync';
+  // import type { Hash } from 'librebase';
   import type { Task } from '../interfaces/task';
   // import type { OptionalID } from '../types/optional-id';
   // import TaskCard from './task-card.svelte';

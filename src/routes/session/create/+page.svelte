@@ -5,8 +5,8 @@
   import 'ionic-svelte/components/ion-label.js';
   import 'ionic-svelte/components/ion-list.js';
   import 'ionic-svelte/components/ion-note.js';
+  import { session } from 'librebase';
   import { fade, slide } from 'svelte/transition';
-  import { session } from 'trusync';
   import { ionFocus } from '$lib/client/actions/focus';
   import Header from '$lib/client/components/header/Header.svelte';
   import { fragmentParam } from '$lib/client/components/url-state';

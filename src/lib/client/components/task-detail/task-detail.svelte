@@ -1,5 +1,5 @@
 <script lang="ts">
-  // import { data } from 'trusync-svelte';
+  // import { data } from 'librebase-svelte';
   // import type { Task } from '../../interfaces/task';
   // import TaskDetailName from './task-detail-name.svelte';
 

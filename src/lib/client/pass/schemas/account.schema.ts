@@ -1,4 +1,4 @@
-import { createSchema } from 'trusync/schema';
+import { createSchema } from 'librebase/schema';
 
 export const AccountSchema = createSchema<{
   name: string;

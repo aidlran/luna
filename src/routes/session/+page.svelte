@@ -3,8 +3,8 @@
 
   import 'ionic-svelte/components/ion-avatar';
   import 'ionic-svelte/components/ion-text';
-  import { session } from 'trusync';
-  import { activeSession, allSessions } from 'trusync-svelte';
+  import { session } from 'librebase';
+  import { activeSession, allSessions } from 'librebase-svelte';
   import { goto } from '$app/navigation';
   import { page } from '$app/stores';
   import { ionFocus } from '$lib/client/actions/focus';

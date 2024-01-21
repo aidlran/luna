@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { activeSession } from 'trusync-svelte';
+  import { activeSession } from 'librebase-svelte';
   import { goto } from '$app/navigation';
   import { page } from '$app/stores';
   import { APPS } from '$lib/client/components/header/apps';

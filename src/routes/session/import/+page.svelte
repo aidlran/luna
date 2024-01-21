@@ -1,9 +1,9 @@
 <script lang="ts">
   /* eslint-disable no-undef -- HTMLIonInputElement is a custom component */
 
+  import { BIP39_WORDLIST_ENGLISH, session } from 'librebase';
   import { onMount } from 'svelte';
   import { fade, slide } from 'svelte/transition';
-  import { BIP39_WORDLIST_ENGLISH, session } from 'trusync';
   import { goto } from '$app/navigation';
   import { ionFocus } from '$lib/client/actions/focus';
   import Header from '$lib/client/components/header/Header.svelte';

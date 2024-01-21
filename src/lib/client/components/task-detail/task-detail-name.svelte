@@ -1,5 +1,5 @@
 <script lang="ts">
-  // import type { DataStore } from 'trusync-svelte';
+  // import type { DataStore } from 'librebase-svelte';
   import type { KeyboardEventHandler } from 'svelte/elements';
   // import type { Task } from '../../interfaces/task';
 
