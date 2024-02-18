@@ -27,17 +27,17 @@
     "start:librebase": "cd lib/librebase && npm start"
   },
   "devDependencies": {
-    "@capacitor/android": "^5.6.0",
-    "@capacitor/app": "^5.0.6",
-    "@capacitor/cli": "^5.6.0",
-    "@capacitor/core": "^5.6.0",
-    "@ionic/core": "^7.6.6",
+    "@capacitor/android": "^5.7.0",
+    "@capacitor/app": "^5.0.7",
+    "@capacitor/cli": "^5.7.0",
+    "@capacitor/core": "^5.7.0",
+    "@ionic/core": "^7.7.2",
     "@sveltejs/adapter-static": "^3.0.1",
     "@sveltejs/kit": "^2.5.0",
     "@sveltejs/vite-plugin-svelte": "^3.0.2",
     "@types/estree": "^1.0.5",
-    "@typescript-eslint/eslint-plugin": "^6.19.1",
-    "@typescript-eslint/parser": "^6.19.1",
+    "@typescript-eslint/eslint-plugin": "^7.0.1",
+    "@typescript-eslint/parser": "^7.0.1",
     "concurrently": "^8.2.2",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",
@@ -47,13 +47,13 @@
     "ionic-svelte": "^0.5.82",
     "librebase": "file:lib/librebase/packages/js",
     "librebase-svelte": "file:lib/librebase/packages/svelte",
-    "prettier": "^3.2.4",
+    "prettier": "^3.2.5",
     "prettier-plugin-prisma": "^5.0.0",
-    "prettier-plugin-svelte": "^3.1.2",
-    "svelte": "^5.0.0-next.40",
-    "svelte-check": "^3.6.3",
+    "prettier-plugin-svelte": "^3.2.1",
+    "svelte": "^5.0.0-next.58",
+    "svelte-check": "^3.6.4",
     "tslib": "^2.6.2",
     "typescript": "~5.3.3",
-    "vite": "^5.0.12"
+    "vite": "^5.1.3"
   }
 }

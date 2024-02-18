@@ -2,7 +2,7 @@
   import { App } from '@capacitor/app';
   import { Capacitor } from '@capacitor/core';
   import 'ionic-svelte/components/ion-app';
-  import { LocalStorageChannel, channel } from 'librebase/channel';
+  import { data, LocalStorageDriver } from 'librebase';
   import { browser } from '$app/environment';
   import { Drawer } from '$lib/client/components/drawer';
   import { UrlState } from '$lib/client/components/url-state';
@@ -11,7 +11,7 @@
 
   let ionReady = false;
 
-  channel().push(new LocalStorageChannel());
+  data().registerChannelDriver(new LocalStorageDriver());
 
   if (browser) {
     import('ionic-svelte').then(({ setupIonicBase }) => setupIonicBase() && (ionReady = true));

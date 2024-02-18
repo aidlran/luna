@@ -5,12 +5,12 @@
   import 'ionic-svelte/components/ion-label.js';
   import 'ionic-svelte/components/ion-list.js';
   import 'ionic-svelte/components/ion-note.js';
-  import { session } from 'librebase';
+  import { keyring } from 'librebase';
   import { fade, slide } from 'svelte/transition';
   import { ionFocus } from '$lib/client/actions/focus';
   import Header from '$lib/client/components/header/Header.svelte';
   import { fragmentParam } from '$lib/client/components/url-state';
-  import type { SessionMetadata } from '$lib/client/types/session-metadata';
+  import type { KeyringMetadata } from '$lib/client/types/keyring-metadata';
 
   const thenParam = fragmentParam('then');
 
@@ -56,8 +56,8 @@
       return;
     }
 
-    session<SessionMetadata>()
-      .create.asPromise({
+    keyring()
+      .create<KeyringMetadata>({
         passphrase,
         metadata: { displayName },
       })

@@ -3,39 +3,34 @@
 
   import 'ionic-svelte/components/ion-avatar';
   import 'ionic-svelte/components/ion-text';
-  import { session } from 'librebase';
-  import { activeSession, allSessions } from 'librebase-svelte';
+  import { keyring, type Keyring } from 'librebase';
+  import { activeSession } from 'librebase-svelte';
   import { goto } from '$app/navigation';
   import { page } from '$app/stores';
   import { ionFocus } from '$lib/client/actions/focus';
   import Header from '$lib/client/components/header/Header.svelte';
   import { fragmentParam } from '$lib/client/components/url-state';
-  import type { SessionMetadata } from '$lib/client/types/session-metadata';
+  import type { KeyringMetadata } from '$lib/client/types/keyring-metadata';
+
+  const { getAll, activate } = keyring();
 
   const activeSessionStore = activeSession();
-  const allSessionsStore = allSessions<SessionMetadata>();
-  let passphraseInput: HTMLIonInputElement;
-  let passphraseError: string | undefined;
-  let targetSession: number | undefined;
+  const thenParam = fragmentParam('then');
 
-  const { getSessions, load: loadSession } = session();
+  let target: Keyring<KeyringMetadata> | undefined;
 
-  let thenParam = fragmentParam('then');
-
-  getSessions((sessions) => {
-    const sessionsArray = Object.values(sessions);
-    if (sessionsArray.length == 1) {
-      targetSession = sessionsArray[0].id;
-    }
+  const keyringsPromise = getAll<KeyringMetadata>().then((keyrings) => {
+    if (keyrings.length == 1) target = keyrings[0];
+    return keyrings;
   });
 
-  function submit() {
-    if (targetSession) {
-      loadSession(
-        targetSession,
-        passphraseInput.value as string,
-        () => $thenParam && goto($thenParam),
-      );
+  let passphraseInput: HTMLIonInputElement;
+  let passphraseError: string | undefined;
+
+  async function submit() {
+    if (target) {
+      await activate(target.id, passphraseInput.value as string);
+      if ($thenParam) goto($thenParam);
     }
   }
 </script>
@@ -45,8 +40,7 @@
 <ion-content class="ion-padding">
   {#if !$activeSessionStore}
     <ion-card>
-      {#if $allSessionsStore[targetSession]}
-        {@const { metadata } = $allSessionsStore[targetSession]}
+      {#if target}
         <ion-card-header>
           <ion-card-title style:text-align="center">Unlock session</ion-card-title>
         </ion-card-header>
@@ -54,10 +48,10 @@
           <div class="flex" style:flex-flow="column">
             <ion-avatar>
               <ion-text color="light">
-                {metadata?.displayName.charAt(0).toLocaleUpperCase()}
+                {target.metadata?.displayName.charAt(0).toLocaleUpperCase()}
               </ion-text>
             </ion-avatar>
-            <span>{metadata?.displayName}</span>
+            <span>{target.metadata?.displayName}</span>
           </div>
 
           <form class="ion-margin" on:submit|preventDefault={submit}>
@@ -87,7 +81,7 @@
           fill="clear"
           expand="block"
           class="ion-margin-top"
-          on:click={() => (targetSession = undefined)}
+          on:click={() => (target = undefined)}
         >
           Use a different session
         </ion-button>
@@ -97,19 +91,21 @@
         </ion-card-header>
         <ion-card-content>
           <ion-list>
-            {#each Object.values($allSessionsStore) as session}
-              <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
-              <ion-item button on:click={() => (targetSession = session.id)}>
-                <ion-label class="flex">
-                  <ion-avatar>
-                    <ion-text color="light">
-                      {session.metadata?.displayName.charAt(0).toLocaleUpperCase()}
-                    </ion-text>
-                  </ion-avatar>
-                  <span>{session.metadata?.displayName}</span>
-                </ion-label>
-              </ion-item>
-            {/each}
+            {#await keyringsPromise then keyrings}
+              {#each keyrings as keyring}
+                <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
+                <ion-item button on:click={() => (target = keyring)}>
+                  <ion-label class="flex">
+                    <ion-avatar>
+                      <ion-text color="light">
+                        {keyring.metadata?.displayName.charAt(0).toLocaleUpperCase()}
+                      </ion-text>
+                    </ion-avatar>
+                    <span>{keyring.metadata?.displayName}</span>
+                  </ion-label>
+                </ion-item>
+              {/each}
+            {/await}
           </ion-list>
         </ion-card-content>
 

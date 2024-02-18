@@ -4,7 +4,7 @@
   import { Capacitor } from '@capacitor/core';
   import type { SelectChangeEventDetail } from '@ionic/core';
   import 'ionic-svelte/components/ion-alert';
-  import { session } from 'librebase';
+  import { keyring } from 'librebase';
   import { activeSession } from 'librebase-svelte';
   import { page } from '$app/stores';
   import { fragmentParam } from '../url-state';
@@ -68,7 +68,7 @@
       text: 'Confirm',
       role: 'destructive',
       handler: () => {
-        session().clear();
+        keyring().clearActive();
         displayConfirmResetModal = false;
       },
     },
