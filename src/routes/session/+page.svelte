@@ -4,7 +4,7 @@
   import 'ionic-svelte/components/ion-avatar';
   import 'ionic-svelte/components/ion-text';
   import { keyring, type Keyring } from 'librebase';
-  import { activeSession } from 'librebase-svelte';
+  import { activeKeyring } from 'librebase-svelte';
   import { goto } from '$app/navigation';
   import { page } from '$app/stores';
   import { ionFocus } from '$lib/client/actions/focus';
@@ -14,7 +14,7 @@
 
   const { getAll, activate } = keyring();
 
-  const activeSessionStore = activeSession();
+  const activeSessionStore = activeKeyring();
   const thenParam = fragmentParam('then');
 
   let target: Keyring<KeyringMetadata> | undefined;

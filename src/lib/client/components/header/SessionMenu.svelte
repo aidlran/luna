@@ -5,12 +5,12 @@
   import type { SelectChangeEventDetail } from '@ionic/core';
   import 'ionic-svelte/components/ion-alert';
   import { keyring } from 'librebase';
-  import { activeSession } from 'librebase-svelte';
+  import { activeKeyring } from 'librebase-svelte';
   import { page } from '$app/stores';
   import { fragmentParam } from '../url-state';
   import { APPS } from './apps';
 
-  const activeSessionStore = activeSession();
+  const activeSessionStore = activeKeyring();
   const thenParam = fragmentParam('then');
 
   let selectElement: HTMLIonSelectElement | undefined;

@@ -20,7 +20,7 @@ jobs:
           node-version: 20
           cache: npm
       - uses: actions/configure-pages@v4
-      - run: npm ci --legacy-peer-deps
+      - run: npm ci
       - run: npm run build:web
       - uses: actions/upload-pages-artifact@v3
         with:
@@ -54,7 +54,7 @@ jobs:
           distribution: temurin
           java-version: '17'
           cache: gradle
-      - run: npm ci --legacy-peer-deps
+      - run: npm ci
       - run: npm run build:web
       - run: npx cap sync android
       - run: ./gradlew assemble --no-daemon
