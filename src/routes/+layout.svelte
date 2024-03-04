@@ -21,10 +21,6 @@
         else App.exitApp();
       });
     }
-    const meta = document.head.getElementsByTagName('meta').namedItem('viewport');
-    if (meta && Capacitor.isNativePlatform()) {
-      meta.content += ', minimum-scale=1, maximum-scale=1, user-scalable=no';
-    }
     keyCode({
       code: ['w', 'w', 's', 's', 'a', 'd', 'a', 'd', 'b', 'a'],
       activates: () => {
@@ -40,6 +36,12 @@
 <svelte:head>
   <title>LUNA</title>
   <meta name="description" content="LUNA: productivity assistant." />
+  <meta
+    name="viewport"
+    content={`width=device-width, initial-scale=1${
+      Capacitor.isNativePlatform() ? ', minimum-scale=1, maximum-scale=1, user-scalable=no' : ''
+    }`}
+  />
 </svelte:head>
 
 {#if ionReady}
