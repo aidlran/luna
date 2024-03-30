@@ -1,14 +1,13 @@
 <script lang="ts">
   /* eslint-disable no-undef -- HTMLIonInputElement is a custom component */
 
-  import { BIP39_WORDLIST_ENGLISH, keyring } from 'librebase';
+  import { BIP39_WORDLIST_ENGLISH, importKeyring } from 'librebase';
   import { onMount } from 'svelte';
   import { fade, slide } from 'svelte/transition';
   import { goto } from '$app/navigation';
   import { ionFocus } from '$lib/client/actions/focus';
   import Header from '$lib/client/components/header/Header.svelte';
   import { fragmentParam } from '$lib/client/components/url-state';
-  import type { KeyringMetadata } from '$lib/client/types/keyring-metadata';
 
   const INPUTS = Array.from<HTMLIonInputElement>({ length: 12 });
 
@@ -107,12 +106,11 @@
           mnemonic = `${mnemonic} ${input.value}`;
         }
 
-        keyring()
-          .import<KeyringMetadata>({
-            mnemonic: mnemonic.trimStart(),
-            passphrase,
-            metadata: { displayName },
-          })
+        importKeyring({
+          mnemonic: mnemonic.trimStart(),
+          passphrase,
+          metadata: { displayName },
+        })
           .then(() => {
             if ($thenParam) goto($thenParam);
           })

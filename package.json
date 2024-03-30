@@ -17,6 +17,7 @@
   "scripts": {
     "build:android": "npm run build:web && cap sync && cap build android",
     "build:web": "npm run build --workspaces && svelte-kit sync && vite build",
+    "ci": "npm run build:web && npm run lint",
     "format": "prettier --write .",
     "lc": "echo LUNA: $(find src -type f -exec cat {} \\; | wc -l) lines",
     "lint": "eslint .",
@@ -27,17 +28,17 @@
     "start:librebase": "cd lib/librebase && npm start"
   },
   "devDependencies": {
-    "@capacitor/android": "^5.7.1",
+    "@capacitor/android": "^5.7.4",
     "@capacitor/app": "^5.0.7",
-    "@capacitor/cli": "^5.7.1",
-    "@capacitor/core": "^5.7.1",
-    "@ionic/core": "^7.7.3",
+    "@capacitor/cli": "^5.7.4",
+    "@capacitor/core": "^5.7.4",
+    "@ionic/core": "^7.8.2",
     "@sveltejs/adapter-static": "^3.0.1",
-    "@sveltejs/kit": "^2.5.2",
+    "@sveltejs/kit": "^2.5.5",
     "@sveltejs/vite-plugin-svelte": "^3.0.2",
     "@types/estree": "^1.0.5",
-    "@typescript-eslint/eslint-plugin": "^7.1.0",
-    "@typescript-eslint/parser": "^7.1.0",
+    "@typescript-eslint/eslint-plugin": "^7.4.0",
+    "@typescript-eslint/parser": "^7.4.0",
     "concurrently": "^8.2.2",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
@@ -50,9 +51,9 @@
     "prettier": "^3.2.5",
     "prettier-plugin-svelte": "^3.2.2",
     "svelte": "^4.2.12",
-    "svelte-check": "^3.6.6",
+    "svelte-check": "^3.6.8",
     "tslib": "^2.6.2",
-    "typescript": "~5.3.3",
-    "vite": "^5.1.4"
+    "typescript": "~5.4.3",
+    "vite": "^5.2.7"
   }
 }

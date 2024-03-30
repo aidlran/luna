@@ -4,7 +4,7 @@
   import { Capacitor } from '@capacitor/core';
   import type { SelectChangeEventDetail } from '@ionic/core';
   import 'ionic-svelte/components/ion-alert';
-  import { keyring } from 'librebase';
+  import { deactivateKeyring } from 'librebase';
   import { activeKeyring } from 'librebase-svelte';
   import { page } from '$app/stores';
   import { fragmentParam } from '../url-state';
@@ -68,7 +68,7 @@
       text: 'Confirm',
       role: 'destructive',
       handler: () => {
-        keyring().clearActive();
+        deactivateKeyring();
         displayConfirmResetModal = false;
       },
     },

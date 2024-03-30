@@ -5,12 +5,11 @@
   import 'ionic-svelte/components/ion-label.js';
   import 'ionic-svelte/components/ion-list.js';
   import 'ionic-svelte/components/ion-note.js';
-  import { keyring } from 'librebase';
+  import { createKeyring } from 'librebase';
   import { fade, slide } from 'svelte/transition';
   import { ionFocus } from '$lib/client/actions/focus';
   import Header from '$lib/client/components/header/Header.svelte';
   import { fragmentParam } from '$lib/client/components/url-state';
-  import type { KeyringMetadata } from '$lib/client/types/keyring-metadata';
 
   const thenParam = fragmentParam('then');
 
@@ -56,11 +55,10 @@
       return;
     }
 
-    keyring()
-      .create<KeyringMetadata>({
-        passphrase,
-        metadata: { displayName },
-      })
+    createKeyring({
+      passphrase,
+      metadata: { displayName },
+    })
       .then((result) => {
         mnemonic = result.mnemonic.split(' ');
 

@@ -3,7 +3,7 @@
 
   import 'ionic-svelte/components/ion-avatar';
   import 'ionic-svelte/components/ion-text';
-  import { keyring, type Keyring } from 'librebase';
+  import { activateKeyring, getAllKeyrings, type Keyring } from 'librebase';
   import { activeKeyring } from 'librebase-svelte';
   import { goto } from '$app/navigation';
   import { page } from '$app/stores';
@@ -12,14 +12,12 @@
   import { fragmentParam } from '$lib/client/components/url-state';
   import type { KeyringMetadata } from '$lib/client/types/keyring-metadata';
 
-  const { getAll, activate } = keyring();
-
   const activeSessionStore = activeKeyring();
   const thenParam = fragmentParam('then');
 
   let target: Keyring<KeyringMetadata> | undefined;
 
-  const keyringsPromise = getAll<KeyringMetadata>().then((keyrings) => {
+  const keyringsPromise = getAllKeyrings<KeyringMetadata>().then((keyrings) => {
     if (keyrings.length == 1) target = keyrings[0];
     return keyrings;
   });
@@ -29,7 +27,7 @@
 
   async function submit() {
     if (target) {
-      await activate(target.id, passphraseInput.value as string);
+      await activateKeyring(target.id, passphraseInput.value as string);
       if ($thenParam) goto($thenParam);
     }
   }

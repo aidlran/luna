@@ -2,7 +2,7 @@
   import { App } from '@capacitor/app';
   import { Capacitor } from '@capacitor/core';
   import 'ionic-svelte/components/ion-app';
-  import { channel, indexedDBDriver } from 'librebase';
+  import { indexedDBDriver, registerDriver } from 'librebase';
   import { browser } from '$app/environment';
   import { Drawer } from '$lib/client/components/drawer';
   import { UrlState } from '$lib/client/components/url-state';
@@ -11,10 +11,9 @@
 
   let ionReady = false;
 
-  channel().registerDriver(indexedDBDriver());
-
   if (browser) {
-    import('ionic-svelte').then(({ setupIonicBase }) => setupIonicBase() && (ionReady = true));
+    indexedDBDriver().then(registerDriver);
+    import('ionic-svelte').then((m) => m.setupIonicBase() && (ionReady = true));
     if (Capacitor.getPlatform() === 'android') {
       App.addListener('backButton', (event) => {
         if (event.canGoBack) window.history.back();
