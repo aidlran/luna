@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     namespace "dev.loughran.luna"
-    compileSdkVersion rootProject.ext.compileSdkVersion
+    compileSdk rootProject.ext.compileSdkVersion
     defaultConfig {
         applicationId "dev.loughran.luna"
         minSdkVersion rootProject.ext.minSdkVersion
