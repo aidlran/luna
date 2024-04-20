@@ -52,6 +52,6 @@
 {/if}
 
 <style>
+  @import './palette.css';
   @import './style.css';
-  @import './variables.css';
 </style>
