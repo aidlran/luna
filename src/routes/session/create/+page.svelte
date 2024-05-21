@@ -1,11 +1,11 @@
 <script lang="ts">
   /* eslint-disable no-undef -- HTMLIonInputElement is a custom component */
 
+  import { createKeyring } from '@librebase/keyrings';
   import 'ionic-svelte/components/ion-item.js';
   import 'ionic-svelte/components/ion-label.js';
   import 'ionic-svelte/components/ion-list.js';
   import 'ionic-svelte/components/ion-note.js';
-  import { createKeyring } from 'librebase';
   import { fade, slide } from 'svelte/transition';
   import { ionFocus } from '$lib/client/actions/focus';
   import Header from '$lib/client/components/header/Header.svelte';

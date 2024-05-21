@@ -4,7 +4,7 @@
   import { APPS } from '$lib/client/components/header/apps';
 
   if (browser) {
-    goto(APPS.find(({ id }) => id == 'pass').path, {
+    goto(APPS.find(({ id }) => id === 'projects').path, {
       replaceState: true,
     });
   }

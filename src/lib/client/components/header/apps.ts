@@ -7,6 +7,7 @@ export const APPS: App<AppID>[] = [
     id: 'pass',
     name: 'LUNA Pass',
     path: '/pass/',
+    devOnly: true,
   },
   {
     id: 'projects',

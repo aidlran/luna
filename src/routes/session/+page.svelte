@@ -1,10 +1,10 @@
 <script lang="ts">
   /* eslint-disable no-undef -- HTMLIonInputElement is a custom component */
 
+  import { activateKeyring, getAllKeyrings, type Keyring } from '@librebase/keyrings';
+  import { activeKeyring } from '@librebase/svelte';
   import 'ionic-svelte/components/ion-avatar';
   import 'ionic-svelte/components/ion-text';
-  import { activateKeyring, getAllKeyrings, type Keyring } from 'librebase';
-  import { activeKeyring } from 'librebase-svelte';
   import { goto } from '$app/navigation';
   import { page } from '$app/stores';
   import { ionFocus } from '$lib/client/actions/focus';

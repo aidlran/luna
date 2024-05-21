@@ -1,7 +1,7 @@
 <script lang="ts">
   /* eslint-disable no-undef -- HTMLIonInputElement is a custom component */
 
-  import { BIP39_WORDLIST_ENGLISH, importKeyring } from 'librebase';
+  import { BIP39_WORDLIST_ENGLISH, importKeyring } from '@librebase/keyrings';
   import { onMount } from 'svelte';
   import { fade, slide } from 'svelte/transition';
   import { goto } from '$app/navigation';

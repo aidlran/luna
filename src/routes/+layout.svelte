@@ -2,7 +2,7 @@
   import { App } from '@capacitor/app';
   import { Capacitor } from '@capacitor/core';
   import 'ionic-svelte/components/ion-app';
-  import { indexedDBDriver, registerDriver } from 'librebase';
+  import { init } from 'librebase';
   import { browser } from '$app/environment';
   import { Drawer } from '$lib/client/components/drawer';
   import { UrlState } from '$lib/client/components/url-state';
@@ -10,9 +10,10 @@
   import { debugMode } from '$lib/client/stores/debug-mode';
 
   let ionReady = false;
+  let librebaseReady = false;
 
   if (browser) {
-    indexedDBDriver().then(registerDriver);
+    init().then(() => (librebaseReady = true));
     import('ionic-svelte').then((m) => m.setupIonicBase() && (ionReady = true));
     if (Capacitor.getPlatform() === 'android') {
       App.addListener('backButton', (event) => {
@@ -41,7 +42,7 @@
   <meta name="description" content="LUNA: productivity assistant." />
 </svelte:head>
 
-{#if ionReady}
+{#if ionReady && librebaseReady}
   <Drawer>
     <UrlState>
       <ion-app>

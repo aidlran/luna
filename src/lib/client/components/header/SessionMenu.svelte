@@ -3,9 +3,9 @@
 
   import { Capacitor } from '@capacitor/core';
   import type { SelectChangeEventDetail } from '@ionic/core';
+  import { deactivateKeyring } from '@librebase/keyrings';
+  import { activeKeyring } from '@librebase/svelte';
   import 'ionic-svelte/components/ion-alert';
-  import { deactivateKeyring } from 'librebase';
-  import { activeKeyring } from 'librebase-svelte';
   import { page } from '$app/stores';
   import { fragmentParam } from '../url-state';
   import { APPS } from './apps';
