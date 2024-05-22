@@ -5,20 +5,18 @@ export type AppID = 'pass' | 'projects' | 'sessions';
 export const APPS: App<AppID>[] = [
   {
     id: 'pass',
-    name: 'LUNA Pass',
+    name: 'Pass',
     path: '/pass/',
     devOnly: true,
   },
   {
     id: 'projects',
-    name: 'LUNA Projects',
+    name: 'TODOs',
     path: '/projects/',
-    devOnly: true,
   },
   {
     id: 'sessions',
-    name: 'Session',
+    name: 'Sessions',
     path: '/session/',
-    devOnly: true,
   },
 ];

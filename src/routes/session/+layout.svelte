@@ -1,11 +1,4 @@
 <script>
-  import 'ionic-svelte/components/ion-button.js';
-  import 'ionic-svelte/components/ion-card.js';
-  import 'ionic-svelte/components/ion-card-header.js';
-  import 'ionic-svelte/components/ion-card-subtitle.js';
-  import 'ionic-svelte/components/ion-card-title.js';
-  import 'ionic-svelte/components/ion-content.js';
-  import 'ionic-svelte/components/ion-input.js';
   import { onDestroy } from 'svelte';
   import { fragmentParam } from '$lib/client/components/url-state';
 

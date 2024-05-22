@@ -1,6 +1,4 @@
 <script lang="ts">
-  import 'ionic-svelte/components/ion-select';
-  import 'ionic-svelte/components/ion-select-option';
   import { chevronBack } from 'ionicons/icons';
   import { page } from '$app/stores';
   import AppSelect from './app-select/AppSelect.svelte';

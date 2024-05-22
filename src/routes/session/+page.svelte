@@ -3,14 +3,12 @@
 
   import { activateKeyring, getAllKeyrings, type Keyring } from '@librebase/keyrings';
   import { activeKeyring } from '@librebase/svelte';
-  import 'ionic-svelte/components/ion-avatar';
-  import 'ionic-svelte/components/ion-text';
   import { goto } from '$app/navigation';
   import { page } from '$app/stores';
   import { ionFocus } from '$lib/client/actions/focus';
   import Header from '$lib/client/components/header/Header.svelte';
   import { fragmentParam } from '$lib/client/components/url-state';
-  import type { KeyringMetadata } from '$lib/client/types/keyring-metadata';
+  import type { KeyringMetadata } from '$lib/client/interfaces/keyring-metadata';
 
   const activeSessionStore = activeKeyring();
   const thenParam = fragmentParam('then');
