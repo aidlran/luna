@@ -25,7 +25,9 @@
 
   function replaceTaskList(newTaskList: Task[]) {
     putFile(newTaskList, 'application/json').then((hash) => {
-      deleteFile(Base58.decode(tasksRef));
+      if (tasksRef) {
+        deleteFile(Base58.decode(tasksRef));
+      }
       const b58Hash = hash.toBase58();
       localStorage.setItem('tasksRef', b58Hash);
       taskList = newTaskList;
