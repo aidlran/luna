@@ -1,26 +1,36 @@
-import { Identifier, getOne, putOne, type IdentifierSchema } from '@librebase/core';
+import { Identifier, IdentifierRegistry, getOne, putOne } from '@librebase/core';
 import { FS, deleteFile, getFile, putFile } from '@librebase/fs';
 import { safeParse } from 'valibot';
+import { browser } from '$app/environment';
+import { localOnlyInstanceID } from '../instances';
 import { TaskListSchema, type TaskList } from './task-list';
 
-const instanceID = 'localonly';
+const instanceID = localOnlyInstanceID;
+const key = 10000;
+const localTaskListID = new Identifier(key, []);
 
 let localTaskListRef: Identifier;
 
-export const LocalTaskListIdentifierSchema = {
-  key: 10000,
-  async parse(_, content) {
-    const fileID = new Identifier(content);
-    const file = await getFile<TaskList>(fileID.value);
-    if (!file || !safeParse(TaskListSchema, file, { abortEarly: true }).success) {
-      return;
-    }
-    localTaskListRef = fileID;
-    return file;
-  },
-} satisfies IdentifierSchema;
-
-const localTaskListID = new Identifier(LocalTaskListIdentifierSchema.key, []);
+if (browser) {
+  IdentifierRegistry.register(
+    {
+      key,
+      async parse(_, content) {
+        const fileID = new Identifier(content);
+        const file = await getFile<TaskList>(fileID.value);
+        if (!file || !safeParse(TaskListSchema, file, { abortEarly: true }).success) {
+          return;
+        }
+        localTaskListRef = fileID;
+        return file;
+      },
+    },
+    {
+      instanceID,
+      force: true,
+    },
+  );
+}
 
 export async function setLocalTaskList(newTaskList: TaskList) {
   const hash = await putFile(newTaskList, 'application/json', { instanceID });
