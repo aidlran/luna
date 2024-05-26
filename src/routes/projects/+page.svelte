@@ -1,6 +1,5 @@
 <script lang="ts">
-  import { Base58 } from '@librebase/core';
-  import { Hash, deleteFile, getFile, putFile } from '@librebase/fs';
+  import { deleteFile, getFile, putFile } from '@librebase/fs';
   import { IonPage } from 'ionic-svelte';
   import { closeOutline, trash } from 'ionicons/icons';
   import { ionFocus } from '$lib/client/actions/focus';
@@ -16,18 +15,12 @@
   let input: HTMLIonInputElement;
 
   if (tasksRef) {
-    // TODO: getFile accepts base58 string and has generic type
-    const hashbuf = Base58.decode(tasksRef);
-    getFile(new Hash(hashbuf[0], hashbuf.subarray(1))).then(
-      (result) => (taskList = result as Task[]),
-    );
+    getFile(tasksRef).then((result) => (taskList = result as Task[]));
   }
 
   function replaceTaskList(newTaskList: Task[]) {
     putFile(newTaskList, 'application/json').then((hash) => {
-      if (tasksRef) {
-        deleteFile(Base58.decode(tasksRef));
-      }
+      tasksRef && deleteFile(tasksRef);
       const b58Hash = hash.toBase58();
       localStorage.setItem('tasksRef', b58Hash);
       taskList = newTaskList;
