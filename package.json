@@ -10,15 +10,12 @@
   "author": "Aidan Loughran",
   "type": "module",
   "workspaces": [
-    "lib/librebase/lib/*",
-    "lib/librebase/packages/codec/*",
-    "lib/librebase/packages/driver/*",
-    "lib/librebase/packages/*"
+    "lib/astrobase"
   ],
   "scripts": {
     "build:android": "npm run build:web && cap sync && cap build android",
-    "build:librebase": "cd lib/librebase && npm run build",
-    "build:web": "npm run build:librebase && svelte-kit sync && vite build",
+    "build:astrobase": "npm run build -w lib/astrobase",
+    "build:web": "npm run build:astrobase && svelte-kit sync && vite build",
     "ci": "npm run build:web && npm run lint",
     "format": "conc npm:format:*",
     "format:prettier": "prettier --write .",
@@ -29,20 +26,17 @@
     "lint:sort-package-json": "sort-package-json --check",
     "preview": "vite preview",
     "start": "conc -k npm:start:*",
-    "start:librebase": "cd lib/librebase && npm start",
+    "start:astrobase": "npm start -w lib/astrobase",
     "start:luna:app": "svelte-kit sync && vite dev",
     "start:luna:svelte-check": "svelte-check --watch --preserveWatchOutput"
   },
   "devDependencies": {
+    "@astrobase/core": "file:lib/astrobase",
     "@capacitor/android": "^6.0.0",
     "@capacitor/app": "^6.0.0",
     "@capacitor/cli": "^6.0.0",
     "@capacitor/core": "^6.0.0",
     "@ionic/core": "^7.8.6",
-    "@librebase/codec-json": "file:lib/librebase/packagees/codec/json",
-    "@librebase/core": "file:lib/librebase/packagees/core",
-    "@librebase/driver-indexeddb": "file:lib/librebase/packagees/driver/indexeddb",
-    "@librebase/fs": "file:lib/librebase/packagees/fs",
     "@sveltejs/adapter-static": "^3.0.1",
     "@sveltejs/kit": "^2.5.10",
     "@sveltejs/vite-plugin-svelte": "^3.1.0",
