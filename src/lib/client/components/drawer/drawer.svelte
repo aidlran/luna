@@ -56,7 +56,7 @@
     class="overlay"
     style:background-color={dim && $control.isOpen ? '#0002' : '#0000'}
     style:pointer-events={$control.isOpen && !clickthrough ? 'initial' : 'none'}
-  />
+  ></div>
 
   <div
     role="none"
@@ -69,7 +69,6 @@
   >
     {#if $control.isOpen}
       <button class="close" on:click={control.close}>X</button>
-      <svelte:component this={$control.component} {...$control.props} />
     {/if}
   </div>
 </div>

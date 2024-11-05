@@ -1,15 +1,15 @@
-import type { ComponentProps, ComponentType, SvelteComponent } from 'svelte';
+import type { Component, ComponentProps, SvelteComponent } from 'svelte';
 import { writable, type Readable } from 'svelte/store';
 
 export interface DrawerState {
-  component?: ComponentType;
+  component?: Component;
   props?: ComponentProps<SvelteComponent>;
   isOpen: boolean;
 }
 
 export interface DrawerControl extends Readable<DrawerState> {
   close: () => void;
-  open: <T extends SvelteComponent>(component: ComponentType<T>, props?: ComponentProps<T>) => void;
+  open: <T extends Component>(component: T, props?: ComponentProps<T>) => void;
 }
 
 export function drawerControl(): DrawerControl {
@@ -19,7 +19,7 @@ export function drawerControl(): DrawerControl {
     set({ isOpen: false });
   }
 
-  function open<T extends SvelteComponent>(component: ComponentType<T>, props?: ComponentProps<T>) {
+  function open<T extends Component>(component: T, props?: ComponentProps<T>) {
     set({
       component,
       props,

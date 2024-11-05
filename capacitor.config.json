@@ -1,8 +1,0 @@
-{
-  "appId": "dev.loughran.luna",
-  "appName": "LUNA",
-  "webDir": "build",
-  "server": {
-    "androidScheme": "https"
-  }
-}

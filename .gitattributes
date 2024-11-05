@@ -1,4 +1,2 @@
-* text=auto
 .eslintrc.* linguist-vendored
 *.config.*  linguist-vendored
-*.java      linguist-vendored

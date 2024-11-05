@@ -1,7 +1,5 @@
-# dir
-.svelte-kit
-/build
-node_modules
+.svelte-kit/
+build/
+node_modules/
 
-# file
 vite.config.js.*

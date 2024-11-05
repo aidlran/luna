@@ -1,6 +1,6 @@
 <!-- https://loading.io/css/ -->
 
-<span class="loading-spinner" />
+<span class="loading-spinner"></span>
 
 <style>
   .loading-spinner,
