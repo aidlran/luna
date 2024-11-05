@@ -44,7 +44,7 @@
     {#if root.children}
       {#each root.children as cid, i}
         <tr>
-          <td class="border" colspan="2">
+          <td class="border">
             {#await getContent<File<Entity>>(cid).then((file) => file?.getValue() as Promise<Entity>)}
               Loading...
             {:then task}
@@ -52,20 +52,34 @@
                 <EditableText
                   value={task.name}
                   onedit={async (newName) => {
-                    task.name = newName;
-                    const file = await new File().setMediaType('application/json').setValue(task);
-                    (root.children ??= [])[i] = await putImmutable(file);
-                    await setRoot(root);
-                    pull();
-                    deleteContent(cid);
+                    if (typeof newName === 'string' && newName !== task.name && root.children) {
+                      task.name = newName;
+                      const file = await new File().setMediaType('application/json').setValue(task);
+                      root.children[i] = await putImmutable(file);
+                      await setRoot(root);
+                      pull();
+                      deleteContent(cid);
+                    }
                   }}
                 />
               {:else}
-                <span>Returned nothing :o</span>
+                Returned nothing :o
               {/if}
             {:catch err}
               {err}
             {/await}
+          </td>
+          <td class="border text-right">
+            <button
+              onclick={async () => {
+                if (root.children) {
+                  root.children.splice(i, 1);
+                  await setRoot(root);
+                  pull();
+                  deleteContent(cid);
+                }
+              }}>Delete</button
+            >
           </td>
         </tr>
       {/each}
