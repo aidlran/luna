@@ -1,15 +1,11 @@
 <script lang="ts">
   import { deleteContent, File, getContent, putImmutable } from '@astrobase/core';
+  import { scale } from 'svelte/transition';
   import EditableText from '$lib/client/components/editable-text/editable-text.svelte';
   import type { Entity } from '$lib/client/data/entity.svelte';
-  import { getRoot, setRoot } from '$lib/client/data/root';
-
-  let root = $state.raw<Entity>({});
+  import { root } from '$lib/client/data/root.svelte';
 
   let addingTask = $state(false);
-
-  const pull = () => getRoot().then((r) => (root = r ?? {}));
-  pull();
 
   async function addTask(name: string) {
     if (name) {
@@ -17,8 +13,7 @@
       const file = await new File().setMediaType('application/json').setValue(entity);
       const cid = await putImmutable(file);
       (root.children ??= []).push(cid);
-      await setRoot(root);
-      pull();
+      root.save();
     }
     addingTask = false;
   }
@@ -35,7 +30,7 @@
   </thead>
   <tbody>
     {#if addingTask}
-      <tr>
+      <tr in:scale>
         <td colspan="2">
           <EditableText editing={true} placeholder="New task" onedit={addTask} />
         </td>
@@ -43,7 +38,7 @@
     {/if}
     {#if root.children}
       {#each root.children as cid, i}
-        <tr>
+        <tr out:scale>
           <td class="border">
             {#await getContent<File<Entity>>(cid).then((file) => file?.getValue() as Promise<Entity>)}
               Loading...
@@ -56,8 +51,7 @@
                       task.name = newName;
                       const file = await new File().setMediaType('application/json').setValue(task);
                       root.children[i] = await putImmutable(file);
-                      await setRoot(root);
-                      pull();
+                      root.save();
                       deleteContent(cid);
                     }
                   }}
@@ -71,11 +65,10 @@
           </td>
           <td class="border text-right">
             <button
-              onclick={async () => {
+              onclick={() => {
                 if (root.children) {
                   root.children.splice(i, 1);
-                  await setRoot(root);
-                  pull();
+                  root.save();
                   deleteContent(cid);
                 }
               }}>Delete</button
