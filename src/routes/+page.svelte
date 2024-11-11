@@ -25,6 +25,7 @@
     <tr>
       <th class="text-left border">Task</th>
       <th class="text-left border">Created</th>
+      <th class="text-left border">Updated</th>
       <th class="text-right border">
         <button disabled={!!addingTask} onclick={() => (addingTask = true)}>Add task</button>
       </th>
@@ -57,6 +58,9 @@
           </td>
           <td class="border">
             {ent.created?.toLocaleDateString()}
+          </td>
+          <td class="border">
+            {ent.updated?.toLocaleDateString()}
           </td>
           <td class="border text-right">
             <button

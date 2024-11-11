@@ -10,19 +10,31 @@ export interface EntityContent {
   name?: string;
   children?: ContentIdentifier[];
   parent?: ContentIdentifier;
+  updated?: number;
+  version: number;
 }
+
+const toD = (ts?: number) => (ts ? new Date(ts * 1e3) : undefined);
+const toTS = (d?: Date) => (d ? Math.floor(d.getTime() / 1e3) : undefined);
 
 export abstract class Entity {
   name = $state<string>();
   parent = $state<ContentIdentifier>();
   children = $state<ContentIdentifier[]>();
   created = $state<Date>();
+  updated = $state<Date>();
 
   protected get file() {
-    return new File()
+    return new File<EntityContent>()
       .setMediaType('application/json')
-      .setTimestamp(this.created ? Math.floor(this.created.getTime() / 1e3) : undefined)
-      .setValue({ name: this.name, children: this.children, parent: this.parent, version: 1 });
+      .setTimestamp(toTS(this.created))
+      .setValue({
+        name: this.name,
+        children: this.children,
+        parent: this.parent,
+        updated: toTS(new Date()),
+        version: 1,
+      });
   }
 
   protected async parse(file?: File<EntityContent>) {
@@ -31,10 +43,8 @@ export abstract class Entity {
       this.name = ent.name;
       this.children = ent.children;
       this.parent = ent.parent;
-      const ts = file?.timestamp;
-      if (ts) {
-        this.created = new Date(ts * 1e3);
-      }
+      this.created = toD(file?.timestamp);
+      this.updated = toD(ent.updated);
     }
   }
 }
