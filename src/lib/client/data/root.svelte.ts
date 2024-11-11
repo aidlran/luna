@@ -1,28 +1,21 @@
-import { ContentIdentifier, File, getMutable, putMutable } from '@astrobase/core';
-import type { Entity } from './entity.svelte';
+import { File, getMutable, putMutable } from '@astrobase/core';
+import { Entity, type EntityContent, type ImmutableEntity } from './entity.svelte';
 
 const key = 'tasks';
 
-class Root implements Entity {
-  name = $state<string>();
-  children = $state<ContentIdentifier[]>();
-
+class Root extends Entity {
   constructor() {
+    super();
     setTimeout(() => this.pull());
   }
 
   async pull() {
-    const file = await getMutable<Entity>(key);
-    const value = (await file?.getValue()) as Entity;
-    this.name = value?.name;
-    this.children = value?.children;
+    const file = (await getMutable<ImmutableEntity>(key)) as File<EntityContent> | undefined;
+    await this.parse(file);
   }
 
   async save() {
-    const file = await new File()
-      .setMediaType('application/json')
-      .setValue({ name: this.name, children: this.children });
-    await putMutable(key, file, {});
+    await putMutable(key, await this.file, {});
   }
 }
 

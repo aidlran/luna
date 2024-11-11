@@ -1,19 +1,20 @@
 <script lang="ts">
-  import { deleteContent, File, getContent, putImmutable } from '@astrobase/core';
-  import { scale } from 'svelte/transition';
+  import { deleteContent } from '@astrobase/core';
   import EditableText from '$lib/client/components/editable-text/editable-text.svelte';
-  import type { Entity } from '$lib/client/data/entity.svelte';
+  import { ImmutableEntity } from '$lib/client/data/entity.svelte';
   import { root } from '$lib/client/data/root.svelte';
 
   let addingTask = $state(false);
 
   async function addTask(name: string) {
     if (name) {
-      const entity: Entity = { name };
-      const file = await new File().setMediaType('application/json').setValue(entity);
-      const cid = await putImmutable(file);
-      (root.children ??= []).push(cid);
-      root.save();
+      const entity = new ImmutableEntity();
+      entity.name = name;
+      const cid = await entity.save();
+      if (cid) {
+        (root.children ??= []).unshift(cid);
+        root.save();
+      }
     }
     addingTask = false;
   }
@@ -22,46 +23,40 @@
 <table class="w-full">
   <thead>
     <tr>
-      <th class="text-left">Task</th>
-      <th class="text-right">
+      <th class="text-left border">Task</th>
+      <th class="text-left border">Created</th>
+      <th class="text-right border">
         <button disabled={!!addingTask} onclick={() => (addingTask = true)}>Add task</button>
       </th>
     </tr>
   </thead>
   <tbody>
     {#if addingTask}
-      <tr in:scale>
-        <td colspan="2">
+      <tr>
+        <td colspan="3">
           <EditableText editing={true} placeholder="New task" onedit={addTask} />
         </td>
       </tr>
     {/if}
     {#if root.children}
       {#each root.children as cid, i}
-        <tr out:scale>
+        {@const ent = new ImmutableEntity(cid)}
+        <tr>
           <td class="border">
-            {#await getContent<File<Entity>>(cid).then((file) => file?.getValue() as Promise<Entity>)}
-              Loading...
-            {:then task}
-              {#if task}
-                <EditableText
-                  value={task.name}
-                  onedit={async (newName) => {
-                    if (typeof newName === 'string' && newName !== task.name && root.children) {
-                      task.name = newName;
-                      const file = await new File().setMediaType('application/json').setValue(task);
-                      root.children[i] = await putImmutable(file);
-                      root.save();
-                      deleteContent(cid);
-                    }
-                  }}
-                />
-              {:else}
-                Returned nothing :o
-              {/if}
-            {:catch err}
-              {err}
-            {/await}
+            <EditableText
+              value={ent.name}
+              onedit={async (newName) => {
+                if (typeof newName === 'string' && newName !== ent.name && root.children) {
+                  ent.name = newName;
+                  root.children[i] = await ent.save();
+                  root.save();
+                  deleteContent(cid);
+                }
+              }}
+            />
+          </td>
+          <td class="border">
+            {ent.created?.toLocaleDateString()}
           </td>
           <td class="border text-right">
             <button
