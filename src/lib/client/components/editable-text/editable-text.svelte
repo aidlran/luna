@@ -5,10 +5,23 @@
     editing?: boolean;
     placeholder?: string;
     value?: string;
+    validate?: (value: string) => boolean;
+    transform?: (value: string) => string;
+    render?: (value: string) => string;
     onedit?: (value: string) => void;
   }
 
-  let { editing = $bindable(false), placeholder, value = $bindable(''), onedit }: Props = $props();
+  let {
+    editing = $bindable(false),
+    placeholder,
+    value = $bindable(''),
+    render,
+    transform,
+    validate,
+    onedit,
+  }: Props = $props();
+
+  let rendered = $derived(render ? render(value) : value);
 
   let input = $state<HTMLInputElement>();
 
@@ -23,8 +36,10 @@
   }
 
   function stopEditing() {
-    value = value.trim();
-    onedit?.(value);
+    if (input && validate?.(input.value) !== false) {
+      value = transform ? transform(input.value) : input.value;
+      onedit?.(value);
+    }
     editing = false;
   }
 </script>
@@ -35,11 +50,11 @@
       class="w-full"
       {placeholder}
       bind:this={input}
-      bind:value
+      {value}
       onblur={stopEditing}
       onkeydown={(e) => e.key == 'Escape' && stopEditing()}
     />
   </form>
 {:else}
-  <button class="text-left w-full" onclick={startEditing}>{value}</button>
+  <button class="text-left w-full min-h-8 cursor-pointer" onclick={startEditing}>{rendered}</button>
 {/if}

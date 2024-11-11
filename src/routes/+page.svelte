@@ -24,6 +24,8 @@
   <thead>
     <tr>
       <th class="text-left border">Task</th>
+      <th class="text-left border">Start</th>
+      <th class="text-left border">End</th>
       <th class="text-left border">Created</th>
       <th class="text-left border">Updated</th>
       <th class="text-right border">
@@ -34,8 +36,13 @@
   <tbody>
     {#if addingTask}
       <tr>
-        <td colspan="3">
-          <EditableText editing={true} placeholder="New task" onedit={addTask} />
+        <td colspan="6">
+          <EditableText
+            editing={true}
+            placeholder="New task"
+            transform={(v) => v.trim()}
+            onedit={addTask}
+          />
         </td>
       </tr>
     {/if}
@@ -46,6 +53,7 @@
           <td class="border">
             <EditableText
               value={ent.name}
+              transform={(v) => v.trim()}
               onedit={async (newName) => {
                 if (typeof newName === 'string' && newName !== ent.name && root.children) {
                   ent.name = newName;
@@ -55,6 +63,66 @@
                 }
               }}
             />
+          </td>
+          <td class="border">
+            <EditableText
+              value={ent.start?.toISOString()}
+              placeholder="YYYY-MM-DD HH:mm:ss"
+              render={(v) => (v ? new Date(v).toLocaleString() : '')}
+              transform={(v) => new Date(v).toISOString()}
+              validate={(v) => (v ? !isNaN(Date.parse(v)) : true)}
+              onedit={async (start) => {
+                const newDate = new Date(start);
+                if (newDate.getTime() !== ent.start?.getTime() && root.children) {
+                  ent.start = newDate;
+                  root.children[i] = await ent.save();
+                  root.save();
+                  deleteContent(cid);
+                }
+              }}
+            />
+            {#if ent.start}
+              <button
+                onclick={async () => {
+                  if (root.children) {
+                    ent.start = undefined;
+                    root.children[i] = await ent.save();
+                    root.save();
+                    deleteContent(cid);
+                  }
+                }}>x</button
+              >
+            {/if}
+          </td>
+          <td class="border">
+            <EditableText
+              value={ent.end?.toISOString()}
+              placeholder="YYYY-MM-DD HH:mm:ss"
+              render={(v) => (v ? new Date(v).toLocaleString() : '')}
+              transform={(v) => (v ? new Date(v).toISOString() : '')}
+              validate={(v) => (v ? !isNaN(Date.parse(v)) : true)}
+              onedit={async (end) => {
+                const newDate = new Date(end);
+                if (newDate.getTime() !== ent.start?.getTime() && root.children) {
+                  ent.end = newDate;
+                  root.children[i] = await ent.save();
+                  root.save();
+                  deleteContent(cid);
+                }
+              }}
+            />
+            {#if ent.end}
+              <button
+                onclick={async () => {
+                  if (root.children) {
+                    ent.end = undefined;
+                    root.children[i] = await ent.save();
+                    root.save();
+                    deleteContent(cid);
+                  }
+                }}>x</button
+              >
+            {/if}
           </td>
           <td class="border">
             {ent.created?.toLocaleDateString()}

@@ -10,6 +10,8 @@ export interface EntityContent {
   name?: string;
   children?: ContentIdentifier[];
   parent?: ContentIdentifier;
+  start?: number;
+  end?: number;
   updated?: number;
   version: number;
 }
@@ -19,10 +21,13 @@ const toTS = (d?: Date) => (d ? Math.floor(d.getTime() / 1e3) : undefined);
 
 export abstract class Entity {
   name = $state<string>();
-  parent = $state<ContentIdentifier>();
   children = $state<ContentIdentifier[]>();
+  parent = $state<ContentIdentifier>();
+  start = $state<Date>();
+  end = $state<Date>();
   created = $state<Date>();
   updated = $state<Date>();
+  version?: number;
 
   protected get file() {
     return new File<EntityContent>()
@@ -32,6 +37,8 @@ export abstract class Entity {
         name: this.name,
         children: this.children,
         parent: this.parent,
+        start: toTS(this.start),
+        end: toTS(this.end),
         updated: toTS(new Date()),
         version: 1,
       });
@@ -43,8 +50,11 @@ export abstract class Entity {
       this.name = ent.name;
       this.children = ent.children;
       this.parent = ent.parent;
+      this.start = toD(ent.start);
+      this.end = toD(ent.end);
       this.created = toD(file?.timestamp);
       this.updated = toD(ent.updated);
+      this.version = ent.version;
     }
   }
 }
