@@ -1,7 +1,7 @@
-import { File, getMutable, putMutable } from '@astrobase/core';
+import { ContentIdentifier, File, getContent, keyToCID, putContent } from '@astrobase/core';
 import { Entity, type EntityContent, type ImmutableEntity } from './entity.svelte';
 
-const key = 'tasks';
+export const rootCID = new ContentIdentifier(keyToCID('tasks'));
 
 class Root extends Entity {
   constructor() {
@@ -10,12 +10,12 @@ class Root extends Entity {
   }
 
   async pull() {
-    const file = (await getMutable<ImmutableEntity>(key)) as File<EntityContent> | undefined;
+    const file = (await getContent<ImmutableEntity>(rootCID)) as File<EntityContent> | undefined;
     await this.parse(file);
   }
 
   async save() {
-    await putMutable(key, await this.file, {});
+    await putContent(rootCID, (await this.file).buffer, {});
   }
 }
 

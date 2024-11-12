@@ -3,7 +3,7 @@
   import EditableDate from '$lib/client/components/editable/editable-date.svelte';
   import EditableText from '$lib/client/components/editable/editable-text.svelte';
   import { ImmutableEntity } from '$lib/client/data/entity.svelte';
-  import { root } from '$lib/client/data/root.svelte';
+  import { root, rootCID } from '$lib/client/data/root.svelte';
 
   let hideFuture = $state(true);
 
@@ -17,6 +17,7 @@
     if (name) {
       const entity = new ImmutableEntity();
       entity.name = name;
+      entity.parent = rootCID;
       const cid = await entity.save();
       if (cid) {
         (root.children ??= []).unshift(cid);
