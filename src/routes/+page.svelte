@@ -1,6 +1,7 @@
 <script lang="ts">
   import { deleteContent } from '@astrobase/core';
-  import EditableText from '$lib/client/components/editable-text/editable-text.svelte';
+  import EditableDate from '$lib/client/components/editable/editable-date.svelte';
+  import EditableText from '$lib/client/components/editable/editable-text.svelte';
   import { ImmutableEntity } from '$lib/client/data/entity.svelte';
   import { root } from '$lib/client/data/root.svelte';
 
@@ -65,12 +66,8 @@
             />
           </td>
           <td class="border">
-            <EditableText
+            <EditableDate
               value={ent.start?.toISOString()}
-              placeholder="YYYY-MM-DD HH:mm:ss"
-              render={(v) => (v ? new Date(v).toLocaleString() : '')}
-              transform={(v) => new Date(v).toISOString()}
-              validate={(v) => (v ? !isNaN(Date.parse(v)) : true)}
               onedit={async (start) => {
                 const newDate = new Date(start);
                 if (newDate.getTime() !== ent.start?.getTime() && root.children) {
@@ -95,12 +92,8 @@
             {/if}
           </td>
           <td class="border">
-            <EditableText
+            <EditableDate
               value={ent.end?.toISOString()}
-              placeholder="YYYY-MM-DD HH:mm:ss"
-              render={(v) => (v ? new Date(v).toLocaleString() : '')}
-              transform={(v) => (v ? new Date(v).toISOString() : '')}
-              validate={(v) => (v ? !isNaN(Date.parse(v)) : true)}
               onedit={async (end) => {
                 const newDate = new Date(end);
                 if (newDate.getTime() !== ent.start?.getTime() && root.children) {

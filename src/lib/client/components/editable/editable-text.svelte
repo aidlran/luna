@@ -1,15 +1,6 @@
 <script lang="ts">
   import { tick } from 'svelte';
-
-  interface Props {
-    editing?: boolean;
-    placeholder?: string;
-    value?: string;
-    validate?: (value: string) => boolean;
-    transform?: (value: string) => string;
-    render?: (value: string) => string;
-    onedit?: (value: string) => void;
-  }
+  import type { EditableProps } from './editable-props';
 
   let {
     editing = $bindable(false),
@@ -19,7 +10,7 @@
     transform,
     validate,
     onedit,
-  }: Props = $props();
+  }: EditableProps = $props();
 
   let rendered = $derived(render ? render(value) : value);
 
