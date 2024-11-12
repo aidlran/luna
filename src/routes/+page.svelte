@@ -5,6 +5,12 @@
   import { ImmutableEntity } from '$lib/client/data/entity.svelte';
   import { root } from '$lib/client/data/root.svelte';
 
+  let hideFuture = $state(true);
+
+  function hidden(ent: ImmutableEntity) {
+    return hideFuture && ent.start && ent.start.getTime() > Date.now();
+  }
+
   let addingTask = $state(false);
 
   async function addTask(name: string) {
@@ -20,6 +26,11 @@
     addingTask = false;
   }
 </script>
+
+<label>
+  <input type="checkbox" bind:checked={hideFuture} />
+  Hide future tasks
+</label>
 
 <table class="w-full">
   <thead>
@@ -50,91 +61,93 @@
     {#if root.children}
       {#each root.children as cid, i}
         {@const ent = new ImmutableEntity(cid)}
-        <tr>
-          <td class="border">
-            <EditableText
-              value={ent.name}
-              transform={(v) => v.trim()}
-              onedit={async (newName) => {
-                if (typeof newName === 'string' && newName !== ent.name && root.children) {
-                  ent.name = newName;
-                  root.children[i] = await ent.save();
-                  root.save();
-                  deleteContent(cid);
-                }
-              }}
-            />
-          </td>
-          <td class="border">
-            <EditableDate
-              value={ent.start?.toISOString()}
-              onedit={async (start) => {
-                const newDate = new Date(start);
-                if (newDate.getTime() !== ent.start?.getTime() && root.children) {
-                  ent.start = newDate;
-                  root.children[i] = await ent.save();
-                  root.save();
-                  deleteContent(cid);
-                }
-              }}
-            />
-            {#if ent.start}
-              <button
-                onclick={async () => {
-                  if (root.children) {
-                    ent.start = undefined;
+        {#if !hidden(ent)}
+          <tr>
+            <td class="border">
+              <EditableText
+                value={ent.name}
+                transform={(v) => v.trim()}
+                onedit={async (newName) => {
+                  if (typeof newName === 'string' && newName !== ent.name && root.children) {
+                    ent.name = newName;
                     root.children[i] = await ent.save();
                     root.save();
                     deleteContent(cid);
                   }
-                }}>x</button
-              >
-            {/if}
-          </td>
-          <td class="border">
-            <EditableDate
-              value={ent.end?.toISOString()}
-              onedit={async (end) => {
-                const newDate = new Date(end);
-                if (newDate.getTime() !== ent.start?.getTime() && root.children) {
-                  ent.end = newDate;
-                  root.children[i] = await ent.save();
-                  root.save();
-                  deleteContent(cid);
-                }
-              }}
-            />
-            {#if ent.end}
-              <button
-                onclick={async () => {
-                  if (root.children) {
-                    ent.end = undefined;
+                }}
+              />
+            </td>
+            <td class="border">
+              <EditableDate
+                value={ent.start?.toISOString()}
+                onedit={async (start) => {
+                  const newDate = new Date(start);
+                  if (newDate.getTime() !== ent.start?.getTime() && root.children) {
+                    ent.start = newDate;
                     root.children[i] = await ent.save();
                     root.save();
                     deleteContent(cid);
                   }
-                }}>x</button
+                }}
+              />
+              {#if ent.start}
+                <button
+                  onclick={async () => {
+                    if (root.children) {
+                      ent.start = undefined;
+                      root.children[i] = await ent.save();
+                      root.save();
+                      deleteContent(cid);
+                    }
+                  }}>x</button
+                >
+              {/if}
+            </td>
+            <td class="border">
+              <EditableDate
+                value={ent.end?.toISOString()}
+                onedit={async (end) => {
+                  const newDate = new Date(end);
+                  if (newDate.getTime() !== ent.start?.getTime() && root.children) {
+                    ent.end = newDate;
+                    root.children[i] = await ent.save();
+                    root.save();
+                    deleteContent(cid);
+                  }
+                }}
+              />
+              {#if ent.end}
+                <button
+                  onclick={async () => {
+                    if (root.children) {
+                      ent.end = undefined;
+                      root.children[i] = await ent.save();
+                      root.save();
+                      deleteContent(cid);
+                    }
+                  }}>x</button
+                >
+              {/if}
+            </td>
+            <td class="border">
+              {ent.created?.toLocaleDateString()}
+            </td>
+            <td class="border">
+              {ent.updated?.toLocaleDateString()}
+            </td>
+            <td class="border text-right">
+              <button
+                onclick={() => {
+                  if (root.children) {
+                    root.children.splice(i, 1);
+                    root.save();
+                    deleteContent(cid);
+                  }
+                }}>Delete</button
               >
-            {/if}
-          </td>
-          <td class="border">
-            {ent.created?.toLocaleDateString()}
-          </td>
-          <td class="border">
-            {ent.updated?.toLocaleDateString()}
-          </td>
-          <td class="border text-right">
-            <button
-              onclick={() => {
-                if (root.children) {
-                  root.children.splice(i, 1);
-                  root.save();
-                  deleteContent(cid);
-                }
-              }}>Delete</button
-            >
-          </td>
-        </tr>
+            </td>
+          </tr>
+        {/if}
       {/each}
     {/if}
   </tbody>
