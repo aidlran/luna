@@ -2,4 +2,7 @@
 build/
 node_modules/
 
+/src-tauri/gen/schemas/
+/src-tauri/target/
+
 vite.config.js.*

@@ -2,25 +2,20 @@
   import { deleteContent } from '@astrobase/core';
   import EditableDate from '$lib/client/components/editable/editable-date.svelte';
   import EditableText from '$lib/client/components/editable/editable-text.svelte';
-  import { ImmutableEntity } from '$lib/client/data/entity.svelte';
+  import { Entity } from '$lib/client/data/entity.svelte';
   import { root, rootCID } from '$lib/client/data/root.svelte';
 
-  let hideFuture = $state(true);
-
-  function hidden(ent: ImmutableEntity) {
-    return hideFuture && ent.start && ent.start.getTime() > Date.now();
-  }
-
   let addingTask = $state(false);
+  let hideFuture = $state(true);
 
   async function addTask(name: string) {
     if (name) {
-      const entity = new ImmutableEntity();
+      const entity = new Entity();
       entity.name = name;
       entity.parent = rootCID;
       const cid = await entity.save();
       if (cid) {
-        (root.children ??= []).unshift(cid);
+        root.children.unshift(cid);
         root.save();
       }
     }
@@ -61,8 +56,8 @@
     {/if}
     {#if root.children}
       {#each root.children as cid, i}
-        {@const ent = new ImmutableEntity(cid)}
-        {#if !hidden(ent)}
+        {@const ent = new Entity(cid)}
+        {#if !hideFuture || !ent.start || ent.start.getTime() <= Date.now()}
           <tr>
             <td class="border">
               <EditableText
@@ -73,7 +68,6 @@
                     ent.name = newName;
                     root.children[i] = await ent.save();
                     root.save();
-                    deleteContent(cid);
                   }
                 }}
               />
@@ -87,7 +81,6 @@
                     ent.start = newDate;
                     root.children[i] = await ent.save();
                     root.save();
-                    deleteContent(cid);
                   }
                 }}
               />
@@ -98,7 +91,6 @@
                       ent.start = undefined;
                       root.children[i] = await ent.save();
                       root.save();
-                      deleteContent(cid);
                     }
                   }}>x</button
                 >
@@ -113,7 +105,6 @@
                     ent.end = newDate;
                     root.children[i] = await ent.save();
                     root.save();
-                    deleteContent(cid);
                   }
                 }}
               />
@@ -124,7 +115,6 @@
                       ent.end = undefined;
                       root.children[i] = await ent.save();
                       root.save();
-                      deleteContent(cid);
                     }
                   }}>x</button
                 >
@@ -143,6 +133,7 @@
                     root.children.splice(i, 1);
                     root.save();
                     deleteContent(cid);
+                    // TODO: delete previous generations
                   }
                 }}>Delete</button
               >

@@ -1,78 +1,40 @@
-import {
-  ContentIdentifier,
-  File,
-  getContent,
-  putImmutable,
-  type ContentIdentifierLike,
-} from '@astrobase/core';
+// prettier-ignore
+import { ContentIdentifier, File, getContent, putImmutable, type ContentIdentifierLike } from '@astrobase/core';
+// prettier-ignore
+import { array, instance, integer, literal, number, object, optional, parse, pipe, string, type InferOutput } from 'valibot';
 
-export interface EntityContent {
-  name?: string;
-  children?: ContentIdentifier[];
-  parent?: ContentIdentifier;
-  start?: number;
-  end?: number;
-  updated?: number;
-  version: number;
-}
+const entitySchema = object({
+  name: optional(string()),
+  children: optional(array(instance(ContentIdentifier))),
+  parent: optional(instance(ContentIdentifier)),
+  previous: optional(instance(ContentIdentifier)),
+  start: optional(pipe(number(), integer())),
+  end: optional(pipe(number(), integer())),
+  updated: optional(pipe(number(), integer())),
+  version: literal(1),
+});
+
+type EntityContent = InferOutput<typeof entitySchema>;
 
 const toD = (ts?: number) => (ts ? new Date(ts * 1e3) : undefined);
 const toTS = (d?: Date) => (d ? Math.floor(d.getTime() / 1e3) : undefined);
 
-export abstract class Entity {
+export class Entity {
   name = $state<string>();
-  children = $state<ContentIdentifier[]>();
+  children = $state<ContentIdentifier[]>([]);
   parent = $state<ContentIdentifier>();
   start = $state<Date>();
   end = $state<Date>();
   created = $state<Date>();
   updated = $state<Date>();
-  version?: number;
 
-  protected get file() {
-    return new File<EntityContent>()
-      .setMediaType('application/json')
-      .setTimestamp(toTS(this.created))
-      .setValue({
-        name: this.name,
-        children: this.children,
-        parent: this.parent,
-        start: toTS(this.start),
-        end: toTS(this.end),
-        updated: toTS(new Date()),
-        version: 1,
-      });
-  }
-
-  protected async parse(file?: File<EntityContent>) {
-    const ent = (await file?.getValue()) as EntityContent | undefined;
-    if (ent) {
-      this.name = ent.name;
-      this.children = ent.children;
-      this.parent = ent.parent;
-      this.start = toD(ent.start);
-      this.end = toD(ent.end);
-      this.created = toD(file?.timestamp);
-      this.updated = toD(ent.updated);
-      this.version = ent.version;
-    }
-  }
-}
-
-export class ImmutableEntity extends Entity {
-  private _cid = $state<ContentIdentifier>();
+  protected _cid = $state<ContentIdentifier>();
+  protected _previous = $state<ContentIdentifier>();
 
   constructor(cid?: ContentIdentifierLike) {
-    super();
     if (cid) {
       this.pull(cid);
     }
-  }
-
-  private async pull(cid: ContentIdentifierLike) {
-    const file = (await getContent(cid)) as File<EntityContent> | undefined;
-    await this.parse(file);
-    this._cid = new ContentIdentifier(cid);
   }
 
   /**
@@ -83,7 +45,46 @@ export class ImmutableEntity extends Entity {
     return this._cid;
   }
 
+  get previous() {
+    return this._previous;
+  }
+
+  get version() {
+    return 1 as const;
+  }
+
+  protected async pull(cid: ContentIdentifierLike) {
+    this._cid = cid = new ContentIdentifier(cid);
+    const file = await getContent<File<EntityContent>>(cid);
+    const ent = parse(entitySchema, await file?.getValue());
+    if (ent) {
+      this.name = ent.name;
+      this.children = ent.children ?? [];
+      this.parent = ent.parent;
+      this._previous = ent.previous;
+      this.start = toD(ent.start);
+      this.end = toD(ent.end);
+      this.created = toD(file?.timestamp);
+      this.updated = toD(ent.updated);
+    }
+  }
+
   async save() {
-    return (this._cid = await putImmutable(await this.file));
+    const file = await new File<EntityContent>()
+      .setMediaType('application/json')
+      .setTimestamp(toTS(this.created))
+      .setValue({
+        name: this.name,
+        children: this.children,
+        parent: this.parent,
+        previous: this._cid,
+        start: toTS(this.start),
+        end: toTS(this.end),
+        updated: toTS(new Date()),
+        version: this.version,
+      });
+    const cid = await putImmutable(file);
+    this._previous = this._cid;
+    return (this._cid = cid);
   }
 }

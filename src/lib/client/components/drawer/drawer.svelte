@@ -2,42 +2,28 @@
   import { setContext } from 'svelte';
   import { drawerControl } from './drawer-control';
 
-  /**
-   * The identifer for the drawer. Used when accessing the `drawerControl()`.
-   */
+  /** The identifer for the drawer. Used when accessing the `drawerControl()`. */
   export let key = 'default';
 
   // TODO: move following props to drawerControl store.
   // TODO: different positions, i.e. left.
 
-  /**
-   * Whether the drawer will dim the background while open.
-   */
+  /** Whether the drawer will dim the background while open. */
   export let dim = true;
 
-  /**
-   * Whether the user can click through to background elements while drawer is open.
-   */
+  /** Whether the user can click through to background elements while drawer is open. */
   export let clickthrough = true;
 
-  /**
-   * Drawer opening/closing transition duration in milliseconds.
-   */
+  /** Drawer opening/closing transition duration in milliseconds. */
   export let transitionDuration = 200;
 
-  /**
-   * Width of the drawer.
-   */
+  /** Width of the drawer. */
   export let width = '30%';
 
-  /**
-   * Minimum width of the drawer.
-   */
+  /** Minimum width of the drawer. */
   export let minWidth = '300px';
 
-  /**
-   * Padding of drawer inner elements.
-   */
+  /** Padding of drawer inner elements. */
   export let padding = '16px';
 
   const control = drawerControl();
