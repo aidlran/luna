@@ -43,7 +43,7 @@
       bind:this={input}
       {value}
       onblur={stopEditing}
-      onkeydown={(e) => e.key == 'Escape' && stopEditing()}
+      onkeydown={(e) => e.key == 'Escape' && input?.blur()}
     />
   </form>
 {:else}

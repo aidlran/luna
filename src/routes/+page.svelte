@@ -4,6 +4,7 @@
   import EditableText from '$lib/client/components/editable/editable-text.svelte';
   import { Entity } from '$lib/client/data/entity.svelte';
   import { root, rootCID } from '$lib/client/data/root.svelte';
+  import EntityDependencies from './entity-dependencies.svelte';
 
   let addingTask = $state(false);
   let hideFuture = $state(true);
@@ -34,6 +35,7 @@
       <th class="text-left border">Task</th>
       <th class="text-left border">Start</th>
       <th class="text-left border">End</th>
+      <th class="text-left border">Dependencies</th>
       <th class="text-left border">Created</th>
       <th class="text-left border">Updated</th>
       <th class="text-right border">
@@ -119,6 +121,9 @@
                   }}>x</button
                 >
               {/if}
+            </td>
+            <td class="border">
+              <EntityDependencies {ent} />
             </td>
             <td class="border">
               {ent.created?.toLocaleDateString()}

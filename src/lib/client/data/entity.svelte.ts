@@ -8,6 +8,7 @@ const entitySchema = object({
   children: optional(array(instance(ContentIdentifier))),
   parent: optional(instance(ContentIdentifier)),
   previous: optional(instance(ContentIdentifier)),
+  deps: optional(array(instance(ContentIdentifier))),
   start: optional(pipe(number(), integer())),
   end: optional(pipe(number(), integer())),
   updated: optional(pipe(number(), integer())),
@@ -23,6 +24,7 @@ export class Entity {
   name = $state<string>();
   children = $state<ContentIdentifier[]>([]);
   parent = $state<ContentIdentifier>();
+  dependencies = $state<ContentIdentifier[]>([]);
   start = $state<Date>();
   end = $state<Date>();
   created = $state<Date>();
@@ -62,6 +64,7 @@ export class Entity {
       this.children = ent.children ?? [];
       this.parent = ent.parent;
       this._previous = ent.previous;
+      this.dependencies = ent.deps ?? [];
       this.start = toD(ent.start);
       this.end = toD(ent.end);
       this.created = toD(file?.timestamp);
@@ -78,6 +81,7 @@ export class Entity {
         children: this.children,
         parent: this.parent,
         previous: this._cid,
+        deps: this.dependencies,
         start: toTS(this.start),
         end: toTS(this.end),
         updated: toTS(new Date()),
