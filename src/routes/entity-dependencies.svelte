@@ -23,19 +23,21 @@
 </script>
 
 <div class="flex justify-between">
-  <div class="border">
+  <div>
     {#each ent.dependencies as depCID, i}
       {@const depEnt = new Entity(depCID)}
-      {depEnt.name}
-      <button
-        onclick={async () => {
-          if (index > -1) {
-            ent.dependencies.splice(i, 1);
-            root.children[index] = await ent.save();
-            await root.save();
-          }
-        }}>x</button
-      >
+      <div class="border">
+        {depEnt.name}
+        <button
+          onclick={async () => {
+            if (index > -1) {
+              ent.dependencies.splice(i, 1);
+              root.children[index] = await ent.save();
+              await root.save();
+            }
+          }}>x</button
+        >
+      </div>
     {/each}
   </div>
 

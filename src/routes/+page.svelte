@@ -7,7 +7,11 @@
   import EntityDependencies from './entity-dependencies.svelte';
 
   let addingTask = $state(false);
+  let hideBlocked = $state(true);
   let hideFuture = $state(true);
+
+  let loaded = $derived(root.children.map((cid) => new Entity(cid)));
+  let blocked = $derived(loaded.filter((ent) => !!ent.dependencies.length));
 
   async function addTask(name: string) {
     if (name) {
@@ -29,6 +33,11 @@
   Hide future tasks
 </label>
 
+<label>
+  <input type="checkbox" bind:checked={hideBlocked} />
+  Hide blocked
+</label>
+
 <table class="w-full">
   <thead>
     <tr>
@@ -46,7 +55,7 @@
   <tbody>
     {#if addingTask}
       <tr>
-        <td colspan="6">
+        <td colspan="7">
           <EditableText
             editing={true}
             placeholder="New task"
@@ -56,10 +65,8 @@
         </td>
       </tr>
     {/if}
-    {#if root.children}
-      {#each root.children as cid, i}
-        {@const ent = new Entity(cid)}
-        {#if !hideFuture || !ent.start || ent.start.getTime() <= Date.now()}
+    {#each loaded as ent, i}
+      {#if (!hideFuture || !ent.start || ent.start.getTime() <= Date.now()) && (!hideBlocked || !blocked.includes(ent))}
           <tr>
             <td class="border">
               <EditableText
@@ -134,10 +141,10 @@
             <td class="border text-right">
               <button
                 onclick={() => {
-                  if (root.children) {
+                if (root.children && ent.cid) {
                     root.children.splice(i, 1);
+                  deleteContent(ent.cid);
                     root.save();
-                    deleteContent(cid);
                     // TODO: delete previous generations
                   }
                 }}>Delete</button
@@ -146,6 +153,5 @@
           </tr>
         {/if}
       {/each}
-    {/if}
   </tbody>
 </table>
