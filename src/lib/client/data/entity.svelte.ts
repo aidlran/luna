@@ -23,6 +23,7 @@ const toTS = (d?: Date) => (d ? Math.floor(d.getTime() / 1e3) : undefined);
 export class Entity {
   name = $state<string>();
   children = $state<ContentIdentifier[]>([]);
+  childrenEnt = $derived<Entity[]>(this.children.map((cid) => new Entity(cid)));
   parent = $state<ContentIdentifier>();
   dependencies = $state<ContentIdentifier[]>([]);
   start = $state<Date>();
@@ -33,9 +34,11 @@ export class Entity {
   protected _cid = $state<ContentIdentifier>();
   protected _previous = $state<ContentIdentifier>();
 
+  readonly selfLoaded;
+
   constructor(cid?: ContentIdentifierLike) {
     if (cid) {
-      this.pull(cid);
+      this.selfLoaded = this.pull(cid);
     }
   }
 
