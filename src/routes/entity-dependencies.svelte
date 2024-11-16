@@ -1,6 +1,6 @@
 <script lang="ts">
   import { tick } from 'svelte';
-  import { Entity } from '$lib/client/data/entity.svelte';
+  import { type Entity, getEntity } from '$lib/client/data/entity.svelte';
   import { root } from '$lib/client/data/root.svelte';
 
   let { ent }: { ent: Entity } = $props();
@@ -16,7 +16,7 @@
           ent.cid?.toString() !== optCID.toString() &&
           !ent.dependencies.find((depCID) => depCID.toString() === optCID.toString()),
       )
-      .map((cid) => new Entity(cid)),
+      .map(getEntity),
   );
 
   let input = $state<HTMLInputElement>();
@@ -25,7 +25,7 @@
 <div class="flex justify-between">
   <div>
     {#each ent.dependencies as depCID, i}
-      {@const depEnt = new Entity(depCID)}
+      {@const depEnt = getEntity(depCID)}
       <div class="border">
         {depEnt.name}
         <button

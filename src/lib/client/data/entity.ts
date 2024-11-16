@@ -10,7 +10,7 @@ export async function deleteEntity(targetCID: ContentIdentifierLike, targetIndex
 
     await Promise.all(
       root.childrenEnt.map(async (ent, i) => {
-        await ent.selfLoaded;
+        await ent.loaded;
         const oldLen = ent.dependencies.length;
         ent.dependencies = ent.dependencies.filter((cid) => cid.toString() !== targetCID);
         if (ent.dependencies.length != oldLen) {

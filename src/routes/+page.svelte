@@ -7,10 +7,10 @@
   import EntityDependencies from './entity-dependencies.svelte';
 
   let addingTask = $state(false);
-  let hideBlocked = $state(true);
-  let hideFuture = $state(true);
 
-  let blocked = $derived(root.childrenEnt.filter((ent) => !!ent.dependencies.length));
+  let hideBlocked = $state(true);
+  let hideCompleted = $state(true);
+  let hideFuture = $state(true);
 
   async function addTask(name: string) {
     if (name) {
@@ -46,6 +46,7 @@
   <thead>
     <tr>
       <th>Task</th>
+      <th>Completed</th>
       <th>Start</th>
       <th>End</th>
       <th>Dependencies</th>
@@ -59,7 +60,7 @@
   <tbody>
     {#if addingTask}
       <tr>
-        <td colspan="7">
+        <td colspan="8">
           <EditableText
             editing={true}
             placeholder="New task"
@@ -70,7 +71,7 @@
       </tr>
     {/if}
     {#each root.childrenEnt as ent, i}
-      {#if (!hideFuture || !ent.start || ent.start.getTime() <= Date.now()) && (!hideBlocked || !blocked.includes(ent))}
+      {#if (!hideFuture || !ent.start || ent.start.getTime() <= Date.now()) && (!hideBlocked || !ent.blocked) && (!hideCompleted || !ent.completed)}
         <tr>
           <td>
             <EditableText
@@ -82,6 +83,16 @@
                   root.children[i] = await ent.save();
                   root.save();
                 }
+              }}
+            />
+          </td>
+          <td>
+            <input
+              type="checkbox"
+              bind:checked={ent.completed}
+              onchange={async () => {
+                root.children[i] = await ent.save();
+                root.save();
               }}
             />
           </td>
