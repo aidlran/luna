@@ -1,7 +1,7 @@
 <script>
   import { indexeddb } from '@astrobase/core/indexeddb';
   import { clients } from '@astrobase/core/rpc/client';
-  import '$lib/client/styles/tailwind.css';
+  import '$lib/client/styles/main.css';
 
   let { children } = $props();
 </script>
