@@ -27,26 +27,31 @@
   }
 </script>
 
-<label>
+<label class="m-2">
   <input type="checkbox" bind:checked={hideFuture} />
   Hide future tasks
 </label>
 
-<label>
+<label class="m-2">
   <input type="checkbox" bind:checked={hideBlocked} />
-  Hide blocked
+  Hide blocked tasks
+</label>
+
+<label class="m-2">
+  <input type="checkbox" bind:checked={hideCompleted} />
+  Hide completed tasks
 </label>
 
 <table class="w-full">
   <thead>
     <tr>
-      <th class="text-left border">Task</th>
-      <th class="text-left border">Start</th>
-      <th class="text-left border">End</th>
-      <th class="text-left border">Dependencies</th>
-      <th class="text-left border">Created</th>
-      <th class="text-left border">Updated</th>
-      <th class="text-right border">
+      <th>Task</th>
+      <th>Start</th>
+      <th>End</th>
+      <th>Dependencies</th>
+      <th>Created</th>
+      <th>Updated</th>
+      <th class="text-right">
         <button disabled={!!addingTask} onclick={() => (addingTask = true)}>Add task</button>
       </th>
     </tr>
@@ -67,7 +72,7 @@
     {#each root.childrenEnt as ent, i}
       {#if (!hideFuture || !ent.start || ent.start.getTime() <= Date.now()) && (!hideBlocked || !blocked.includes(ent))}
         <tr>
-          <td class="border">
+          <td>
             <EditableText
               value={ent.name}
               transform={(v) => v.trim()}
@@ -80,7 +85,7 @@
               }}
             />
           </td>
-          <td class="border">
+          <td>
             <EditableDate
               value={ent.start?.toISOString()}
               onedit={async (start) => {
@@ -104,7 +109,7 @@
               >
             {/if}
           </td>
-          <td class="border">
+          <td>
             <EditableDate
               value={ent.end?.toISOString()}
               onedit={async (end) => {
@@ -128,16 +133,16 @@
               >
             {/if}
           </td>
-          <td class="border">
+          <td>
             <EntityDependencies {ent} />
           </td>
-          <td class="border">
+          <td>
             {ent.created?.toLocaleDateString()}
           </td>
-          <td class="border">
+          <td>
             {ent.updated?.toLocaleDateString()}
           </td>
-          <td class="border text-right">
+          <td class="text-right">
             <button onclick={() => ent.cid && deleteEntity(ent.cid, i)}>Delete</button>
           </td>
         </tr>
