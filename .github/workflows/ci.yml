@@ -7,28 +7,7 @@ concurrency:
 on: [push, pull_request]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          submodules: recursive
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: npm
-      - uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '17'
-          cache: gradle
-      - run: npm ci
-      - run: npm run build:web
-      - run: npx cap sync android
-      - run: ./gradlew assemble --no-daemon
-        working-directory: ./android
-
-  lint:
+  CI:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -39,5 +18,4 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci
-      - run: npm run build:web
-      - run: npm run lint
+      - run: npm run ci
