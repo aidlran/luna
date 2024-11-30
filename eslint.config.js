@@ -27,7 +27,14 @@ export default ts.config(
     },
   },
   {
-    ignores: ['.svelte-kit/', 'build/', 'dist/', 'lib/'],
+    ignores: [
+      '.svelte-kit/',
+      'build/',
+      'dist/',
+      'lib/',
+      'src-tauri/gen/schemas/',
+      'src-tauri/target/',
+    ],
   },
   {
     rules: {
