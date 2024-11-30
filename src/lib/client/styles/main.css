@@ -3,7 +3,8 @@
 @import 'tailwindcss/utilities';
 
 @layer base {
-  button {
+  button,
+  a.button {
     @apply py-1 px-2 rounded cursor-pointer hover:bg-neutral-200;
   }
 
