@@ -1,7 +1,11 @@
 [submodule "Astrobase"]
 	path = apps/pass/Astrobase
-	url = https://github.com/AstrobaseTech/Astrobase.git
+	url = https://github.com/AstrobaseTech/Astrobase
 
 [submodule "Astrobase-legacy"]
 	path = apps/pass/Astrobase-legacy
-	url = https://github.com/AstrobaseTech/Astrobase.git
+	url = https://github.com/AstrobaseTech/Astrobase
+
+[submodule "lib/astrobase"]
+	path = apps/projects/lib/astrobase
+	url = https://github.com/AstrobaseTech/Astrobase
