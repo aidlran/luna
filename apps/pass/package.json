@@ -5,14 +5,10 @@
   "description": "A secure password and secrets management CLI utility using Astrobase",
   "type": "module",
   "bin": "src/cli.mjs",
-  "workspaces": [
-    "Astrobase",
-    "Astrobase-legacy"
-  ],
   "scripts": {
     "build": "conc npm:build:astrobase npm:build:astrobase-legacy",
-    "build:astrobase": "npm run build -w Astrobase",
-    "build:astrobase-legacy": "npm run build -w Astrobase-legacy",
+    "build:astrobase": "npm run build -w lib/astrobase",
+    "build:astrobase-legacy": "npm run build -w lib/astrobase-legacy",
     "ci": "npm run build && npm run test",
     "test": "vitest run"
   },

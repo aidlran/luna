@@ -4,7 +4,7 @@ import { defineConfig } from 'vitest/config';
 
 const host = process.env.TAURI_DEV_HOST;
 
-export default defineConfig(async () => ({
+export default defineConfig({
   plugins: [sveltekit()],
 
   // prevent from obscuring rust errors
@@ -32,4 +32,4 @@ export default defineConfig(async () => ({
       ignored: ['**/src-tauri/**'],
     },
   },
-}));
+});

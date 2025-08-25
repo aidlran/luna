@@ -9,6 +9,10 @@
   "license": "UNLICENSED",
   "author": "Aidan Loughran",
   "type": "module",
+  "workspaces": [
+    "apps/*",
+    "lib/*"
+  ],
   "scripts": {
     "format": "prettier --write .",
     "lint": "eslint ."
