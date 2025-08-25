@@ -28,12 +28,15 @@ export default ts.config(
   },
   {
     ignores: [
-      '.svelte-kit/',
-      'build/',
-      'dist/',
-      'lib/',
-      'src-tauri/gen/schemas/',
-      'src-tauri/target/',
+      'apps/pass/Astrobase*/',
+      'apps/projects/lib/',
+      '**/.svelte-kit/',
+      '**/build/',
+      '**/coverage/',
+      '**/dist/',
+      '**/src-tauri/gen/schemas/',
+      '**/src-tauri/target/',
+      '**/static/',
     ],
   },
   {

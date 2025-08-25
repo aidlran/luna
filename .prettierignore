@@ -1,0 +1,7 @@
+Astrobase/
+Astrobase-legacy/
+/apps/projects/lib/
+static/
+
+LICENSE
+package-lock.json
