@@ -5,7 +5,8 @@ pkgs.mkShell {
   nativeBuildInputs = with pkgs; [
     pkg-config
     gobject-introspection
-    cargo 
+    cargo
+    cargo-tauri
     nodejs
     rustc
   ];
