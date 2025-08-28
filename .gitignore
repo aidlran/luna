@@ -2,7 +2,7 @@
 build/
 coverage/
 node_modules/
-src-tauri/gen/schemas/
-src-tauri/target/
+**/src-tauri/gen/schemas/
+**/src-tauri/target/
 *.db
 vite.config.js.*
