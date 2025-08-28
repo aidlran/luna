@@ -7,8 +7,8 @@
   "bin": "src/cli.mjs",
   "scripts": {
     "build": "conc npm:build:astrobase npm:build:astrobase-legacy",
-    "build:astrobase": "npm run build -w lib/astrobase",
-    "build:astrobase-legacy": "npm run build -w lib/astrobase-legacy",
+    "build:astrobase": "npm run build -w ../../lib/astrobase",
+    "build:astrobase-legacy": "npm run build -w ../../lib/astrobase-legacy",
     "ci": "npm run build && npm run test",
     "test": "vitest run"
   },

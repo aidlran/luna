@@ -10,14 +10,14 @@
   "author": "Aidan Loughran",
   "type": "module",
   "scripts": {
-    "prebuild": "conc \"npm run build -w lib/astrobase-legacy\" \"svelte-kit sync\"",
+    "prebuild": "conc \"npm run build -w ../../lib/astrobase-legacy\" \"svelte-kit sync\"",
     "build": "vite build",
     "ci": "npm run build && npm run lint",
     "dev": "vite dev",
     "lc": "echo LUNA: $(find src -type f -exec cat {} \\; | wc -l) lines",
     "preview": "vite preview",
     "start": "svelte-kit sync && conc -k npm:start:*",
-    "start:astrobase": "npm start -w lib/astrobase-legacy",
+    "start:astrobase": "npm start -w ../../lib/astrobase-legacy",
     "start:luna:app": "tauri dev",
     "start:luna:check": "svelte-check --watch --preserveWatchOutput"
   },
