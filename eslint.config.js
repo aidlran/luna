@@ -1,5 +1,6 @@
 import eslint from '@eslint/js';
 import prettier from 'eslint-config-prettier';
+import solid from 'eslint-plugin-solid/configs/typescript';
 import svelte from 'eslint-plugin-svelte';
 import globals from 'globals';
 import ts from 'typescript-eslint';
@@ -24,6 +25,13 @@ export default ts.config(
       parserOptions: {
         parser: ts.parser,
       },
+    },
+  },
+  {
+    files: ['**/*.{ts,tsx}'],
+    ...solid,
+    languageOptions: {
+      parser: ts.parser,
     },
   },
   {
