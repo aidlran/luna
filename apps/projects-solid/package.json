@@ -10,15 +10,18 @@
   "author": "Aidan Loughran",
   "type": "module",
   "scripts": {
-    "build": "vinxi build",
-    "preview": "vinxi serve",
-    "start": "vinxi dev"
+    "native:build": "tauri build",
+    "native:dev": "tauri dev",
+    "web:build": "vinxi build",
+    "web:dev": "vinxi dev",
+    "web:preview": "vinxi serve"
   },
   "dependencies": {
     "@solidjs/meta": "^0.29.4",
     "@solidjs/router": "^0.15.0",
     "@solidjs/start": "^1.1.0",
     "@tailwindcss/vite": "^4.1.13",
+    "@tauri-apps/cli": "^2.0.0",
     "solid-js": "^1.9.5",
     "tailwindcss": "^4.1.13",
     "vinxi": "^0.5.7"

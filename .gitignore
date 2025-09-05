@@ -1,4 +1,6 @@
+.output/
 .svelte-kit/
+.vinxi/
 build/
 coverage/
 node_modules/
