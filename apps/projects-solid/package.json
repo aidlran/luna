@@ -1,11 +1,18 @@
 {
   "name": "luna-projects",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A project management application.",
+  "homepage": "https://github.com/aidlran/luna#readme",
+  "bugs": "https://github.com/aidlran/luna/issues",
+  "repository": "github:aidlran/luna",
+  "license": "AGPL-3.0-only",
+  "author": "Aidan Loughran",
   "type": "module",
   "scripts": {
-    "dev": "vinxi dev",
     "build": "vinxi build",
-    "start": "vinxi start",
-    "version": "vinxi version"
+    "preview": "vinxi serve",
+    "start": "vinxi dev"
   },
   "dependencies": {
     "@solidjs/meta": "^0.29.4",

@@ -5,4 +5,5 @@ node_modules/
 **/src-tauri/gen/schemas/
 **/src-tauri/target/
 *.db
+.DS_Store
 vite.config.js.*
