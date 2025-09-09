@@ -1,6 +1,11 @@
-import { defineConfig } from '@solidjs/start/config';
+import { defineConfig, type SolidStartInlineConfig } from '@solidjs/start/config';
 import tailwindcss from '@tailwindcss/vite';
 
-export default defineConfig({
-  vite: { plugins: [tailwindcss()] },
-});
+export const config = {
+  ssr: false,
+  vite: {
+    plugins: [tailwindcss()],
+  },
+} satisfies SolidStartInlineConfig;
+
+export default defineConfig(config);
