@@ -14,7 +14,7 @@
     "native:dev": "tauri dev",
     "web:build": "vinxi build",
     "web:dev": "vinxi dev",
-    "web:preview": "vinxi serve"
+    "web:preview": "node .output/server/index.mjs"
   },
   "dependencies": {
     "@solidjs/meta": "^0.29.4",
