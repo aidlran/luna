@@ -1,1 +1,12 @@
 @import 'tailwindcss';
+
+@layer base {
+  button {
+    @apply py-1 px-2 rounded cursor-pointer hover:bg-neutral-200;
+  }
+
+  th,
+  td {
+    @apply text-left border p-1;
+  }
+}
