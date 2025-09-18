@@ -1,16 +1,14 @@
 #!/usr/bin/env node
 
 import { getIdentity, putIdentity } from '@astrobase/sdk/identity';
-import { spawnSync } from 'child_process';
 import { Command } from 'commander';
-import { randomUUID } from 'crypto';
 import paths from 'env-paths';
-import { existsSync, mkdirSync, readFileSync, renameSync, unlinkSync, writeFileSync } from 'fs';
-import { tmpdir } from 'os';
+import { existsSync, mkdirSync, renameSync } from 'fs';
 import { join } from 'path';
 import pkg from '../package.json' with { type: 'json' };
 // prettier-ignore
 import { deleteEntry, get, getEntryProps, getIndex, put, renameEntry, saveEntry } from './lib/content.mjs';
+import { securelyEditViaEditor } from './lib/editor.mjs';
 import { init } from './lib/init.mjs';
 import { prompt } from './lib/readline.mjs';
 
@@ -181,45 +179,23 @@ program
       }
     }
 
-    const tempFilePath = join(tmpdir(), randomUUID());
+    const newNote = securelyEditViaEditor(note);
+    const changed = newNote.compare(note) != 0;
 
-    writeFileSync(tempFilePath, note, { mode: 0o600 });
+    note.fill(0);
 
-    const editResult = spawnSync(process.env.EDITOR || 'vim', [tempFilePath], { stdio: 'inherit' });
-
-    if (editResult.error) {
-      console.error(editResult.error);
-      process.exit(1);
-    }
-
-    const newNote = readFileSync(tempFilePath);
-
-    if (newNote.compare(note) == 0) {
-      console.log('No change');
-    } else {
+    if (changed) {
       await putIdentity({
         id,
         instance,
         ref: await put(instance, newNote, 'application/octet-stream'),
       });
       console.log('Note saved');
+    } else {
+      console.log('No change');
     }
 
-    function shredFallback() {
-      console.warn('Shred failed; using fallback');
-      const overwriteBuffer = Buffer.alloc(newNote.length, 0);
-      writeFileSync(tempFilePath, overwriteBuffer);
-      unlinkSync(tempFilePath);
-    }
-
-    try {
-      const shred = spawnSync('shred', ['--remove', '--zero', '--iterations=3', tempFilePath]);
-      if (shred.status != 0) {
-        shredFallback();
-      }
-    } catch {
-      shredFallback();
-    }
+    newNote.fill(0);
   });
 
 const initInstance = () => init(program.getOptionValue('db'));

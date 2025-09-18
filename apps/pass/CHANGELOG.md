@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Improved security of `note` subcommand.
+
 ## [2.1.0](https://github.com/aidlran/cli-password-manager/releases/tag/v2.1.0) - 2025-07-17
 
 - Added `note` subcommand.
