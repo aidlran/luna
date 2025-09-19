@@ -1,5 +1,6 @@
 import { Title } from '@solidjs/meta';
-import { createSignal, For, Show, Signal } from 'solid-js';
+// prettier-ignore
+import { type Accessor, createSignal, For, type JSX, type ParentProps, type Setter, Show, type Signal } from 'solid-js';
 import EditableDate from '~/components/editable-date';
 import EditableText from '~/components/editable-text';
 
@@ -12,6 +13,17 @@ interface Task {
   created: number;
   updated: Signal<number>;
 }
+
+const FilterCheckbox = ({
+  children,
+  get,
+  set,
+}: ParentProps<{ get: Accessor<boolean>; set: Setter<boolean> }>): JSX.Element => (
+  <label class="m-2">
+    <input type="checkbox" checked={get()} on:change={(e) => set(e.target.checked)} />
+    {children}
+  </label>
+);
 
 export default () => {
   // Adding new task state
@@ -31,32 +43,17 @@ export default () => {
     <main>
       <Title>Home | Luna Projects</Title>
 
-      {/* <label class="m-2">
-        <input
-          type="checkbox"
-          checked={hideBlocked()}
-          on:change={(e) => setHideBlocked(e.target.checked)}
-        />
+      {/* <FilterCheckbox get={hideBlocked} set={setHideBlocked}>
         Hide blocked tasks
-      </label> */}
+      </FilterCheckbox> */}
 
-      <label class="m-2">
-        <input
-          type="checkbox"
-          checked={hideCompleted()}
-          on:change={(e) => setHideCompleted(e.target.checked)}
-        />
+      <FilterCheckbox get={hideCompleted} set={setHideCompleted}>
         Hide completed tasks
-      </label>
+      </FilterCheckbox>
 
-      <label class="m-2">
-        <input
-          type="checkbox"
-          checked={hideFuture()}
-          on:change={(e) => setHideFuture(e.target.checked)}
-        />
+      <FilterCheckbox get={hideFuture} set={setHideFuture}>
         Hide future tasks
-      </label>
+      </FilterCheckbox>
 
       <table class="w-full">
         <thead>
