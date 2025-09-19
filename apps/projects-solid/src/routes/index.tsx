@@ -1,12 +1,13 @@
 import { Title } from '@solidjs/meta';
 import { createSignal, For, Show, Signal } from 'solid-js';
+import EditableDate from '~/components/editable-date';
 import EditableText from '~/components/editable-text';
 
 interface Task {
   name: Signal<string>;
   completed: Signal<boolean>;
-  start: Signal<number | undefined>;
-  end: Signal<number | undefined>;
+  start: Signal<string | undefined>;
+  end: Signal<string | undefined>;
   dependencies: Signal<Task[]>;
   created: number;
   updated: Signal<number>;
@@ -19,7 +20,7 @@ export default () => {
   // Filters state
   // const [hideBlocked, setHideBlocked] = createSignal(true);
   const [hideCompleted, setHideCompleted] = createSignal(true);
-  // const [hideFuture, setHideFuture] = createSignal(true);
+  const [hideFuture, setHideFuture] = createSignal(true);
 
   // Task list
   const [tasks, setTasks] = createSignal<Task[]>([]);
@@ -34,7 +35,7 @@ export default () => {
         <input
           type="checkbox"
           checked={hideBlocked()}
-          on:change={() => setHideBlocked(!hideBlocked())}
+          on:change={(e) => setHideBlocked(e.target.checked)}
         />
         Hide blocked tasks
       </label> */}
@@ -43,27 +44,27 @@ export default () => {
         <input
           type="checkbox"
           checked={hideCompleted()}
-          on:change={() => setHideCompleted(!hideCompleted())}
+          on:change={(e) => setHideCompleted(e.target.checked)}
         />
         Hide completed tasks
       </label>
 
-      {/* <label class="m-2">
+      <label class="m-2">
         <input
           type="checkbox"
           checked={hideFuture()}
-          on:change={() => setHideFuture(!hideFuture())}
+          on:change={(e) => setHideFuture(e.target.checked)}
         />
         Hide future tasks
-      </label> */}
+      </label>
 
       <table class="w-full">
         <thead>
           <tr>
             <th>Task</th>
             <th>Completed</th>
-            {/* <th>Start</th> */}
-            {/* <th>End</th> */}
+            <th>Start</th>
+            <th>End</th>
             {/* <th>Dependencies</th> */}
             <th>Created</th>
             <th>Updated</th>
@@ -118,26 +119,58 @@ export default () => {
             {(task, i) => {
               const [name, setName] = task.name;
               const [completed, setCompleted] = task.completed;
+              const [start, setStart] = task.start;
+              const [end, setEnd] = task.end;
               const [updated, setUpdated] = task.updated;
               return (
-                <Show when={!hideCompleted() || !completed()}>
+                <Show
+                  when={
+                    (!hideCompleted() || !completed()) &&
+                    (!hideFuture() || !start() || Date.parse(start()!) <= Date.now())
+                  }
+                >
                   <tr>
                     <td>
                       <EditableText
-                        value={[name, (v) => (setUpdated(Date.now()), setName(v))]}
-                        transform={(v) => v.trim()}
+                        value={name}
+                        on:change={(e) => {
+                          const v = e.target.value.trim();
+                          if (v) {
+                            setUpdated(Date.now());
+                            setName(e.target.value.trim());
+                          }
+                        }}
                       />
                     </td>
+
                     <td>
                       <input
                         type="checkbox"
                         checked={completed()}
-                        on:change={() => (setUpdated(Date.now()), setCompleted(!completed()))}
+                        on:change={(e) => (setUpdated(Date.now()), setCompleted(e.target.checked))}
                       />
                     </td>
 
-                    {/* TODO: start */}
-                    {/* TODO: end */}
+                    <td>
+                      <EditableDate
+                        value={start}
+                        on:change={(e) => {
+                          setUpdated(Date.now());
+                          setStart(new Date(e.target.value).toISOString());
+                        }}
+                      />
+                    </td>
+
+                    <td>
+                      <EditableDate
+                        value={end}
+                        on:change={(e) => {
+                          setUpdated(Date.now());
+                          setEnd(new Date(e.target.value).toISOString());
+                        }}
+                      />
+                    </td>
+
                     {/* TODO: dependencies */}
 
                     <td>{new Date(task.created).toLocaleDateString()}</td>
