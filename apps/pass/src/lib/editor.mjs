@@ -46,6 +46,5 @@ export function securelyEditViaEditor(/** @type {string | NodeJS.ArrayBufferView
     process.exit(editResult.status);
   }
 
-
   return newData;
 }
