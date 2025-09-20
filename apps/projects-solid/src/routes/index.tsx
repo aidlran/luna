@@ -1,6 +1,6 @@
 import { Title } from '@solidjs/meta';
 // prettier-ignore
-import { type Accessor, createSignal, For, type JSX, type ParentProps, type Setter, Show, type Signal } from 'solid-js';
+import { type Accessor, createMemo, createSignal, For, type JSX, type ParentProps, type Setter, Show, type Signal } from 'solid-js';
 import EditableDate from '~/components/editable-date';
 import EditableText from '~/components/editable-text';
 
@@ -116,9 +116,33 @@ export default () => {
             {(task, i) => {
               const [name, setName] = task.name;
               const [completed, setCompleted] = task.completed;
-              const [start, setStart] = task.start;
-              const [end, setEnd] = task.end;
-              const [updated, setUpdated] = task.updated;
+              const [start] = task.start;
+              const created = new Date(task.created);
+              const [, setUpdated] = task.updated;
+              const updated = createMemo(() => new Date(task.updated[0]()));
+
+              const EditableDateCell = ({
+                value: [get, set],
+              }: {
+                value: Signal<string | undefined>;
+              }): JSX.Element => (
+                <td>
+                  <div class="flex">
+                    <EditableDate
+                      class="grow"
+                      value={get}
+                      on:change={(e) => {
+                        setUpdated(Date.now());
+                        set(new Date(e.target.value).toISOString());
+                      }}
+                    />
+                    <Show when={get()}>
+                      <button on:click={() => set(undefined)}>x</button>
+                    </Show>
+                  </div>
+                </td>
+              );
+
               return (
                 <Show
                   when={
@@ -129,6 +153,7 @@ export default () => {
                   <tr>
                     <td>
                       <EditableText
+                        class="w-full"
                         value={name}
                         on:change={(e) => {
                           const v = e.target.value.trim();
@@ -148,30 +173,16 @@ export default () => {
                       />
                     </td>
 
-                    <td>
-                      <EditableDate
-                        value={start}
-                        on:change={(e) => {
-                          setUpdated(Date.now());
-                          setStart(new Date(e.target.value).toISOString());
-                        }}
-                      />
-                    </td>
+                    <EditableDateCell value={task.start} />
 
-                    <td>
-                      <EditableDate
-                        value={end}
-                        on:change={(e) => {
-                          setUpdated(Date.now());
-                          setEnd(new Date(e.target.value).toISOString());
-                        }}
-                      />
-                    </td>
+                    <EditableDateCell value={task.end} />
 
                     {/* TODO: dependencies */}
 
-                    <td>{new Date(task.created).toLocaleDateString()}</td>
-                    <td>{new Date(updated()).toLocaleDateString()}</td>
+                    <td title={created.toLocaleString()}>{created.toLocaleDateString()}</td>
+
+                    <td title={updated().toLocaleString()}>{updated().toLocaleDateString()}</td>
+
                     <td class="text-right">
                       <button on:click={() => setTasks(tasks().toSpliced(i(), 1))}>Delete</button>
                     </td>

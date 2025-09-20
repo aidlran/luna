@@ -14,7 +14,7 @@ export default ({ value, ...props }: EditableTextProps): JSX.Element => {
       when={editing()}
       fallback={
         <button
-          class="text-left w-full min-h-8 cursor-pointer"
+          class={('min-h-8 text-left ' + (props.class ?? '')).trimEnd()}
           on:click={() => (setEditing(true), input.focus())}
         >
           {value()}
@@ -25,7 +25,6 @@ export default ({ value, ...props }: EditableTextProps): JSX.Element => {
         {...props}
         value={value()}
         ref={input}
-        class="w-full"
         on:blur={() => setEditing(false)}
         on:keydown={(e) => (e.key === 'Escape' || e.key === 'Enter') && input.blur()}
       />
