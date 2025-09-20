@@ -1,8 +1,8 @@
 {
-  "name": "luna-projects-legacy",
+  "name": "luna-projects",
   "version": "0.1.0",
   "private": true,
-  "description": "A productivity assistant.",
+  "description": "A project management application.",
   "homepage": "https://github.com/aidlran/luna#readme",
   "bugs": "https://github.com/aidlran/luna/issues",
   "repository": "github:aidlran/luna",
@@ -10,32 +10,23 @@
   "author": "Aidan Loughran",
   "type": "module",
   "scripts": {
-    "prebuild": "conc \"npm run build -w ../../lib/astrobase-legacy\" \"svelte-kit sync\"",
-    "build": "vite build",
-    "ci": "npm run build && npm run lint",
-    "dev": "vite dev",
-    "lc": "echo LUNA: $(find src -type f -exec cat {} \\; | wc -l) lines",
-    "preview": "vite preview",
-    "start": "svelte-kit sync && conc -k npm:start:*",
-    "start:astrobase": "npm start -w ../../lib/astrobase-legacy",
-    "start:luna:app": "tauri dev",
-    "start:luna:check": "svelte-check --watch --preserveWatchOutput"
+    "native:build": "tauri build",
+    "native:dev": "tauri dev",
+    "web:build": "vinxi build",
+    "web:dev": "vinxi dev",
+    "web:preview": "node .output/server/index.mjs"
   },
-  "devDependencies": {
-    "@sveltejs/adapter-static": "^3.0.5",
-    "@sveltejs/kit": "^2.7.1",
-    "@sveltejs/vite-plugin-svelte": "^6.0.0",
-    "@tauri-apps/api": "^2",
-    "@tauri-apps/cli": "^2",
-    "@tauri-apps/plugin-shell": "^2",
-    "autoprefixer": "^10.4.20",
-    "concurrently": "^9.1.0",
-    "svelte": "^5.0.0",
-    "svelte-check": "^4.0.5",
-    "tailwindcss": "^3.4.9",
-    "tslib": "^2.8.0",
-    "typescript": "~5.7.2",
-    "valibot": "^1.0.0-beta.3",
-    "vite": "^7.0.0"
+  "dependencies": {
+    "@solidjs/meta": "^0.29.4",
+    "@solidjs/router": "^0.15.0",
+    "@solidjs/start": "^1.1.0",
+    "@tailwindcss/vite": "^4.1.13",
+    "@tauri-apps/cli": "^2.0.0",
+    "solid-js": "^1.9.5",
+    "tailwindcss": "^4.1.13",
+    "vinxi": "^0.5.7"
+  },
+  "engines": {
+    "node": ">=22"
   }
 }
