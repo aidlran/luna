@@ -10,6 +10,7 @@ interface Task {
   start: Signal<string | undefined>;
   end: Signal<string | undefined>;
   dependencies: Signal<Task[]>;
+  blocked: Accessor<boolean>;
   created: number;
   updated: Signal<number>;
 }
@@ -30,7 +31,7 @@ export default () => {
   const [addingTask, setAddingTask] = createSignal(false);
 
   // Filters state
-  // const [hideBlocked, setHideBlocked] = createSignal(true);
+  const [hideBlocked, setHideBlocked] = createSignal(true);
   const [hideCompleted, setHideCompleted] = createSignal(true);
   const [hideFuture, setHideFuture] = createSignal(true);
 
@@ -43,9 +44,9 @@ export default () => {
     <main>
       <Title>Home | Luna Projects</Title>
 
-      {/* <FilterCheckbox get={hideBlocked} set={setHideBlocked}>
+      <FilterCheckbox get={hideBlocked} set={setHideBlocked}>
         Hide blocked tasks
-      </FilterCheckbox> */}
+      </FilterCheckbox>
 
       <FilterCheckbox get={hideCompleted} set={setHideCompleted}>
         Hide completed tasks
@@ -62,7 +63,7 @@ export default () => {
             <th>Completed</th>
             <th>Start</th>
             <th>End</th>
-            {/* <th>Dependencies</th> */}
+            <th>Dependencies</th>
             <th>Created</th>
             <th>Updated</th>
             <th class="text-right">
@@ -90,13 +91,17 @@ export default () => {
                     const value = e.currentTarget.value.trim();
                     if (value) {
                       const now = Date.now();
+                      const dependencies = createSignal<Task[]>([]);
                       setTasks([
                         {
                           name: createSignal(value),
                           completed: createSignal(false),
                           start: createSignal(),
                           end: createSignal(),
-                          dependencies: createSignal<Task[]>([]),
+                          dependencies,
+                          blocked: createMemo(() =>
+                            dependencies[0]().some((dep) => !dep.completed[0]() || dep.blocked()),
+                          ),
                           created: now,
                           updated: createSignal(now),
                         },
@@ -120,6 +125,10 @@ export default () => {
               const created = new Date(task.created);
               const [, setUpdated] = task.updated;
               const updated = createMemo(() => new Date(task.updated[0]()));
+
+              const [dependencies, setDependencies] = task.dependencies;
+              const [addingDependency, setAddingDependency] = createSignal(false);
+              let dependencyInput!: HTMLInputElement;
 
               const EditableDateCell = ({
                 value: [get, set],
@@ -146,6 +155,7 @@ export default () => {
               return (
                 <Show
                   when={
+                    (!hideBlocked() || !task.blocked()) &&
                     (!hideCompleted() || !completed()) &&
                     (!hideFuture() || !start() || Date.parse(start()!) <= Date.now())
                   }
@@ -177,14 +187,98 @@ export default () => {
 
                     <EditableDateCell value={task.end} />
 
-                    {/* TODO: dependencies */}
+                    <td>
+                      <div class="flex justify-between">
+                        <div>
+                          <For each={dependencies()}>
+                            {({ name: [name] }, i) => (
+                              <div class="border inline">
+                                {name()}
+                                <button
+                                  on:click={() => {
+                                    setDependencies((v) => v.toSpliced(i(), 1));
+                                  }}
+                                >
+                                  x
+                                </button>
+                              </div>
+                            )}
+                          </For>
+                        </div>
+
+                        <Show
+                          when={addingDependency()}
+                          fallback={
+                            <button
+                              on:click={() => {
+                                setAddingDependency(true);
+                                dependencyInput.focus();
+                              }}
+                            >
+                              +
+                            </button>
+                          }
+                        >
+                          <input
+                            class="grow"
+                            list="tasks"
+                            ref={dependencyInput}
+                            on:change={(e) => {
+                              e.target.blur();
+                              const dependency = tasks().find(
+                                ({ name: [name] }) => name() === e.target.value,
+                              );
+                              if (dependency) {
+                                setDependencies((v) => [...v, dependency]);
+                              }
+                            }}
+                            on:blur={() => setAddingDependency(false)}
+                            on:keydown={(e) =>
+                              (e.key === 'Escape' || e.key === 'Enter') && dependencyInput.blur()
+                            }
+                          />
+
+                          <datalist id="tasks">
+                            <For each={tasks()}>
+                              {(datalistTask) => (
+                                <Show
+                                  when={
+                                    // TODO: need to hide it if the entry's dependency chain includes `task`
+                                    //       need to propagate dependencies up
+                                    task !== datalistTask &&
+                                    !dependencies().some(
+                                      (dependencyTask) => dependencyTask === datalistTask,
+                                    )
+                                  }
+                                >
+                                  <option>{datalistTask.name[0]()}</option>
+                                </Show>
+                              )}
+                            </For>
+                          </datalist>
+                        </Show>
+                      </div>
+                    </td>
 
                     <td title={created.toLocaleString()}>{created.toLocaleDateString()}</td>
 
                     <td title={updated().toLocaleString()}>{updated().toLocaleDateString()}</td>
 
                     <td class="text-right">
-                      <button on:click={() => setTasks(tasks().toSpliced(i(), 1))}>Delete</button>
+                      <button
+                        on:click={() => {
+                          setTasks((v) => v.toSpliced(i(), 1));
+                          for (const {
+                            dependencies: [, setDependencies],
+                          } of tasks()) {
+                            setDependencies((dependencies) =>
+                              dependencies.filter((dependency) => dependency !== task),
+                            );
+                          }
+                        }}
+                      >
+                        Delete
+                      </button>
                     </td>
                   </tr>
                 </Show>
