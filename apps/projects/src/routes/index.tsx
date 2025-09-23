@@ -165,9 +165,10 @@ export default () => {
                                 <div class="border inline">
                                   {dependee.name[0]()}
                                   <button
-                                    on:click={() =>
-                                      setEntityDependencies((v) => v.toSpliced(i(), 1))
-                                    }
+                                    on:click={() => {
+                                      setEntityDependencies((v) => v.toSpliced(i(), 1));
+                                      setUpdated(Date.now());
+                                    }}
                                   >
                                     x
                                   </button>
@@ -202,6 +203,7 @@ export default () => {
                               if (dependee) {
                                 setEntityDependencies((v) => [...v, [entity, dependee]]);
                               }
+                              setUpdated(Date.now());
                             }}
                             on:blur={() => setAddingDependency(false)}
                             on:keydown={(e) =>
@@ -217,10 +219,9 @@ export default () => {
                                     // TODO: need to hide it if the entry's dependency chain includes `task`
                                     //       need to propagate dependencies up
                                     entity !== datalistEntity &&
-                                    !entityDependencies().some(
-                                      ([dependent, dependee]) =>
-                                        dependent === entity && dependee === datalistEntity,
-                                    )
+                                    !entity
+                                      .dependencies()
+                                      .some(([, dependee]) => dependee === datalistEntity)
                                   }
                                 >
                                   <option>{datalistEntity.name[0]()}</option>

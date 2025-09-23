@@ -7,6 +7,7 @@ export interface Entity {
   end: Signal<string | undefined>;
   created: number;
   updated: Signal<number>;
+  dependencies: Accessor<EntityDependency[]>;
   blocked: Accessor<boolean>;
 }
 
@@ -33,11 +34,11 @@ export function objectToEntity(entityPojo: Partial<EntityPojo>): Entity {
     end: createSignal(entityPojo.end),
     created: entityPojo.created ?? Date.now(),
     updated: createSignal(entityPojo.updated ?? Date.now()),
+
+    dependencies: () => entityDependencies().filter(([dependent]) => dependent === entity),
+
     blocked: () =>
-      entityDependencies().some(
-        ([dependent, dependee]) =>
-          dependent === entity && (!dependee.completed[0]() || dependee.blocked()),
-      ),
+      entity.dependencies().some(([, dependee]) => !dependee.completed[0]() || dependee.blocked()),
   };
 
   return entity;
