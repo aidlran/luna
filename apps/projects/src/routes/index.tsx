@@ -3,17 +3,8 @@ import { Title } from '@solidjs/meta';
 import { type Accessor, createMemo, createSignal, For, type JSX, type ParentProps, type Setter, Show, type Signal } from 'solid-js';
 import EditableDate from '~/components/editable-date';
 import EditableText from '~/components/editable-text';
-
-interface Task {
-  name: Signal<string>;
-  completed: Signal<boolean>;
-  start: Signal<string | undefined>;
-  end: Signal<string | undefined>;
-  dependencies: Signal<Task[]>;
-  blocked: Accessor<boolean>;
-  created: number;
-  updated: Signal<number>;
-}
+// prettier-ignore
+import { entities, entityDependencies, objectToEntity, setEntities, setEntityDependencies } from '~/lib/entities';
 
 const FilterCheckbox = ({
   children,
@@ -27,16 +18,11 @@ const FilterCheckbox = ({
 );
 
 export default () => {
-  // Adding new task state
   const [addingTask, setAddingTask] = createSignal(false);
 
-  // Filters state
   const [hideBlocked, setHideBlocked] = createSignal(true);
   const [hideCompleted, setHideCompleted] = createSignal(true);
   const [hideFuture, setHideFuture] = createSignal(true);
-
-  // Task list
-  const [tasks, setTasks] = createSignal<Task[]>([]);
 
   let newTaskInput!: HTMLInputElement;
 
@@ -88,25 +74,9 @@ export default () => {
                   class="w-full"
                   placeholder="New task"
                   on:blur={(e) => {
-                    const value = e.currentTarget.value.trim();
-                    if (value) {
-                      const now = Date.now();
-                      const dependencies = createSignal<Task[]>([]);
-                      setTasks([
-                        {
-                          name: createSignal(value),
-                          completed: createSignal(false),
-                          start: createSignal(),
-                          end: createSignal(),
-                          dependencies,
-                          blocked: createMemo(() =>
-                            dependencies[0]().some((dep) => !dep.completed[0]() || dep.blocked()),
-                          ),
-                          created: now,
-                          updated: createSignal(now),
-                        },
-                        ...tasks(),
-                      ]);
+                    const name = e.currentTarget.value.trim();
+                    if (name) {
+                      setEntities((entities) => [objectToEntity({ name }), ...entities]);
                     }
                     setAddingTask(false);
                   }}
@@ -117,16 +87,15 @@ export default () => {
               </td>
             </tr>
           </Show>
-          <For each={tasks()}>
-            {(task, i) => {
-              const [name, setName] = task.name;
-              const [completed, setCompleted] = task.completed;
-              const [start] = task.start;
-              const created = new Date(task.created);
-              const [, setUpdated] = task.updated;
-              const updated = createMemo(() => new Date(task.updated[0]()));
+          <For each={entities()}>
+            {(entity, i) => {
+              const [name, setName] = entity.name;
+              const [completed, setCompleted] = entity.completed;
+              const [start] = entity.start;
+              const created = new Date(entity.created);
+              const [, setUpdated] = entity.updated;
+              const updated = createMemo(() => new Date(entity.updated[0]()));
 
-              const [dependencies, setDependencies] = task.dependencies;
               const [addingDependency, setAddingDependency] = createSignal(false);
               let dependencyInput!: HTMLInputElement;
 
@@ -155,7 +124,7 @@ export default () => {
               return (
                 <Show
                   when={
-                    (!hideBlocked() || !task.blocked()) &&
+                    (!hideBlocked() || !entity.blocked()) &&
                     (!hideCompleted() || !completed()) &&
                     (!hideFuture() || !start() || Date.parse(start()!) <= Date.now())
                   }
@@ -183,25 +152,27 @@ export default () => {
                       />
                     </td>
 
-                    <EditableDateCell value={task.start} />
+                    <EditableDateCell value={entity.start} />
 
-                    <EditableDateCell value={task.end} />
+                    <EditableDateCell value={entity.end} />
 
                     <td>
                       <div class="flex justify-between">
                         <div>
-                          <For each={dependencies()}>
-                            {({ name: [name] }, i) => (
-                              <div class="border inline">
-                                {name()}
-                                <button
-                                  on:click={() => {
-                                    setDependencies((v) => v.toSpliced(i(), 1));
-                                  }}
-                                >
-                                  x
-                                </button>
-                              </div>
+                          <For each={entityDependencies()}>
+                            {([dependent, dependee], i) => (
+                              <Show when={dependent === entity}>
+                                <div class="border inline">
+                                  {dependee.name[0]()}
+                                  <button
+                                    on:click={() =>
+                                      setEntityDependencies((v) => v.toSpliced(i(), 1))
+                                    }
+                                  >
+                                    x
+                                  </button>
+                                </div>
+                              </Show>
                             )}
                           </For>
                         </div>
@@ -225,11 +196,11 @@ export default () => {
                             ref={dependencyInput}
                             on:change={(e) => {
                               e.target.blur();
-                              const dependency = tasks().find(
+                              const dependee = entities().find(
                                 ({ name: [name] }) => name() === e.target.value,
                               );
-                              if (dependency) {
-                                setDependencies((v) => [...v, dependency]);
+                              if (dependee) {
+                                setEntityDependencies((v) => [...v, [entity, dependee]]);
                               }
                             }}
                             on:blur={() => setAddingDependency(false)}
@@ -239,19 +210,20 @@ export default () => {
                           />
 
                           <datalist id="tasks">
-                            <For each={tasks()}>
-                              {(datalistTask) => (
+                            <For each={entities()}>
+                              {(datalistEntity) => (
                                 <Show
                                   when={
                                     // TODO: need to hide it if the entry's dependency chain includes `task`
                                     //       need to propagate dependencies up
-                                    task !== datalistTask &&
-                                    !dependencies().some(
-                                      (dependencyTask) => dependencyTask === datalistTask,
+                                    entity !== datalistEntity &&
+                                    !entityDependencies().some(
+                                      ([dependent, dependee]) =>
+                                        dependent === entity && dependee === datalistEntity,
                                     )
                                   }
                                 >
-                                  <option>{datalistTask.name[0]()}</option>
+                                  <option>{datalistEntity.name[0]()}</option>
                                 </Show>
                               )}
                             </For>
@@ -267,14 +239,13 @@ export default () => {
                     <td class="text-right">
                       <button
                         on:click={() => {
-                          setTasks((v) => v.toSpliced(i(), 1));
-                          for (const {
-                            dependencies: [, setDependencies],
-                          } of tasks()) {
-                            setDependencies((dependencies) =>
-                              dependencies.filter((dependency) => dependency !== task),
-                            );
-                          }
+                          setEntities((v) => v.toSpliced(i(), 1));
+                          setEntityDependencies((dependencies) =>
+                            dependencies.filter(
+                              ([dependent, dependee]) =>
+                                entity !== dependent && entity !== dependee,
+                            ),
+                          );
                         }}
                       >
                         Delete
