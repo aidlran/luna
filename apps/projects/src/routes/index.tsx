@@ -1,10 +1,12 @@
+import { deleteImmutable } from '@astrobase/sdk/immutable';
 import { Title } from '@solidjs/meta';
 // prettier-ignore
 import { type Accessor, createMemo, createSignal, For, type JSX, type ParentProps, type Setter, Show, type Signal } from 'solid-js';
 import EditableDate from '~/components/editable-date';
 import EditableText from '~/components/editable-text';
+import astrobaseMergedConfig from '~/lib/astrobase-merged-config';
 // prettier-ignore
-import { entities, entityDependencies, objectToEntity, setEntities, setEntityDependencies } from '~/lib/entities';
+import { createEntity, entities, entityDependencies, saveRoot, setEntities, setEntityDependencies, updateEntity } from '~/lib/entities';
 
 const FilterCheckbox = ({
   children,
@@ -75,9 +77,7 @@ export default () => {
                   placeholder="New task"
                   on:blur={(e) => {
                     const name = e.currentTarget.value.trim();
-                    if (name) {
-                      setEntities((entities) => [objectToEntity({ name }), ...entities]);
-                    }
+                    name && createEntity({ name });
                     setAddingTask(false);
                   }}
                   on:keydown={(e) =>
@@ -109,13 +109,12 @@ export default () => {
                     <EditableDate
                       class="grow"
                       value={get}
-                      on:change={(e) => {
-                        setUpdated(Date.now());
-                        set(new Date(e.target.value).toISOString());
-                      }}
+                      on:change={(e) =>
+                        updateEntity(entity, () => set(new Date(e.target.value).toISOString()))
+                      }
                     />
                     <Show when={get()}>
-                      <button on:click={() => set(undefined)}>x</button>
+                      <button on:click={() => updateEntity(entity, () => set(undefined))}>x</button>
                     </Show>
                   </div>
                 </td>
@@ -136,10 +135,7 @@ export default () => {
                         value={name}
                         on:change={(e) => {
                           const v = e.target.value.trim();
-                          if (v) {
-                            setUpdated(Date.now());
-                            setName(e.target.value.trim());
-                          }
+                          v && updateEntity(entity, () => setName(v));
                         }}
                       />
                     </td>
@@ -148,7 +144,9 @@ export default () => {
                       <input
                         type="checkbox"
                         checked={completed()}
-                        on:change={(e) => (setUpdated(Date.now()), setCompleted(e.target.checked))}
+                        on:change={(e) =>
+                          updateEntity(entity, () => setCompleted(e.target.checked))
+                        }
                       />
                     </td>
 
@@ -165,9 +163,9 @@ export default () => {
                                 <div class="border inline">
                                   {dependee.name[0]()}
                                   <button
-                                    on:click={() => {
+                                    on:click={async () => {
                                       setEntityDependencies((v) => v.toSpliced(i(), 1));
-                                      setUpdated(Date.now());
+                                      updateEntity(entity, undefined, true);
                                     }}
                                   >
                                     x
@@ -195,15 +193,15 @@ export default () => {
                             class="grow"
                             list="tasks"
                             ref={dependencyInput}
-                            on:change={(e) => {
+                            on:change={async (e) => {
                               e.target.blur();
                               const dependee = entities().find(
                                 ({ name: [name] }) => name() === e.target.value,
                               );
                               if (dependee) {
                                 setEntityDependencies((v) => [...v, [entity, dependee]]);
+                                updateEntity(entity, undefined, true);
                               }
-                              setUpdated(Date.now());
                             }}
                             on:blur={() => setAddingDependency(false)}
                             on:keydown={(e) =>
@@ -239,7 +237,7 @@ export default () => {
 
                     <td class="text-right">
                       <button
-                        on:click={() => {
+                        on:click={async () => {
                           setEntities((v) => v.toSpliced(i(), 1));
                           setEntityDependencies((dependencies) =>
                             dependencies.filter(
@@ -247,6 +245,8 @@ export default () => {
                                 entity !== dependent && entity !== dependee,
                             ),
                           );
+                          saveRoot();
+                          deleteImmutable(astrobaseMergedConfig()!, (await entity.cid()).value);
                         }}
                       >
                         Delete
