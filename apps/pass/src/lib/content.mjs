@@ -1,5 +1,6 @@
 import { deleteContent } from '@astrobase/sdk/content';
-import { get, getEntry, getIndex, put, saveIndex } from '../../../../lib/luna/content.mjs';
+// prettier-ignore
+import { assertEntryExists, deleteEntry as baseDeleteEntry, get, getEntry, getIndex, put, saveIndex } from '../../../../lib/luna/content.mjs';
 import pkg from '../../package.json' with { type: 'json' };
 
 /**
@@ -35,22 +36,10 @@ export async function getEntryProps(instance, id) {
 /**
  * @param {import('@astrobase/sdk/instance').Instance} instance
  * @param {string} id
- * @param {boolean} [bool] `true` = it must exist. `false` = it must not exist.
- */
-export async function assertEntryExists(instance, id, bool = true) {
-  if (!(await getIndex(instance, pkg.name))[id] == bool) {
-    console.error(`Entry '${id}' ${bool ? 'does not exist' : 'already exists'}`);
-    process.exit(1);
-  }
-}
-
-/**
- * @param {import('@astrobase/sdk/instance').Instance} instance
- * @param {string} id
  * @returns {Promise<import('./content.mjs').Entry['props']>}
  */
 export async function getAssertedEntryProps(instance, id) {
-  await assertEntryExists(instance, id);
+  await assertEntryExists(instance, pkg.name, id);
   const props = await getEntryProps(instance, id);
   if (!props) {
     console.error(`Entry '${id}' not found`);
@@ -95,26 +84,15 @@ export async function renameEntry(instance, oldID, newID) {
   await saveIndex(instance, pkg.name, index);
 }
 
-/**
- * Deletes an entry in the index and cleans up entry history.
- *
- * @param {import('@astrobase/sdk/instance').Instance} instance
- * @param {string} id
- */
-export async function deleteEntry(instance, id) {
-  const index = await getIndex(instance, pkg.name);
-
-  let cid = index[id]?.cid;
-
-  delete index[id];
-
+/** @type {import('../../../../lib/luna/content.mjs').DeleteEntryHook<IndexValue>} */
+export async function deleteEntryHook({ cid }, instance) {
   /** @type {Promise<unknown>[]} */
-  const promises = [saveIndex(instance, pkg.name, index)];
+  const promises = [];
 
   while (cid) {
-    /** @type {Entry} */
-    // @ts-expect-error
+    /** @type {Entry | void} */
     const entry = await get(instance, pkg.name, cid);
+
     promises.push(deleteContent(cid, instance));
 
     if (!entry) {
@@ -124,5 +102,16 @@ export async function deleteEntry(instance, id) {
     cid = entry.prev;
   }
 
-  await Promise.all(promises);
+  return Promise.all(promises);
+}
+
+/**
+ * Deletes an entry in the index and cleans up entry history.
+ *
+ * @deprecated
+ * @param {import('@astrobase/sdk/instance').Instance} instance
+ * @param {string} id
+ */
+export async function deleteEntry(instance, id) {
+  await baseDeleteEntry(instance, pkg.name, id, deleteEntryHook);
 }

@@ -1,7 +1,8 @@
 import { Command } from 'commander';
+import { assertEntryExists } from '../../../../lib/luna/content.mjs';
 import { dbOption } from '../../../../lib/luna/db.option.mjs';
 import pkg from '../../package.json' with { type: 'json' };
-import { assertEntryExists, renameEntry } from '../lib/content.mjs';
+import { renameEntry } from '../lib/content.mjs';
 import { init } from '../lib/init.mjs';
 
 export default new Command('rename')
@@ -11,8 +12,8 @@ export default new Command('rename')
   .action(async (oldID, newID, { db }) => {
     const instance = await init(db);
 
-    await assertEntryExists(instance, oldID);
-    await assertEntryExists(instance, newID, false);
+    await assertEntryExists(instance, pkg.name, oldID);
+    await assertEntryExists(instance, pkg.name, newID, false);
 
     await renameEntry(instance, oldID, newID);
   });
