@@ -1,9 +1,6 @@
 {
-  "plugins": ["prettier-plugin-jsdoc", "prettier-plugin-svelte"],
+  "plugins": ["prettier-plugin-jsdoc"],
   "printWidth": 100,
   "singleQuote": true,
-  "overrides": [
-    { "files": "*.svelte", "options": { "parser": "svelte" } },
-    { "files": "*.svg", "options": { "parser": "html" } }
-  ]
+  "overrides": [{ "files": "*.svg", "options": { "parser": "html" } }]
 }

@@ -1,11 +1,10 @@
 .output/
-.svelte-kit/
 .vinxi/
 build/
 coverage/
 node_modules/
 **/src-tauri/gen/schemas/
 **/src-tauri/target/
-*.db
+*.db*
 .DS_Store
 vite.config.js.*

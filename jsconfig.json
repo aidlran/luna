@@ -1,0 +1,7 @@
+{
+  "compilerOptions": {
+    "module": "NodeNext",
+    "checkJs": true
+  },
+  "include": ["apps/*/src/**/*", "lib/luna/**/*", "lib/test/**/*"]
+}

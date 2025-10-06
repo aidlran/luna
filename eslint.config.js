@@ -1,29 +1,19 @@
 import eslint from '@eslint/js';
+import { defineConfig } from 'eslint/config';
 import prettier from 'eslint-config-prettier';
 import solid from 'eslint-plugin-solid/configs/typescript';
-import svelte from 'eslint-plugin-svelte';
 import globals from 'globals';
 import ts from 'typescript-eslint';
 
-export default ts.config(
+export default defineConfig(
   eslint.configs.recommended,
   ...ts.configs.strict,
-  ...svelte.configs['flat/recommended'],
   prettier,
-  ...svelte.configs['flat/prettier'],
   {
     languageOptions: {
       globals: {
         ...globals.browser,
         ...globals.node,
-      },
-    },
-  },
-  {
-    files: ['**/*.svelte'],
-    languageOptions: {
-      parserOptions: {
-        parser: ts.parser,
       },
     },
   },
@@ -36,18 +26,20 @@ export default ts.config(
   },
   {
     ignores: [
-      '**/.svelte-kit/',
+      '**/.output/',
+      '**/.vinxi/',
       '**/build/',
       '**/coverage/',
       '**/dist/',
       '**/src-tauri/gen/schemas/',
       '**/src-tauri/target/',
       '**/static/',
-      'lib/',
+      'lib/astrobase',
     ],
   },
   {
     rules: {
+      '@typescript-eslint/ban-ts-comment': 'off',
       'no-console': 'error',
     },
   },

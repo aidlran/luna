@@ -2,7 +2,3 @@
 	path = lib/astrobase
 	url = https://github.com/AstrobaseTech/Astrobase
 
-[submodule "Astrobase-legacy"]
-	path = lib/astrobase-legacy
-	url = https://github.com/AstrobaseTech/Astrobase
-

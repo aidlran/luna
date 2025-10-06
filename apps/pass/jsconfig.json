@@ -1,8 +1,0 @@
-{
-  "compilerOptions": {
-    "module": "NodeNext",
-    "checkJs": true,
-    "resolveJsonModule": true
-  },
-  "files": ["src/cli.mjs"]
-}

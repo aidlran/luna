@@ -3,10 +3,12 @@ import { Common } from '@astrobase/sdk/common';
 import { inMemory } from '@astrobase/sdk/in-memory';
 import { createInstance } from '@astrobase/sdk/instance';
 import { createKeyring, loadKeyring } from '@astrobase/sdk/keyrings';
+import assert from 'assert';
 import { randomBytes } from 'crypto';
 import { expect, test } from 'vitest';
-// prettier-ignore
-import { deleteEntry, get, getEntry, getIndex, put, renameEntry, saveEntry, saveIndex } from './content.mjs';
+import { getEntry, getIndex, saveIndex } from '../../../../lib/luna/content.mjs';
+import pkg from '../../package.json' with { type: 'json' };
+import { deleteEntry, renameEntry, saveEntry } from './content.mjs';
 
 const randText = (length = 8) => randomBytes(length).toString('base64');
 
@@ -15,36 +17,23 @@ const passphrase = randText();
 const keyring = await createKeyring(instance, { passphrase, wordlist });
 await loadKeyring(instance, { cid: keyring.cid, passphrase, wordlist });
 
-test('Put & get', async () => {
-  const content = {
-    [randText()]: randText(),
-    [randText()]: [randText()],
-    [randText()]: { [randText()]: randText() },
-  };
-
-  const cid = await put(instance, content);
-
-  await expect(get(instance, cid)).resolves.toStrictEqual(content);
-});
-
 test('saveEntry, getEntry, renameEntry & deleteEntry', async () => {
-  await saveIndex(instance, {});
+  await saveIndex(instance, pkg.name, {});
 
   const firstEntryID = randText();
 
   // Non exist get test
-  await expect(getEntry(instance, firstEntryID)).resolves.toBe(null);
+  await expect(getEntry(instance, pkg.name, firstEntryID)).resolves.toBe(undefined);
 
   // Save new test
-  /** @type {import('./content.mjs').Entry} */
   let props = {
     [randText()]: randText(),
   };
   await saveEntry(instance, firstEntryID, props);
-  await expect(getEntry(instance, firstEntryID)).resolves.toStrictEqual({ props });
+  await expect(getEntry(instance, pkg.name, firstEntryID)).resolves.toStrictEqual({ props });
 
   // Save update test
-  let prev = (await getIndex())[firstEntryID].cid;
+  let prev = (await getIndex(instance, pkg.name))[firstEntryID].cid;
   props = {
     [randText()]: randText(),
     [randText()]: randText(),
@@ -52,7 +41,8 @@ test('saveEntry, getEntry, renameEntry & deleteEntry', async () => {
   await saveEntry(instance, firstEntryID, props);
 
   // Get after update
-  let retrievedEntry = await getEntry(instance, firstEntryID);
+  let retrievedEntry = await getEntry(instance, pkg.name, firstEntryID);
+  assert(retrievedEntry);
   expect(retrievedEntry.prev.toString()).toBe(prev.toString());
   expect(retrievedEntry.props).toStrictEqual(props);
 
@@ -61,13 +51,14 @@ test('saveEntry, getEntry, renameEntry & deleteEntry', async () => {
 
   // Rename test
   await renameEntry(instance, firstEntryID, secondEntryID);
-  await expect(getEntry(instance, firstEntryID)).resolves.toBe(null);
-  retrievedEntry = await getEntry(instance, secondEntryID);
+  await expect(getEntry(instance, pkg.name, firstEntryID)).resolves.toBe(undefined);
+  retrievedEntry = await getEntry(instance, pkg.name, secondEntryID);
+  assert(retrievedEntry);
   expect(retrievedEntry.prev.toString()).toBe(prev.toString());
   expect(retrievedEntry.props).toStrictEqual(props);
 
   // Delete test
   await deleteEntry(instance, secondEntryID);
-  await expect(getEntry(instance, firstEntryID)).resolves.toBe(null);
-  await expect(getEntry(instance, secondEntryID)).resolves.toBe(null);
+  await expect(getEntry(instance, pkg.name, firstEntryID)).resolves.toBe(undefined);
+  await expect(getEntry(instance, pkg.name, secondEntryID)).resolves.toBe(undefined);
 });
