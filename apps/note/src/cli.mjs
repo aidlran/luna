@@ -2,6 +2,7 @@
 
 import { Command } from 'commander';
 import listCommand from '../../../lib/luna/commands/list.command.mjs';
+import renameCommand from '../../../lib/luna/commands/rename.command.mjs';
 import pkg from '../package.json' with { type: 'json' };
 import deleteCommand from './commands/delete.command.mjs';
 import editCommand from './commands/edit.command.mjs';
@@ -12,4 +13,5 @@ new Command(pkg.name)
   .addCommand(deleteCommand)
   .addCommand(editCommand)
   .addCommand(listCommand(pkg.name))
+  .addCommand(renameCommand(pkg.name))
   .parse();

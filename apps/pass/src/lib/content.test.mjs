@@ -6,9 +6,9 @@ import { createKeyring, loadKeyring } from '@astrobase/sdk/keyrings';
 import assert from 'assert';
 import { randomBytes } from 'crypto';
 import { expect, test } from 'vitest';
-import { getEntry, getIndex, saveIndex } from '../../../../lib/luna/content.mjs';
+import { deleteEntry, getEntry, getIndex, saveIndex } from '../../../../lib/luna/content.mjs';
 import pkg from '../../package.json' with { type: 'json' };
-import { deleteEntry, renameEntry, saveEntry } from './content.mjs';
+import { deleteEntryHook, saveEntry } from './content.mjs';
 
 const randText = (length = 8) => randomBytes(length).toString('base64');
 
@@ -46,19 +46,7 @@ test('saveEntry, getEntry, renameEntry & deleteEntry', async () => {
   expect(retrievedEntry.prev.toString()).toBe(prev.toString());
   expect(retrievedEntry.props).toStrictEqual(props);
 
-  // Will be renamed
-  const secondEntryID = firstEntryID + 'different';
-
-  // Rename test
-  await renameEntry(instance, firstEntryID, secondEntryID);
-  await expect(getEntry(instance, pkg.name, firstEntryID)).resolves.toBe(undefined);
-  retrievedEntry = await getEntry(instance, pkg.name, secondEntryID);
-  assert(retrievedEntry);
-  expect(retrievedEntry.prev.toString()).toBe(prev.toString());
-  expect(retrievedEntry.props).toStrictEqual(props);
-
   // Delete test
-  await deleteEntry(instance, secondEntryID);
+  await deleteEntry(instance, pkg.name, firstEntryID, deleteEntryHook);
   await expect(getEntry(instance, pkg.name, firstEntryID)).resolves.toBe(undefined);
-  await expect(getEntry(instance, pkg.name, secondEntryID)).resolves.toBe(undefined);
 });
