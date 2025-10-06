@@ -11,7 +11,7 @@ import pkg from '../../package.json' with { type: 'json' };
 
 export default new Command('edit')
   .argument('<name>')
-  .description('Edit a note')
+  .description(`Edit or create a note with EDITOR (${process.env.EDITOR})`)
   .addOption(dbOption(pkg.name))
   .action(async (name, { db }) => {
     const instance = await initInstance(db, pkg.name);
@@ -47,7 +47,7 @@ export default new Command('edit')
 function securelyEditViaEditor(/** @type {string | NodeJS.ArrayBufferView} */ data) {
   const tempFilePath = join(tmpdir(), randomUUID());
 
-  const editor = process.env.EDITOR || 'vim';
+  const editor = process.env.EDITOR;
   const args = [tempFilePath];
 
   if (editor === 'vim') {

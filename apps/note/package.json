@@ -2,7 +2,7 @@
   "name": "luna-note",
   "version": "0.1.0",
   "private": true,
-  "description": "A secure notes app using Astrobase",
+  "description": "A secure notes app using Astrobase.",
   "type": "module",
   "bin": "src/cli.mjs",
   "dependencies": {

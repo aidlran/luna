@@ -8,7 +8,7 @@ import { propertyOption } from '../options/property.option.mjs';
 import { secretOption } from '../options/secret.options.mjs';
 
 export default new Command('update')
-  .argument('<unique-id>')
+  .argument('<name>')
   .description('Update an existing entry')
   .addOption(dbOption(pkg.name))
   .addOption(propertyOption)

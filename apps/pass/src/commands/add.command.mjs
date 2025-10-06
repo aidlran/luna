@@ -9,7 +9,7 @@ import { propertyOption } from '../options/property.option.mjs';
 import { secretOption } from '../options/secret.options.mjs';
 
 export default new Command('add')
-  .argument('<unique-id>')
+  .argument('<name>')
   .description('Add an entry')
   .addOption(dbOption(pkg.name))
   .addOption(propertyOption)

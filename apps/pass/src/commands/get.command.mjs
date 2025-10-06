@@ -5,7 +5,7 @@ import { getAssertedEntryProps } from '../lib/content.mjs';
 import { init } from '../lib/init.mjs';
 
 export default new Command('get')
-  .argument('<unique-id>')
+  .argument('<name>')
   .description('Retrieve an entry')
   .addOption(dbOption(pkg.name))
   .action(async (id, { db }) => {
