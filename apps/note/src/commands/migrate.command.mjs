@@ -13,12 +13,14 @@ export default new Command('migrate')
   .description('Migrate the note from luna-pass')
   .addOption(dbOption(notePkg.name))
   .action(async (name, { db }) => {
+    // eslint-disable-next-line no-console
     console.log('Initialising Luna Note database...');
 
     const noteInstance = await initInstance(db, notePkg.name);
 
     await assertEntryExists(noteInstance, notePkg.name, name, false);
 
+    // eslint-disable-next-line no-console
     console.log('Initialising Luna Pass database...');
 
     const passPkgName = 'luna-pass';
@@ -46,5 +48,6 @@ export default new Command('migrate')
 
     await saveIndex(noteInstance, notePkg.name, noteIndex);
 
+    // eslint-disable-next-line no-console
     console.log('Note saved');
   });

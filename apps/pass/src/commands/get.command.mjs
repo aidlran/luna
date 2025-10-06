@@ -12,6 +12,7 @@ export default new Command('get')
     for (const [k, v] of Object.entries(await getAssertedEntryProps(await init(db), id)).sort(
       ([a], [b]) => a.localeCompare(b),
     )) {
+      // eslint-disable-next-line no-console
       console.log(`${k.charAt(0).toUpperCase()}${k.slice(1)}:`, v);
     }
   });

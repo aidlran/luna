@@ -9,7 +9,7 @@ export default new Command('cat')
   .argument('<name>')
   .description('Retrieve a note & print to stdout')
   .addOption(dbOption(pkg.name))
-  .action(async (name, { db }) => {
+  .action(async function (name, { db }) {
     const instance = await initInstance(db, pkg.name);
 
     /** @type {import('@astrobase/sdk/cid').ContentIdentifier} */
@@ -19,8 +19,7 @@ export default new Command('cat')
     const note = await get(instance, pkg.name, cid, 'application/octet-stream');
 
     if (!note) {
-      console.error('Note content not found');
-      process.exit(1);
+      this.error('Note content not found');
     }
 
     process.stdout.write(note);

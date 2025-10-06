@@ -37,9 +37,11 @@ export default new Command('edit')
       index[name] = await put(instance, pkg.name, newNote, 'application/octet-stream');
       newNote.fill(0);
       await saveIndex(instance, pkg.name, index);
+      // eslint-disable-next-line no-console
       console.log('Note saved');
     } else {
       newNote.fill(0);
+      // eslint-disable-next-line no-console
       console.log('No change');
     }
   });
@@ -63,6 +65,7 @@ function securelyEditViaEditor(/** @type {string | NodeJS.ArrayBufferView} */ da
   shred(tempFilePath);
 
   if (editResult.error) {
+    // eslint-disable-next-line no-console
     console.error(editResult.error.message);
     process.exit(editResult.status);
   }

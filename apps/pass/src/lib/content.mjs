@@ -1,6 +1,6 @@
 import { deleteContent } from '@astrobase/sdk/content';
 // prettier-ignore
-import { assertEntryExists, deleteEntry as baseDeleteEntry, get, getEntry, getIndex, put, saveIndex } from '../../../../lib/luna/content.mjs';
+import { assertEntryExists, get, getEntry, getIndex, put, saveIndex } from '../../../../lib/luna/content.mjs';
 import pkg from '../../package.json' with { type: 'json' };
 
 /**
@@ -42,6 +42,7 @@ export async function getAssertedEntryProps(instance, id) {
   await assertEntryExists(instance, pkg.name, id);
   const props = await getEntryProps(instance, id);
   if (!props) {
+    // eslint-disable-next-line no-console
     console.error(`Entry '${id}' not found`);
     process.exit(1);
   }

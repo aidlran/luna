@@ -21,6 +21,7 @@ export default new Command('update')
 
     if (keysToDelete) {
       for (const key of keysToDelete) {
+        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
         delete props[key];
       }
     }
