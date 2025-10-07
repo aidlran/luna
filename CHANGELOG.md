@@ -5,7 +5,7 @@
 ### Luna Note
 
 - First version.
-- Added `append`, `cat`, `delete`, `edit`, `list`, `migrate` & `rename` commands.
+- Added `append`, `cat`, `delete`, `edit`, `list`, `migrate`, `rename` & `set` commands.
 
 ### Luna Pass
 
