@@ -1,3 +1,4 @@
+import { deleteContent } from '@astrobase/sdk/content';
 import { spawnSync } from 'child_process';
 import { Command } from 'commander';
 import { randomUUID } from 'crypto';
@@ -39,6 +40,9 @@ export default new Command('edit')
       await saveIndex(instance, pkg.name, index);
       // eslint-disable-next-line no-console
       console.log('Note saved');
+      if (oldCID) {
+        await deleteContent(oldCID, instance);
+      }
     } else {
       newNote.fill(0);
       // eslint-disable-next-line no-console
