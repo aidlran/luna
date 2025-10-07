@@ -2,7 +2,6 @@ import { describe, expect, it } from 'vitest';
 import { generateID } from '../../../../lib/test/generate-id.mjs';
 import { spawnCommand } from '../../../../lib/test/spawn-command.mjs';
 import { passphrase } from '../../../../lib/test/passphrase.mjs';
-import { RESET, YELLOW } from '../lib/console.mjs';
 
 describe('Add command', () => {
   it('Adds an entry', async () => {
@@ -43,10 +42,8 @@ describe('Add command', () => {
     expect(exitCode).not.toBe(0);
     expect(stdout).toBe('');
     expect(stderr).toBe(
-      YELLOW +
-        'WARN: Secrets may have been leaked via command line input' +
-        RESET +
-        '\n--secret cannot accept a value on the command line for security reasons\n',
+      'WARN: Secrets may have been leaked via command line input\n' +
+        '--secret cannot accept a value on the command line for security reasons\n',
     );
   });
 

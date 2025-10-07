@@ -142,9 +142,7 @@ describe('Update command', () => {
     expect(updateResult.exitCode).not.toBe(0);
     expect(updateResult.stdout).toBe('');
     expect(updateResult.stderr).toBe(
-      YELLOW +
-        'WARN: Secrets may have been leaked via command line input' +
-        RESET +
+      'WARN: Secrets may have been leaked via command line input' +
         '\n--secret cannot accept a value on the command line for security reasons\n',
     );
 
