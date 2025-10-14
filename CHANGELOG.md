@@ -2,18 +2,25 @@
 
 ## Unreleased
 
-### Luna Note
+### Luna Projects
 
-- First version.
+- Migrated to Solid from Svelte.
+- Added management of a single task list with a reactive interface.
+
+## [Luna Note 0.1.0](https://github.com/aidlran/luna/releases/tag/note-v0.1.0) - 2025-10-14
+
+- Initial version.
 - Added `append`, `cat`, `delete`, `edit`, `list`, `migrate`, `rename` & `set` commands.
+- Added AGPL-3.0 license.
 
-### Luna Pass
+## [Luna Pass 3.0.0](https://github.com/aidlran/luna/releases/tag/pass-v3.0.0) - 2025-10-14
 
 - Removed automatic migration introduced in `v2.0.0-rc.7`.
 - Removed `note` subcommand in favour of standalone Luna Note app.
 - Refactored to modularise code.
 - Replaced `readline-sync` dependency with own solution.
 - Added E2E tests for commands.
+- Added AGPL-3.0 license.
 
 ## [Luna Pass 2.1.0](https://github.com/aidlran/cli-password-manager/releases/tag/v2.1.0) - 2025-07-17
 

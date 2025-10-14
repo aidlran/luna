@@ -6,7 +6,7 @@
   "homepage": "https://github.com/aidlran/luna#readme",
   "bugs": "https://github.com/aidlran/luna/issues",
   "repository": "github:aidlran/luna",
-  "license": "UNLICENSED",
+  "license": "AGPL-3.0-only",
   "author": "Aidan Loughran",
   "type": "module",
   "workspaces": [

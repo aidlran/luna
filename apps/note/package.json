@@ -3,6 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "description": "A secure notes app using Astrobase.",
+  "homepage": "https://github.com/aidlran/luna#readme",
+  "bugs": "https://github.com/aidlran/luna/issues",
+  "repository": "github:aidlran/luna",
+  "license": "AGPL-3.0-only",
+  "author": "Aidan Loughran",
   "type": "module",
   "bin": "src/cli.mjs",
   "dependencies": {
