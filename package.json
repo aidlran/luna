@@ -9,6 +9,10 @@
   "license": "AGPL-3.0-only",
   "author": "Aidan Loughran",
   "type": "module",
+  "bin": {
+    "luna-note": "apps/note/src/cli.mjs",
+    "luna-pass": "apps/pass/src/cli.mjs"
+  },
   "workspaces": [
     "apps/*",
     "lib/*"

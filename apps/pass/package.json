@@ -9,7 +9,6 @@
   "license": "AGPL-3.0-only",
   "author": "Aidan Loughran",
   "type": "module",
-  "bin": "src/cli.mjs",
   "dependencies": {
     "@bitcoinerlab/secp256k1": "^1.0.0",
     "@noble/secp256k1": "^2.0.0",
