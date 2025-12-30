@@ -1,5 +1,4 @@
 import { Option } from 'commander';
-import { inspect } from 'util';
 
 /**
  * @param {string} value
@@ -7,8 +6,8 @@ import { inspect } from 'util';
  */
 function parseIntArg(value) {
   const asInt = Number.parseInt(value);
-  console.log(inspect(this, true, null, true));
   if (Number.isNaN(asInt)) {
+    // eslint-disable-next-line no-console
     console.error(this.long + ' value must be an integer');
     process.exit(1);
   }

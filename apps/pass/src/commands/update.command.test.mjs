@@ -2,7 +2,6 @@ import { describe, expect, it } from 'vitest';
 import { generateID } from '../../../../lib/test/generate-id.mjs';
 import { spawnCommand } from '../../../../lib/test/spawn-command.mjs';
 import { passphrase } from '../../../../lib/test/passphrase.mjs';
-import { RESET, YELLOW } from '../lib/console.mjs';
 
 describe('Update command', () => {
   it('Updates an entry', async () => {

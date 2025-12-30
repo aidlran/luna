@@ -7,6 +7,14 @@
 - Migrated to Solid from Svelte.
 - Added management of a single task list with a reactive interface.
 
+## [Luna Note 0.2.0](https://github.com/aidlran/luna/releases/tag/note-v0.1.0) - 2025-12-30
+
+- Added error handling and reprompt when incorrect passphrase is entered.
+
+## [Luna Pass 3.1.0](https://github.com/aidlran/luna/releases/tag/pass-v3.1.0) - 2025-12-30
+
+- Added error handling and reprompt when incorrect passphrase is entered.
+
 ## [Luna Note 0.1.0](https://github.com/aidlran/luna/releases/tag/note-v0.1.0) - 2025-10-14
 
 - Initial version.

@@ -11,6 +11,8 @@ export default new Command('set')
   .description('Write to a new or overwrite an existing note from stdin')
   .addOption(dbOption(pkg.name))
   .addOption(timeoutOption)
-  .action(async (name, { db, timeout }) =>
-    setNote(await initInstance(db, pkg.name), name, await readStdin(timeout)),
-  );
+  .action(async function (name, { db, timeout }) {
+    const content = await readStdin(timeout);
+    const instance = await initInstance(db, pkg.name);
+    await setNote(instance, name, content);
+  });

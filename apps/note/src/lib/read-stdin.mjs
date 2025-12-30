@@ -7,6 +7,7 @@ export default async function (timeout) {
   const chunks = [];
 
   let timeoutInstance = setTimeout(() => {
+    // eslint-disable-next-line no-console
     console.error('Timed out awaiting input from stdin');
     process.exit(1);
   }, timeout);
@@ -17,12 +18,13 @@ export default async function (timeout) {
 
   process.stdin.on('data', (data) => {
     clearTimeout(timeoutInstance);
-    chunks.push(data);
+    chunks.push(typeof data === 'string' ? Buffer.from(data) : data);
   });
 
   await stdinRead;
 
   if (!chunks.some((buf) => buf.length)) {
+    // eslint-disable-next-line no-console
     console.error('No input from stdin');
     process.exit(1);
   }
