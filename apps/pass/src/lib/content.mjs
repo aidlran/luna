@@ -20,7 +20,7 @@ import pkg from '../../package.json' with { type: 'json' };
 /**
  * @param {import('@astrobase/sdk/instance').Instance} instance
  * @param {string} id
- * @returns {Promise<Entry['props'] & { added: string }>}
+ * @returns {Promise<(Entry['props'] & { added: string }) | undefined>}
  */
 export async function getEntryProps(instance, id) {
   const entry = await getEntry(instance, pkg.name, id);
@@ -72,7 +72,10 @@ export async function deleteEntryHook({ cid }, instance) {
   /** @type {Promise<unknown>[]} */
   const promises = [];
 
-  while (cid) {
+  /** @type {import('@astrobase/sdk/cid').ContentIdentifier | undefined} */
+  let next = cid;
+
+  while (next) {
     /** @type {Entry | void} */
     const entry = await get(instance, pkg.name, cid);
 
@@ -82,7 +85,7 @@ export async function deleteEntryHook({ cid }, instance) {
       break;
     }
 
-    cid = entry.prev;
+    next = entry.prev;
   }
 
   return Promise.all(promises);

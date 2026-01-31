@@ -1,6 +1,7 @@
 import { Option } from 'commander';
 
 /**
+ * @this {Option}
  * @param {string} value
  * @returns {number}
  */

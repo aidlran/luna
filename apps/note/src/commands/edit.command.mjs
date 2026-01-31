@@ -53,7 +53,7 @@ export default new Command('edit')
 function securelyEditViaEditor(/** @type {string | NodeJS.ArrayBufferView} */ data) {
   const tempFilePath = join(tmpdir(), randomUUID());
 
-  const editor = process.env.EDITOR;
+  const editor = process.env.EDITOR ?? 'vi';
   const args = [tempFilePath];
 
   if (editor === 'vim') {

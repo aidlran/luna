@@ -1,7 +1,7 @@
 import { prompt } from '../../../../lib/luna/readline.mjs';
 
 /**
- * @param {object} obj
+ * @param {Partial<Record<string, string>>} obj
  * @param {string[]} [secrets]
  * @returns {Promise<void>}
  */

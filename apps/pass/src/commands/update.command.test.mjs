@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { assert, describe, expect, it } from 'vitest';
 import { generateID } from '../../../../lib/test/generate-id.mjs';
 import { spawnCommand } from '../../../../lib/test/spawn-command.mjs';
 import { passphrase } from '../../../../lib/test/passphrase.mjs';
@@ -66,32 +66,40 @@ describe('Update command', () => {
 
     expect(empty).toBe('');
 
-    const [twoFactorLabel, twoFactorValue] = twoFactorString.split(': ');
+    const [twoFactorLabel, twoFactorValue] = twoFactorString?.split(': ') ?? [];
     expect(twoFactorLabel).toBe('2FA code');
     expect(twoFactorValue).toBe(passphrase);
 
     const getResultBeforeSplit = getResultBefore.stdout.split('\n');
 
-    const [addedLabel, addedValue] = addedString.split(': ');
+    const [addedLabel, addedValue] = addedString?.split(': ') ?? [];
     expect(addedLabel).toBe('Added');
+    assert(addedValue);
     expect(Date.parse(addedValue)).not.toBeNaN();
-    expect(addedValue).toBe(getResultBeforeSplit[0].split(': ')[1]);
+    const getResultBeforeL1 = getResultBeforeSplit[0];
+    assert(getResultBeforeL1);
+    expect(addedValue).toBe(getResultBeforeL1.split(': ')[1]);
 
-    const [emailLabel, emailValue] = emailString.split(': ');
+    const [emailLabel, emailValue] = emailString?.split(': ') ?? [];
     expect(emailLabel).toBe('Email');
     expect(emailValue).toBe(email);
 
-    const [passwordLabel, passwordValue] = passwordString.split(': ');
+    const [passwordLabel, passwordValue] = passwordString?.split(': ') ?? [];
     expect(passwordLabel).toBe('Password');
     expect(passwordValue).toBe(passphrase);
 
-    const [updatedLabel, updatedValue] = updatedString.split(': ');
+    const [updatedLabel, updatedValue] = updatedString?.split(': ') ?? [];
     expect(updatedLabel).toBe('Updated');
+    assert(updatedValue);
     const updatedTimestamp = Date.parse(updatedValue);
     expect(updatedTimestamp).not.toBeNaN();
-    expect(updatedTimestamp).toBeGreaterThan(Date.parse(getResultBeforeSplit[4].split(': ')[1]));
+    const getResultBeforeL5 = getResultBeforeSplit[4];
+    assert(getResultBeforeL5);
+    const getResultBeforeL5Value = getResultBeforeL5.split(': ')[1];
+    assert(getResultBeforeL5Value);
+    expect(updatedTimestamp).toBeGreaterThan(Date.parse(getResultBeforeL5Value));
 
-    const [usernameLabel, usernameValue] = usernameString.split(': ');
+    const [usernameLabel, usernameValue] = usernameString?.split(': ') ?? [];
     expect(usernameLabel).toBe('Username');
     expect(usernameValue).toBe(username);
   });

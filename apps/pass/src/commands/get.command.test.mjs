@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { assert, describe, expect, it } from 'vitest';
 import { generateID } from '../../../../lib/test/generate-id.mjs';
 import { passphrase } from '../../../../lib/test/passphrase.mjs';
 import { spawnCommand } from '../../../../lib/test/spawn-command.mjs';
@@ -42,20 +42,22 @@ describe('Get command', () => {
 
     expect(empty).toBe('');
 
-    const [addedLabel, addedValue] = addedString.split(': ');
+    const [addedLabel, addedValue] = addedString?.split(': ') ?? [];
     expect(addedLabel).toBe('Added');
+    assert(addedValue);
     expect(Date.parse(addedValue)).not.toBeNaN();
 
-    const [emailLabel, emailValue] = emailString.split(': ');
+    const [emailLabel, emailValue] = emailString?.split(': ') ?? [];
     expect(emailLabel).toBe('Email');
     expect(emailValue).toBe(email);
 
-    const [passwordLabel, passwordValue] = passwordString.split(': ');
+    const [passwordLabel, passwordValue] = passwordString?.split(': ') ?? [];
     expect(passwordLabel).toBe('Password');
     expect(passwordValue).toBe(passphrase);
 
-    const [updatedLabel, updatedValue] = updatedString.split(': ');
+    const [updatedLabel, updatedValue] = updatedString?.split(': ') ?? [];
     expect(updatedLabel).toBe('Updated');
+    assert(updatedValue);
     expect(Date.parse(updatedValue)).not.toBeNaN();
   });
 });

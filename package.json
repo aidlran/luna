@@ -19,18 +19,22 @@
   ],
   "scripts": {
     "build": "npm run build -w lib/astrobase",
+    "ci": "conc npm:check npm:lint npm:test",
+    "check": "tsc --noEmit",
     "format": "prettier --write .",
     "lint": "eslint .",
     "test": "vitest run"
   },
   "devDependencies": {
     "@types/eslint": "^9.6.1",
+    "concurrently": "^9.2.1",
     "eslint": "^9.37.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-solid": "^0.14.5",
     "globals": "^16.4.0",
     "prettier": "^3.6.2",
     "prettier-plugin-jsdoc": "^1.3.3",
+    "typescript": "^5.9.3",
     "typescript-eslint": "^8.46.0",
     "vitest": "^3.2.4"
   }
