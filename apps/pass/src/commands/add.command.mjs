@@ -1,9 +1,9 @@
 import { Command } from 'commander';
 import { assertEntryExists } from '../../../../lib/luna/content.mjs';
 import { dbOption } from '../../../../lib/luna/db.option.mjs';
+import { initInstance } from '../../../../lib/luna/init.mjs';
 import pkg from '../../package.json' with { type: 'json' };
 import { saveEntry } from '../lib/content.mjs';
-import { init } from '../lib/init.mjs';
 import { promptSecrets } from '../lib/prompt.mjs';
 import { propertyOption } from '../options/property.option.mjs';
 import { secretOption } from '../options/secret.options.mjs';
@@ -16,7 +16,7 @@ export default new Command('add')
   .addOption(secretOption)
   .action(async (id, { db, property, secret }) => {
     promptSecrets((property ??= {}), secret);
-    const instance = await init(db);
+    const instance = await initInstance(db, pkg.name);
     await assertEntryExists(instance, pkg.name, id, false);
     await saveEntry(instance, id, property);
   });

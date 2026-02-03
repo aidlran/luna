@@ -1,21 +1,21 @@
 import { deleteContent } from '@astrobase/sdk/content';
-import { spawnSync } from 'child_process';
 import { Command } from 'commander';
-import { randomUUID } from 'crypto';
-import { readFileSync, statSync, unlinkSync, writeFileSync } from 'fs';
-import { tmpdir } from 'os';
-import { join } from 'path';
+import { spawnSync } from 'node:child_process';
+import { randomUUID } from 'node:crypto';
+import { readFileSync, statSync, unlinkSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { get, getIndex, put, saveIndex } from '../../../../lib/luna/content.mjs';
 import { dbOption } from '../../../../lib/luna/db.option.mjs';
+import { initInstance } from '../../../../lib/luna/init.mjs';
 import pkg from '../../package.json' with { type: 'json' };
-import { init } from '../lib/init.mjs';
 
 export default new Command('edit')
   .argument('<name>')
   .description(`Edit or create a note with EDITOR (${process.env.EDITOR})`)
   .addOption(dbOption(pkg.name))
   .action(async (name, { db }) => {
-    const instance = await init(db);
+    const instance = await initInstance(db, pkg.name);
 
     /** @type {Record<string, import('@astrobase/sdk/cid').ContentIdentifier>} */
     const index = (await getIndex(instance, pkg.name)) || {};
