@@ -7,15 +7,15 @@ import { tmpdir } from 'os';
 import { join } from 'path';
 import { get, getIndex, put, saveIndex } from '../../../../lib/luna/content.mjs';
 import { dbOption } from '../../../../lib/luna/db.option.mjs';
-import { initInstance } from '../../../../lib/luna/init.mjs';
 import pkg from '../../package.json' with { type: 'json' };
+import { init } from '../lib/init.mjs';
 
 export default new Command('edit')
   .argument('<name>')
   .description(`Edit or create a note with EDITOR (${process.env.EDITOR})`)
   .addOption(dbOption(pkg.name))
   .action(async (name, { db }) => {
-    const instance = await initInstance(db, pkg.name);
+    const instance = await init(db);
 
     /** @type {Record<string, import('@astrobase/sdk/cid').ContentIdentifier>} */
     const index = (await getIndex(instance, pkg.name)) || {};
@@ -23,9 +23,7 @@ export default new Command('edit')
     const oldCID = index[name];
 
     /** @type {Uint8Array<ArrayBuffer>} */
-    const note =
-      (oldCID && (await get(instance, pkg.name, oldCID, 'application/octet-stream'))) ||
-      new Uint8Array();
+    const note = (oldCID && (await get(instance, oldCID))) || new Uint8Array();
 
     /** @type {Buffer<ArrayBuffer>} */
     const newNote = securelyEditViaEditor(note);

@@ -77,7 +77,7 @@ export async function deleteEntryHook({ cid }, instance) {
 
   while (next) {
     /** @type {Entry | void} */
-    const entry = await get(instance, pkg.name, cid);
+    const entry = await get(instance, cid);
 
     promises.push(deleteContent(cid, instance));
 

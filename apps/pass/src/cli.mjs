@@ -8,6 +8,7 @@ import addCommand from './commands/add.command.mjs';
 import deleteCommand from './commands/delete.command.mjs';
 import getCommand from './commands/get.command.mjs';
 import updateCommand from './commands/update.command.mjs';
+import { init } from './lib/init.mjs';
 
 new Command(pkg.name)
   .description(pkg.description)
@@ -15,7 +16,7 @@ new Command(pkg.name)
   .addCommand(addCommand)
   .addCommand(deleteCommand)
   .addCommand(getCommand)
-  .addCommand(listCommand(pkg.name))
-  .addCommand(renameCommand(pkg.name))
+  .addCommand(listCommand(pkg.name, init))
+  .addCommand(renameCommand(pkg.name, init))
   .addCommand(updateCommand)
   .parse();

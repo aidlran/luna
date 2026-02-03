@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+### Luna Note
+
+- Upgraded Astrobase & migrated to crypt wraps. An automatic migration will run when using the CLI
+  with an old database. This migration will be removed in a future version.
+- Removed the `migrate` subcommand.
+
+### Luna Pass
+
+- Upgraded Astrobase & migrated to crypt wraps. An automatic migration will run when using the CLI
+  with an old database. This migration will be removed in a future version.
+
 ### Luna Projects
 
 - Migrated to Solid from Svelte.
