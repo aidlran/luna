@@ -5,7 +5,7 @@ import { hash, SHA_256 } from '@astrobase/sdk/hashing';
 import { deleteImmutable, putImmutable, toImmutableCID } from '@astrobase/sdk/immutable';
 import { getMutable, putMutable } from '@astrobase/sdk/mutable';
 import { createEffect, createSignal, type Accessor, type Signal } from 'solid-js';
-import astrobaseMergedConfig from './astrobase-merged-config';
+import { instance as _instance } from './astrobase';
 
 export interface Entity {
   name: Signal<string>;
@@ -47,7 +47,7 @@ export function objectToEntity(entityPojo: Partial<EntityPojo>): Entity {
     updated: createSignal(entityPojo.updated ?? Date.now()),
 
     file() {
-      const config = astrobaseMergedConfig()!;
+      const config = _instance()!;
       return new FileBuilder().setMediaType('application/json').setValue(
         {
           name: entity.name[0](),
@@ -62,7 +62,7 @@ export function objectToEntity(entityPojo: Partial<EntityPojo>): Entity {
     },
 
     async cid() {
-      const config = astrobaseMergedConfig()!;
+      const config = _instance()!;
       const file = entity.file();
       return toImmutableCID(await hash(config, SHA_256, (await file).buffer));
     },
@@ -77,7 +77,7 @@ export function objectToEntity(entityPojo: Partial<EntityPojo>): Entity {
 }
 
 export async function saveRoot() {
-  const instance = astrobaseMergedConfig()!;
+  const instance = _instance()!;
   return putMutable(
     'luna-projects',
     await new FileBuilder().setMediaType('application/json').setValue(
@@ -94,7 +94,7 @@ export async function saveRoot() {
 }
 
 async function saveEntity(entity: Entity) {
-  const instance = astrobaseMergedConfig()!;
+  const instance = _instance()!;
 
   const [cid] = await Promise.all([putImmutable(await entity.file(), { instance }), saveRoot()]);
 
@@ -120,7 +120,7 @@ export async function updateEntity(entity: Entity, update?: () => unknown, force
 
   entity.updated[1](Date.now());
 
-  const instance = astrobaseMergedConfig()!;
+  const instance = _instance()!;
 
   const [cid] = await Promise.all([
     saveEntity(entity),
@@ -131,7 +131,7 @@ export async function updateEntity(entity: Entity, update?: () => unknown, force
 }
 
 createEffect(async () => {
-  const instance = astrobaseMergedConfig();
+  const instance = _instance();
 
   if (!instance) {
     return;

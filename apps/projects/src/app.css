@@ -1,8 +1,23 @@
 @import 'tailwindcss';
 
 @layer base {
-  button {
-    @apply py-1 px-2 rounded cursor-pointer hover:bg-neutral-200;
+  :root {
+    @apply bg-black text-white;
+  }
+
+  button,
+  A {
+    @apply py-1 px-2 cursor-pointer text-blue-400 hover:bg-neutral-800;
+  }
+
+  button,
+  input {
+    @apply block border w-full max-w-lg m-auto p-3;
+  }
+
+  form input,
+  form button {
+    @apply my-3;
   }
 
   th,
