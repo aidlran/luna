@@ -249,7 +249,10 @@ export default (): JSX.Element => {
                               ),
                             );
                             saveRoot();
-                            deleteImmutable(instance()!, (await entity.cid()).value);
+                            const cid = entity.cid[0]();
+                            if (cid) {
+                              deleteImmutable(instance()!, cid.value);
+                            }
                           }}
                         >
                           Delete

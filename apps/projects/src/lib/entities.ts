@@ -1,11 +1,9 @@
 import type { ContentIdentifier } from '@astrobase/sdk/cid';
-import { getContent } from '@astrobase/sdk/content';
-import { FileBuilder } from '@astrobase/sdk/file';
-import { hash, SHA_256 } from '@astrobase/sdk/hashing';
-import { deleteImmutable, putImmutable, toImmutableCID } from '@astrobase/sdk/immutable';
-import { getMutable, putMutable } from '@astrobase/sdk/mutable';
+import { CryptOptions } from '@astrobase/sdk/crypt';
+import { deleteImmutable } from '@astrobase/sdk/immutable';
 import { createEffect, createSignal, type Accessor, type Signal } from 'solid-js';
-import { instance as _instance } from './astrobase';
+import { get, getIndex, put, saveIndex } from '../../../../lib/luna/content.mjs';
+import { instance, keyringUnlocked, selectedKeyring } from './astrobase';
 
 export interface Entity {
   name: Signal<string>;
@@ -15,8 +13,7 @@ export interface Entity {
   created: number;
   updated: Signal<number>;
 
-  file: Accessor<Promise<FileBuilder>>;
-  cid: Accessor<Promise<ContentIdentifier>>;
+  cid: Signal<ContentIdentifier | undefined>;
 
   dependencies: Accessor<EntityDependency[]>;
   blocked: Accessor<boolean>;
@@ -29,9 +26,17 @@ export interface EntityPojo {
   end?: string;
   created: number;
   updated: number;
+  cid: ContentIdentifier;
 }
 
 export type EntityDependency = [dependent: Entity, dependee: Entity];
+
+const identityID = 'luna-projects';
+
+export const cryptOverrides: Partial<CryptOptions> = {
+  encAlg: 'XChaCha20-Poly1305',
+  nonce: crypto.getRandomValues(new Uint8Array(24)),
+};
 
 export const [entities, setEntities] = createSignal<Entity[]>([]);
 
@@ -46,26 +51,7 @@ export function objectToEntity(entityPojo: Partial<EntityPojo>): Entity {
     created: entityPojo.created ?? Date.now(),
     updated: createSignal(entityPojo.updated ?? Date.now()),
 
-    file() {
-      const config = _instance()!;
-      return new FileBuilder().setMediaType('application/json').setValue(
-        {
-          name: entity.name[0](),
-          completed: entity.completed[0](),
-          start: entity.start[0](),
-          end: entity.end[0](),
-          created: entity.created,
-          updated: entity.updated[0](),
-        },
-        config,
-      );
-    },
-
-    async cid() {
-      const config = _instance()!;
-      const file = entity.file();
-      return toImmutableCID(await hash(config, SHA_256, (await file).buffer));
-    },
+    cid: createSignal(entityPojo.cid),
 
     dependencies: () => entityDependencies().filter(([dependent]) => dependent === entity),
 
@@ -76,86 +62,108 @@ export function objectToEntity(entityPojo: Partial<EntityPojo>): Entity {
   return entity;
 }
 
-export async function saveRoot() {
-  const instance = _instance()!;
-  return putMutable(
-    'luna-projects',
-    await new FileBuilder().setMediaType('application/json').setValue(
-      {
-        entities: await Promise.all(entities().map(({ cid }) => cid())),
-        dependencies: await Promise.all(
-          entityDependencies().map(([a, b]) => Promise.all([a.cid(), b.cid()])),
-        ),
-      },
-      instance,
-    ),
-    { instance },
+export const saveRoot = async () =>
+  saveIndex(
+    instance()!,
+    identityID,
+    {
+      entities: await Promise.all(entities().map(({ cid }) => cid[0]())),
+      dependencies: await Promise.all(
+        entityDependencies().map(([a, b]) => Promise.all([a.cid[0](), b.cid[0]()])),
+      ),
+    },
+    cryptOverrides,
   );
-}
 
 async function saveEntity(entity: Entity) {
-  const instance = _instance()!;
+  const config = instance()!;
 
-  const [cid] = await Promise.all([putImmutable(await entity.file(), { instance }), saveRoot()]);
+  const cid = await put(
+    config,
+    identityID,
+    {
+      name: entity.name[0](),
+      completed: entity.completed[0](),
+      start: entity.start[0](),
+      end: entity.end[0](),
+      created: entity.created,
+      updated: entity.updated[0](),
+    },
+    undefined,
+    cryptOverrides,
+  );
 
-  return cid;
+  entity.cid[1](cid);
+
+  saveRoot();
 }
 
 export async function createEntity(entityPojo: Partial<EntityPojo>) {
   const entity = objectToEntity(entityPojo);
-
   setEntities((entities) => [entity, ...entities]);
-
-  return saveEntity(entity);
+  saveEntity(entity);
 }
 
 export async function updateEntity(entity: Entity, update?: () => unknown, force?: boolean) {
-  const originalCID = await entity.cid();
+  const originalCID = entity.cid[0]();
 
   update?.();
 
-  if (force !== true && (await entity.cid()).toString() === originalCID.toString()) {
+  const newCID = entity.cid[0]();
+
+  if (force !== true && originalCID && newCID && newCID.toString() === originalCID.toString()) {
     return;
   }
 
   entity.updated[1](Date.now());
 
-  const instance = _instance()!;
+  const config = instance()!;
 
-  const [cid] = await Promise.all([
-    saveEntity(entity),
-    deleteImmutable(instance, originalCID.value),
-  ]);
+  saveEntity(entity);
 
-  return cid;
+  if (originalCID) {
+    deleteImmutable(config, originalCID.value);
+  }
 }
 
 createEffect(async () => {
-  const instance = _instance();
+  const config = instance();
 
-  if (!instance) {
+  if (!config || !keyringUnlocked() || selectedKeyring() === undefined) {
     return;
   }
 
-  const rootFile = await getMutable('luna-projects', instance);
+  let root: {
+    entities: ContentIdentifier[];
+    dependencies: [ContentIdentifier, ContentIdentifier][];
+  };
 
-  if (rootFile) {
-    const rootValue = (await rootFile.getValue(instance)) as {
+  try {
+    root = (await getIndex(config, identityID)) as {
       entities: ContentIdentifier[];
       dependencies: [ContentIdentifier, ContentIdentifier][];
     };
+  } catch (e) {
+    if (e instanceof RangeError && e.message === 'Identity not found') {
+      return saveRoot();
+    }
+    throw e;
+  }
 
+  if (root) {
     const entityMap: Record<string, Promise<Entity>> = {};
 
     const loadEntity = async (cid: ContentIdentifier) =>
-      (entityMap[cid.toString()] ??= getContent<FileBuilder<EntityPojo>>(cid, instance)
-        .then((file) => file?.getValue(instance) as Promise<EntityPojo>)
-        .then(objectToEntity));
+      (entityMap[cid.toString()] ??= (get(config, cid) as Promise<EntityPojo>).then((pojo) =>
+        objectToEntity({ ...pojo, cid }),
+      ));
 
-    Promise.all(rootValue.entities.map(loadEntity)).then(setEntities);
+    await Promise.all([
+      Promise.all(root.entities.map(loadEntity)).then(setEntities),
 
-    Promise.all(
-      rootValue.dependencies.map(([a, b]) => Promise.all([loadEntity(a), loadEntity(b)])),
-    ).then(setEntityDependencies);
+      Promise.all(
+        root.dependencies.map(([a, b]) => Promise.all([loadEntity(a), loadEntity(b)])),
+      ).then(setEntityDependencies),
+    ]);
   }
 });

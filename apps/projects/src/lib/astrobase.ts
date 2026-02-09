@@ -1,16 +1,20 @@
-import { createMemo, createResource, createSignal } from 'solid-js';
-import { Common } from '@astrobase/sdk/common';
 import { WithWebCryptoCrypt } from '@astrobase/sdk/crypt/web-crypto';
+import { Common } from '@astrobase/sdk/common';
+import { WithNobleCrypt } from '@astrobase/sdk/crypt/noble';
 import { indexeddb } from '@astrobase/sdk/indexeddb';
 import { createInstance } from '@astrobase/sdk/instance';
 import { WithWebCryptoKDF } from '@astrobase/sdk/kdf/web-crypto';
+import { Buffer } from 'buffer';
+import { createMemo, createResource, createSignal } from 'solid-js';
+
+window.Buffer = Buffer;
 
 /**
  * The base Astrobase config. The application derives a reactive final config value with user
  * configuration on top.
  */
 const baseConfig = createResource(async () =>
-  createInstance(Common, WithWebCryptoCrypt, WithWebCryptoKDF, {
+  createInstance(Common, WithWebCryptoCrypt, WithNobleCrypt, WithWebCryptoKDF, {
     clients: [{ strategy: await indexeddb() }],
   }),
 )[0];

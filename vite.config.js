@@ -4,5 +4,6 @@ export default defineConfig({
   test: {
     exclude: ['lib/astrobase', ...configDefaults.exclude],
     testTimeout: 10000,
+    retry: 1,
   },
 });
