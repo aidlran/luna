@@ -1,11 +1,13 @@
 import { deleteImmutable } from '@astrobase/sdk/immutable';
+import { clearKeyring } from '@astrobase/sdk/keyrings';
 import { Title } from '@solidjs/meta';
+import { A } from '@solidjs/router';
 // prettier-ignore
 import { type Accessor, createMemo, createSignal, For, type JSX, type ParentProps, type Setter, Show, type Signal } from 'solid-js';
 import EditableDate from '~/components/editable-date';
 import EditableText from '~/components/editable-text';
 import KeyringGuard from '~/components/keyring-guard';
-import { instance } from '~/lib/astrobase';
+import { instance, setKeyringUnlocked } from '~/lib/astrobase';
 // prettier-ignore
 import { createEntity, entities, entityDependencies, saveRoot, setEntities, setEntityDependencies, updateEntity } from '~/lib/entities';
 
@@ -33,6 +35,16 @@ export default (): JSX.Element => {
     <KeyringGuard unlockStatus={true} redirectPath="/keyrings">
       <main>
         <Title>Home | Luna Projects</Title>
+
+        <A
+          href="/keyrings/unlock"
+          onClick={() => {
+            clearKeyring(instance()!);
+            setKeyringUnlocked(false);
+          }}
+        >
+          Lock
+        </A>
 
         <FilterCheckbox get={hideBlocked} set={setHideBlocked}>
           Hide blocked tasks

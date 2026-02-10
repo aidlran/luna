@@ -18,10 +18,10 @@ export default (): JSX.Element => {
   createEffect(() => {
     const keyringCount = keyringCIDs()?.length;
     const selected = selectedKeyring();
+
     if (keyringCount == 0) {
       navigate('../create', { replace: true });
-    }
-    if (typeof selected !== 'number') {
+    } else if (typeof selected !== 'number') {
       if (keyringCount == 1) {
         setSelectedKeyring(0);
       } else {
@@ -36,7 +36,11 @@ export default (): JSX.Element => {
         <Title>Unlock Keyring | Luna Projects</Title>
 
         <Show when={keyringCount()}>
-          <A href="..">Back to keyring selection</A>
+          {(count) => (
+            <Show when={count() > 1}>
+              <A href="..">Back to keyring selection</A>
+            </Show>
+          )}
         </Show>
 
         <A href="../create">Create New Keyring</A>
